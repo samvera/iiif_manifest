@@ -55,10 +55,12 @@ The class that represents the leaf nodes, must implement `#id`. It must also imp
                                      )
     end
 
-    def endpoint
-      IIIFManifest::IIIFEndpoint.new("http://test.host/images/#{id}",
-                                     profile: "http://iiif.io/api/image/2/level2.json")
-    end
+    private
+
+      def endpoint
+        IIIFManifest::IIIFEndpoint.new("http://test.host/images/#{id}",
+                                       profile: "http://iiif.io/api/image/2/level2.json")
+      end
   end
 ```
 
@@ -77,5 +79,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/projecthydra-labs/iiif\_manifest. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/projecthydra-labs/iiif_manifest. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
