@@ -1,4 +1,5 @@
 # IIIFManifest
+[![Build Status](https://travis-ci.org/projecthydra-labs/iiif_manifest.svg?branch=master)](https://travis-ci.org/projecthydra-labs/iiif_manifest)
 
 IIIF http://iiif.io/ defines an API for presenting related images in a viewer. This transforms Hydra::Works objects into that format usable by players such as http://universalviewer.io/
 
