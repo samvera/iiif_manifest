@@ -9,7 +9,6 @@ module IIIFManifest
   autoload :ManifestBuilder
   autoload :ManifestFactory
   autoload :ManifestServiceLocator
-  autoload :ManifestHelper
   autoload :DisplayImage
   autoload :IIIFCollection
   autoload :IIIFEndpoint
