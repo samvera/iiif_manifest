@@ -22,6 +22,7 @@ RSpec.describe IIIFManifest::ManifestFactory do
       def work_presenters
         []
       end
+
       def manifest_url
         "http://test.host/books/#{@id}/manifest"
       end
@@ -46,6 +47,7 @@ RSpec.describe IIIFManifest::ManifestFactory do
   describe "#to_h" do
     let(:result) { subject.to_h }
     let(:json_result) { JSON.parse(subject.to_h.to_json) }
+
     it "has a label" do
       expect(result.label).to eq book_presenter.to_s
     end
@@ -70,6 +72,54 @@ RSpec.describe IIIFManifest::ManifestFactory do
 
         expect(IIIFManifest::ManifestBuilder::CanvasBuilder).to have_received(:new)
           .exactly(1).times.with(file_presenter, anything)
+      end
+    end
+
+    context "where there is a no sequence_rendering method" do
+      let(:file_presenter) { DisplayImagePresenter.new }
+
+      it "does not have a rendering on the sequence" do
+        allow(IIIFManifest::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
+        allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
+        expect(result['sequences'][0]['rendering']).to eq []
+      end
+    end
+
+    context "where there is a sequence_rendering method" do
+      let(:file_presenter) { DisplayImagePresenter.new }
+      before do
+        class Book
+          def initialize(id)
+            @id = id
+          end
+
+          def description
+            'a brief description'
+          end
+
+          def file_set_presenters
+            []
+          end
+
+          def work_presenters
+            []
+          end
+
+          def manifest_url
+            "http://test.host/books/#{@id}/manifest"
+          end
+
+          def sequence_rendering
+            [{ "@id" => "http://test.host/file_set/id/download", "format" => "application/pdf", "label" => "Download" }]
+          end
+        end
+      end
+
+      it "has a rendering on the sequence" do
+        allow(IIIFManifest::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
+        allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
+
+        expect(result['sequences'][0]['rendering']).to eq [{ "@id" => "http://test.host/file_set/id/download", "format" => "application/pdf", "label" => "Download" }]
       end
     end
 
