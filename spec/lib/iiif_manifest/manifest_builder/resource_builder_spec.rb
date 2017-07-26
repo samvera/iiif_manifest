@@ -6,11 +6,11 @@ RSpec.describe IIIFManifest::ManifestBuilder::ResourceBuilder do
   let(:display_image) { IIIFManifest::DisplayImage.new(url, width: 640, height: 480) }
   let(:annotation) { IIIF::Presentation::Annotation.new }
 
-  describe "#apply" do
+  describe '#apply' do
     subject { builder.apply(annotation) }
 
-    context "without iiif_endpoint" do
-      it "sets a resource on the annotation" do
+    context 'without iiif_endpoint' do
+      it 'sets a resource on the annotation' do
         subject
         expect(annotation.resource).to be_kind_of IIIF::Presentation::Resource
         expect(annotation.resource['@id']).to eq url
@@ -19,12 +19,13 @@ RSpec.describe IIIFManifest::ManifestBuilder::ResourceBuilder do
       end
     end
 
-    context "with iiif_endpoint" do
+    context 'with iiif_endpoint' do
       let(:iiif_endpoint) { IIIFManifest::IIIFEndpoint.new('http://example.com/') }
       let(:display_image) do
         IIIFManifest::DisplayImage.new(url, width: 640, height: 480, iiif_endpoint: iiif_endpoint)
       end
-      it "sets a resource on the annotation" do
+
+      it 'sets a resource on the annotation' do
         subject
         expect(annotation.resource).to be_kind_of IIIF::Presentation::Resource
         expect(annotation.resource['@id']).to eq url

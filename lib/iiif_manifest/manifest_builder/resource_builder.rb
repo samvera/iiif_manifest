@@ -18,17 +18,17 @@ module IIIFManifest
 
       private
 
-        def resource
-          @resource ||= IIIF::Presentation::Resource.new
-        end
+      def resource
+        @resource ||= IIIF::Presentation::Resource.new
+      end
 
-        def iiif_endpoint
-          display_image.try(:iiif_endpoint)
-        end
+      def iiif_endpoint
+        display_image.try(:iiif_endpoint)
+      end
 
-        def image_service_builder
-          ImageServiceBuilder.new(iiif_endpoint)
-        end
+      def image_service_builder
+        ImageServiceBuilder.new(iiif_endpoint)
+      end
     end
   end
 end

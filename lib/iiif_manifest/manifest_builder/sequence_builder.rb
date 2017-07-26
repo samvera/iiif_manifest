@@ -19,19 +19,19 @@ module IIIFManifest
 
       private
 
-        def canvas_builder
-          canvas_builder_factory.from(work)
-        end
+      def canvas_builder
+        canvas_builder_factory.from(work)
+      end
 
-        def sequence
-          @sequence ||=
-            begin
-              sequence = IIIF::Presentation::Sequence.new
-              sequence["@id"] ||= work.manifest_url + "/sequence/normal"
-              canvas_builder.apply(sequence)
-              sequence
-            end
-        end
+      def sequence
+        @sequence ||=
+          begin
+            sequence = IIIF::Presentation::Sequence.new
+            sequence['@id'] ||= work.manifest_url + '/sequence/normal'
+            canvas_builder.apply(sequence)
+            sequence
+          end
+      end
     end
   end
 end

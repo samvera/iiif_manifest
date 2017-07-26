@@ -17,9 +17,9 @@ module IIIFManifest
 
       private
 
-        def viewing_hint
-          (record.respond_to?(:viewing_hint) && record.send(:viewing_hint)) || 'individuals'
-        end
+      def viewing_hint
+        (record.respond_to?(:viewing_hint) && record.send(:viewing_hint)) || 'individuals'
+      end
 
       # def viewing_direction
       #   record.try(:viewing_direction) || "left-to-right"
