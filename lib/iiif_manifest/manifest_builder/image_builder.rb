@@ -16,17 +16,17 @@ module IIIFManifest
 
       private
 
-        def build_resource
-          resource_builder.apply(annotation)
-        end
+      def build_resource
+        resource_builder.apply(annotation)
+      end
 
-        def resource_builder
-          ResourceBuilder.new(display_image)
-        end
+      def resource_builder
+        ResourceBuilder.new(display_image)
+      end
 
-        def annotation
-          @annotation ||= IIIF::Presentation::Annotation.new
-        end
+      def annotation
+        @annotation ||= IIIF::Presentation::Annotation.new
+      end
     end
   end
 end

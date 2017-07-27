@@ -7,7 +7,7 @@ module IIIFManifest
     end
 
     def context
-      "http://iiif.io/api/image/2/context.json"
+      'http://iiif.io/api/image/2/context.json'
     end
   end
 end

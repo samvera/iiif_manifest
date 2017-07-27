@@ -19,28 +19,28 @@ module IIIFManifest
 
       private
 
-        def canvas_builder
-          canvas_builder_factory.from(work)
-        end
+      def canvas_builder
+        canvas_builder_factory.from(work)
+      end
 
-        def sequence
-          @sequence ||=
-            begin
-              sequence = IIIF::Presentation::Sequence.new
-              sequence["@id"] ||= work.manifest_url + "/sequence/normal"
-              sequence["rendering"] ||= populate_sequence_rendering
-              canvas_builder.apply(sequence)
-              sequence
-            end
-        end
-
-        def populate_sequence_rendering
-          if work.respond_to?(:sequence_rendering)
-            work.sequence_rendering.each { | x | x.to_h }
-          else
-            []
+      def sequence
+        @sequence ||=
+          begin
+            sequence = IIIF::Presentation::Sequence.new
+            sequence['@id'] ||= work.manifest_url + '/sequence/normal'
+            sequence['rendering'] ||= populate_sequence_rendering
+            canvas_builder.apply(sequence)
+            sequence
           end
+      end
+
+      def populate_sequence_rendering
+        if work.respond_to?(:sequence_rendering)
+          work.sequence_rendering.each(&:to_h)
+        else
+          []
         end
+      end
     end
   end
 end

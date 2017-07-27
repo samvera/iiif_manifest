@@ -1,4 +1,4 @@
-require "iiif_manifest/version"
+require 'iiif_manifest/version'
 require 'active_support'
 require 'active_support/core_ext/module'
 require 'active_support/core_ext/object'

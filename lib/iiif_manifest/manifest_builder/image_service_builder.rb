@@ -15,9 +15,9 @@ module IIIFManifest
 
       private
 
-        def service
-          @service ||= IIIF::Service.new
-        end
+      def service
+        @service ||= IIIF::Service.new
+      end
     end
   end
 end
