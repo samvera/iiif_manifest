@@ -5,11 +5,17 @@ IIIF http://iiif.io/ defines an API for presenting related images in a viewer. T
 
 ## Usage
 
-You application must have an object that implements `#file_set_presenters` and `#work_presenters`.  The former method should return as set of leaf nodes and the later any interstitial nodes. If none are found an empty array should be returned. Additionally it should implement `#manifest_url` that shows where the manifest can be found. Finally, it must have a `#description` method that returns a string.
+Your application ***must*** have an object that implements `#file_set_presenters` and `#work_presenters`.  The former method should return as set of leaf nodes and the later any interstitial nodes. If none are found an empty array should be returned. 
+
+Additionally, it ***must*** have a `#description` method that returns a string.
+
+Additionally it ***should*** implement `#manifest_url` that shows where the manifest can be found. 
+
+Finally, it ***may*** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at sequences level. Each hash must contain "@id", "format" (mime type) and "label" (eg. `{ "@id" => "download url", "format" => "application/pdf", "label" => "user friendly label" }`). 
 
 For example:
 
-```ruby
+ ```ruby
   class Book
     def initialize(id, pages = [])
       @id = id
@@ -30,6 +36,10 @@ For example:
 
     def description
       'a brief description'
+    end
+    
+    def sequence_rendering:
+      [{"@id" => "http://test.host/file_set/id/download", "format" => "application/pdf", "label" => "Download"}]
     end
   end
 ```
