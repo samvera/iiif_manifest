@@ -39,6 +39,7 @@ module IIIFManifest
         composite_builder_factory.new(
           record_property_builder,
           sequence_builder,
+          structure_builder,
           composite_builder: composite_builder
         )
       end
@@ -80,6 +81,10 @@ module IIIFManifest
 
       def record_property_builder
         ManifestBuilder::RecordPropertyBuilder
+      end
+
+      def structure_builder
+        ManifestBuilder::StructureBuilder
       end
 
       def sequence_builder

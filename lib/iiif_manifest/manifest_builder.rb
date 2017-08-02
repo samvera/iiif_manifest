@@ -9,6 +9,7 @@ require_relative 'manifest_builder/image_service_builder'
 require_relative 'manifest_builder/record_property_builder'
 require_relative 'manifest_builder/resource_builder'
 require_relative 'manifest_builder/sequence_builder'
+require_relative 'manifest_builder/structure_builder'
 
 module IIIFManifest
   class ManifestBuilder

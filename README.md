@@ -11,7 +11,12 @@ Additionally, it ***must*** have a `#description` method that returns a string.
 
 Additionally it ***should*** implement `#manifest_url` that shows where the manifest can be found. 
 
-Finally, it ***may*** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at sequences level. Each hash must contain "@id", "format" (mime type) and "label" (eg. `{ "@id" => "download url", "format" => "application/pdf", "label" => "user friendly label" }`). 
+Additionally it ***may*** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at sequences level. Each hash must contain "@id", "format" (mime type) and "label" (eg. `{ "@id" => "download url", "format" => "application/pdf", "label" => "user friendly label" }`). 
+
+Finally, It ***may*** implement `ranges`, which returns an array of objects which
+represent a table of contents or similar structure, each of which responds to
+`label`, `ranges`, and `file_set_presenters`.
+
 
 For example:
 
@@ -37,9 +42,32 @@ For example:
     def description
       'a brief description'
     end
-    
+
     def sequence_rendering:
       [{"@id" => "http://test.host/file_set/id/download", "format" => "application/pdf", "label" => "Download"}]
+    end
+
+    def ranges
+      [
+        ManifestRange.new(
+          label: "Table of Contents",
+          ranges: [
+            ManifestRange.new(
+              label: "Chapter 1",
+              file_set_presenters: @pages
+            )
+          ]
+        )
+      ]
+    end
+  end
+
+  class ManifestRange
+    attr_reader :label, :ranges, :file_set_presenters
+    def initialize(label:, ranges: [], file_set_presenters: [])
+      @label = label
+      @ranges = ranges
+      @file_set_presenters = file_set_presenters
     end
   end
 ```
