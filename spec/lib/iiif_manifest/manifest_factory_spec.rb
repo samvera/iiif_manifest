@@ -27,6 +27,24 @@ RSpec.describe IIIFManifest::ManifestFactory do
       def manifest_url
         "http://test.host/books/#{@id}/manifest"
       end
+
+      def ranges
+        @ranges ||=
+          [
+            ManifestRange.new(label: 'Table of Contents', ranges: [
+                                ManifestRange.new(label: 'Chapter 1', file_set_presenters: [])
+                              ])
+          ]
+      end
+    end
+
+    class ManifestRange
+      attr_reader :label, :ranges, :file_set_presenters
+      def initialize(label:, ranges: [], file_set_presenters: [])
+        @label = label
+        @ranges = ranges
+        @file_set_presenters = file_set_presenters
+      end
     end
 
     class DisplayImagePresenter
@@ -73,6 +91,22 @@ RSpec.describe IIIFManifest::ManifestFactory do
 
         expect(IIIFManifest::ManifestBuilder::CanvasBuilder).to have_received(:new)
           .exactly(1).times.with(file_presenter, anything)
+      end
+      it 'builds a structure if it can' do
+        allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
+        allow(book_presenter.ranges[0].ranges[0]).to receive(:file_set_presenters).and_return([file_presenter])
+
+        expect(result['structures'].length).to eq 2
+        structure = result['structures'].first
+        expect(structure['label']).to eq 'Table of Contents'
+        expect(structure['viewingHint']).to eq 'top'
+        expect(structure['canvases']).to be_blank
+        expect(structure['ranges'].length).to eq 1
+        expect(structure['ranges'][0]).not_to eq structure['@id']
+
+        sub_range = result['structures'].last
+        expect(sub_range['ranges']).to be_blank
+        expect(sub_range['canvases'].length).to eq 1
       end
     end
 

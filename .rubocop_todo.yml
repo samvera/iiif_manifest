@@ -38,6 +38,10 @@ RSpec/VerifiedDoubles:
   Exclude:
     - 'spec/lib/iiif_manifest/display_image_spec.rb'
 
+RSpec/ExampleLength:
+  Exclude:
+    - 'spec/lib/iiif_manifest/manifest_factory_spec.rb'
+
 # Offense count: 20
 Style/Documentation:
   Exclude:
@@ -56,6 +60,7 @@ Style/Documentation:
     - 'lib/iiif_manifest/manifest_builder/record_property_builder.rb'
     - 'lib/iiif_manifest/manifest_builder/resource_builder.rb'
     - 'lib/iiif_manifest/manifest_builder/sequence_builder.rb'
+    - 'lib/iiif_manifest/manifest_builder/structure_builder.rb'
     - 'lib/iiif_manifest/manifest_builder.rb'
     - 'lib/iiif_manifest/manifest_factory.rb'
     - 'lib/iiif_manifest/manifest_service_locator.rb'
@@ -66,6 +71,10 @@ Style/Documentation:
 Style/MethodMissing:
   Exclude:
     - 'lib/iiif_manifest/manifest_builder/composite_builder.rb'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'lib/iiif_manifest/manifest_service_locator.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
