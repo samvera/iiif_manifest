@@ -10,24 +10,15 @@ module IIIFManifest
         manifest['@id'] = record.manifest_url.to_s
         manifest.label = record.to_s
         manifest.description = record.description
-        manifest.viewing_hint = viewing_hint
+        manifest.viewing_hint = viewing_hint if viewing_hint.present?
         manifest
-        # manifest.try(:viewing_direction=, viewing_direction)
       end
 
       private
 
       def viewing_hint
-        (record.respond_to?(:viewing_hint) && record.send(:viewing_hint)) || 'individuals'
+        (record.respond_to?(:viewing_hint) && record.send(:viewing_hint))
       end
-
-      # def viewing_direction
-      #   record.try(:viewing_direction) || "left-to-right"
-      # end
-      #
-      # def viewing_hint
-      #   record.viewing_hint || "individuals"
-      # end
     end
   end
 end
