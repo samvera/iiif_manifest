@@ -1,9 +1,10 @@
 module IIIFManifest
   class ManifestBuilder
     class ImageServiceBuilder
-      attr_reader :iiif_endpoint
-      def initialize(iiif_endpoint)
+      attr_reader :iiif_endpoint, :iiif_service_factory
+      def initialize(iiif_endpoint, iiif_service_factory:)
         @iiif_endpoint = iiif_endpoint
+        @iiif_service_factory = iiif_service_factory
       end
 
       def apply(resource)
@@ -16,7 +17,7 @@ module IIIFManifest
       private
 
       def service
-        @service ||= IIIF::Service.new
+        @service ||= iiif_service_factory.new
       end
     end
   end

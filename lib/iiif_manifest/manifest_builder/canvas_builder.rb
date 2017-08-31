@@ -1,17 +1,19 @@
 module IIIFManifest
   class ManifestBuilder
     class CanvasBuilder
-      attr_reader :record, :parent
+      attr_reader :record, :parent, :iiif_canvas_factory, :image_builder
 
-      def initialize(record, parent)
+      def initialize(record, parent, iiif_canvas_factory:, image_builder:)
         @record = record
         @parent = parent
+        @iiif_canvas_factory = iiif_canvas_factory
+        @image_builder = image_builder
         apply_record_properties
         attach_image if display_image
       end
 
       def canvas
-        @canvas ||= IIIF::Presentation::Canvas.new
+        @canvas ||= iiif_canvas_factory.new
       end
 
       def path
@@ -36,7 +38,7 @@ module IIIFManifest
       end
 
       def attach_image
-        ImageBuilder.new(display_image).apply(canvas)
+        image_builder.new(display_image).apply(canvas)
       end
     end
   end
