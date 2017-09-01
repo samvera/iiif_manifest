@@ -1,10 +1,11 @@
 module IIIFManifest
   class ManifestBuilder
     class SequenceBuilder
-      attr_reader :work, :canvas_builder_factory
-      def initialize(work, canvas_builder_factory:)
+      attr_reader :work, :canvas_builder_factory, :sequence_factory
+      def initialize(work, canvas_builder_factory:, sequence_factory:)
         @work = work
         @canvas_builder_factory = canvas_builder_factory
+        @sequence_factory = sequence_factory
       end
 
       def apply(manifest)
@@ -26,7 +27,7 @@ module IIIFManifest
       def sequence
         @sequence ||=
           begin
-            sequence = IIIF::Presentation::Sequence.new
+            sequence = sequence_factory.new
             sequence['@id'] ||= work.manifest_url + '/sequence/normal'
             sequence['rendering'] ||= populate_sequence_rendering
             canvas_builder.apply(sequence)

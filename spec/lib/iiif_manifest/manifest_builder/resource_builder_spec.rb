@@ -1,10 +1,17 @@
 require 'spec_helper'
 
 RSpec.describe IIIFManifest::ManifestBuilder::ResourceBuilder do
-  let(:builder) { described_class.new(display_image) }
+  let(:builder) do
+    described_class.new(
+      display_image,
+      iiif_resource_factory: IIIF::Presentation::Resource,
+      image_service_builder_factory: image_service_builder_factory
+    )
+  end
   let(:url) { 'http://example.com/img1' }
   let(:display_image) { IIIFManifest::DisplayImage.new(url, width: 640, height: 480) }
   let(:annotation) { IIIF::Presentation::Annotation.new }
+  let(:image_service_builder_factory) { IIIFManifest::ManifestServiceLocator.image_service_builder_factory }
 
   describe '#apply' do
     subject { builder.apply(annotation) }

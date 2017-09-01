@@ -1,9 +1,11 @@
 module IIIFManifest
   class ManifestBuilder
     class ResourceBuilder
-      attr_reader :display_image
-      def initialize(display_image)
+      attr_reader :display_image, :iiif_resource_factory, :image_service_builder_factory
+      def initialize(display_image, iiif_resource_factory:, image_service_builder_factory:)
         @display_image = display_image
+        @iiif_resource_factory = iiif_resource_factory
+        @image_service_builder_factory = image_service_builder_factory
       end
 
       def apply(annotation)
@@ -19,7 +21,7 @@ module IIIFManifest
       private
 
       def resource
-        @resource ||= IIIF::Presentation::Resource.new
+        @resource ||= iiif_resource_factory.new
       end
 
       def iiif_endpoint
@@ -27,7 +29,7 @@ module IIIFManifest
       end
 
       def image_service_builder
-        ImageServiceBuilder.new(iiif_endpoint)
+        image_service_builder_factory.new(iiif_endpoint)
       end
     end
   end

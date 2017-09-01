@@ -1,17 +1,28 @@
 module IIIFManifest
   class ManifestBuilder
     class StructureBuilder
-      attr_reader :record
-      def initialize(record)
+      attr_reader :record, :canvas_builder_factory, :iiif_range_factory
+      def initialize(record, canvas_builder_factory:, iiif_range_factory:)
         @record = record
+        @canvas_builder_factory = canvas_builder_factory
+        @iiif_range_factory = iiif_range_factory
       end
 
       def apply(manifest)
         top_ranges.each_with_index do |top_range|
           manifest['structures'] ||= []
-          manifest['structures'] = RangeBuilder.new(top_range, record, true).apply(manifest['structures'])
+          manifest['structures'] = range_builder(top_range).apply(manifest['structures'])
         end
         manifest
+      end
+
+      def range_builder(top_range)
+        RangeBuilder.new(
+          top_range,
+          record, true,
+          canvas_builder_factory: canvas_builder_factory,
+          iiif_range_factory: iiif_range_factory
+        )
       end
 
       def top_ranges
@@ -19,12 +30,14 @@ module IIIFManifest
       end
     end
     class RangeBuilder
-      attr_reader :record, :parent
+      attr_reader :record, :parent, :canvas_builder_factory, :iiif_range_factory
       delegate :file_set_presenters, to: :record
-      def initialize(record, parent, top = false)
+      def initialize(record, parent, top = false, canvas_builder_factory:, iiif_range_factory:)
         @record = record
         @parent = parent
         @top = top
+        @canvas_builder_factory = canvas_builder_factory
+        @iiif_range_factory = iiif_range_factory
         build_range
       end
 
@@ -54,18 +67,23 @@ module IIIFManifest
 
       def sub_ranges
         @sub_ranges ||= record.ranges.map do |sub_range|
-          RangeBuilder.new(sub_range, parent)
+          RangeBuilder.new(
+            sub_range,
+            parent,
+            canvas_builder_factory: canvas_builder_factory,
+            iiif_range_factory: iiif_range_factory
+          )
         end
       end
 
       def canvas_builders
         @canvas_builders ||= file_set_presenters.map do |file_set_presenter|
-          CanvasBuilder.new(file_set_presenter, parent)
+          canvas_builder_factory.new(file_set_presenter, parent)
         end
       end
 
       def range
-        @range ||= IIIF::Presentation::Range.new
+        @range ||= iiif_range_factory.new
       end
 
       def top?

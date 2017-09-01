@@ -90,7 +90,7 @@ RSpec.describe IIIFManifest::ManifestFactory do
         result
 
         expect(IIIFManifest::ManifestBuilder::CanvasBuilder).to have_received(:new)
-          .exactly(1).times.with(file_presenter, anything)
+          .exactly(1).times.with(file_presenter, anything, anything)
       end
       it 'builds a structure if it can' do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
