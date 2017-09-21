@@ -9,7 +9,7 @@ module IIIFManifest
       end
 
       def apply(manifest)
-        top_ranges.each_with_index do |top_range|
+        top_ranges.each do |top_range|
           manifest['structures'] ||= []
           manifest['structures'] = range_builder(top_range).apply(manifest['structures'])
         end

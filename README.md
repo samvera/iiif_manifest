@@ -11,12 +11,13 @@ Additionally, it ***must*** have a `#description` method that returns a string.
 
 Additionally it ***should*** implement `#manifest_url` that shows where the manifest can be found. 
 
+Additionally it ***should*** implement `#manifest_metadata` to provide an array containing hashes of metadata Label/Value pairs. 
+
 Additionally it ***may*** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at sequences level. Each hash must contain "@id", "format" (mime type) and "label" (eg. `{ "@id" => "download url", "format" => "application/pdf", "label" => "user friendly label" }`). 
 
 Finally, It ***may*** implement `ranges`, which returns an array of objects which
 represent a table of contents or similar structure, each of which responds to
 `label`, `ranges`, and `file_set_presenters`.
-
 
 For example:
 
@@ -42,8 +43,15 @@ For example:
     def description
       'a brief description'
     end
+    
+    def manifest_metadata
+          [
+            { "label" => "Title", "value" => "Title of the Item" },
+            { "label" => "Creator", "value" => "Morrissey, Stephen Patrick" }
+          ]
+    end
 
-    def sequence_rendering:
+    def sequence_rendering
       [{"@id" => "http://test.host/file_set/id/download", "format" => "application/pdf", "label" => "Download"}]
     end
 

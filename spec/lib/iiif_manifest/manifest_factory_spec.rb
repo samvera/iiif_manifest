@@ -163,6 +163,35 @@ RSpec.describe IIIFManifest::ManifestFactory do
       end
     end
 
+    context 'where there is a no manifest_metadata method' do
+      let(:file_presenter) { DisplayImagePresenter.new }
+
+      it 'does not have a metadata element' do
+        allow(IIIFManifest::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
+        allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
+        expect(result['metadata']).to eq nil
+      end
+    end
+
+    context 'where there is a manifest_metadata method' do
+      let(:metadata) { [{ 'label' => 'Title', 'value' => 'Title of the Item' }] }
+
+      it 'has metadata' do
+        allow(book_presenter).to receive(:manifest_metadata).and_return(metadata)
+        expect(result['metadata'][0]['label']).to eq 'Title'
+        expect(result['metadata'][0]['value']).to eq 'Title of the Item'
+      end
+    end
+
+    context 'where there is a manifest_metadata method with invalid data' do
+      let(:metadata) { 'invalid data' }
+
+      it 'has no metadata' do
+        allow(book_presenter).to receive(:manifest_metadata).and_return(metadata)
+        expect(result['metadata']).to eq nil
+      end
+    end
+
     context 'when there are child works' do
       let(:child_work_presenter) { presenter_class.new('test2') }
 
