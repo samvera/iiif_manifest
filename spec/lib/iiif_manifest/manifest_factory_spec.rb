@@ -110,7 +110,7 @@ RSpec.describe IIIFManifest::ManifestFactory do
       end
     end
 
-    context 'where there is a no sequence_rendering method' do
+    context 'when there is a no sequence_rendering method' do
       let(:file_presenter) { DisplayImagePresenter.new }
 
       it 'does not have a rendering on the sequence' do
@@ -120,7 +120,7 @@ RSpec.describe IIIFManifest::ManifestFactory do
       end
     end
 
-    context 'where there is a sequence_rendering method' do
+    context 'when there is a sequence_rendering method' do
       let(:file_presenter) { DisplayImagePresenter.new }
 
       before do
@@ -163,7 +163,7 @@ RSpec.describe IIIFManifest::ManifestFactory do
       end
     end
 
-    context 'where there is a no manifest_metadata method' do
+    context 'when there is no manifest_metadata method' do
       let(:file_presenter) { DisplayImagePresenter.new }
 
       it 'does not have a metadata element' do
@@ -173,7 +173,7 @@ RSpec.describe IIIFManifest::ManifestFactory do
       end
     end
 
-    context 'where there is a manifest_metadata method' do
+    context 'when there is a manifest_metadata method' do
       let(:metadata) { [{ 'label' => 'Title', 'value' => 'Title of the Item' }] }
 
       it 'has metadata' do
@@ -183,7 +183,7 @@ RSpec.describe IIIFManifest::ManifestFactory do
       end
     end
 
-    context 'where there is a manifest_metadata method with invalid data' do
+    context 'when there is a manifest_metadata method with invalid data' do
       let(:metadata) { 'invalid data' }
 
       it 'has no metadata' do
@@ -234,6 +234,19 @@ RSpec.describe IIIFManifest::ManifestFactory do
       end
       it 'builds sequences from all the child file sets' do
         expect(result['sequences'].first['canvases'].length).to eq 2
+      end
+    end
+
+    context 'when there is no viewing_direction method' do
+      it 'does not have a viewingDirection element' do
+        expect(result['viewingDirection']).to eq nil
+      end
+    end
+
+    context 'when there is a viewing_direction method' do
+      it 'has a viewingDirection' do
+        allow(book_presenter).to receive(:viewing_direction).and_return('right-to-left')
+        expect(result.viewingDirection).to eq 'right-to-left'
       end
     end
   end
