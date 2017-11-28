@@ -11,6 +11,7 @@ module IIIFManifest
         manifest.label = record.to_s
         manifest.description = record.description
         manifest.viewing_hint = viewing_hint if viewing_hint.present?
+        manifest.viewing_direction = viewing_direction if viewing_direction.present?
         manifest.metadata = record.manifest_metadata if valid_metadata?
         manifest
       end
@@ -19,6 +20,10 @@ module IIIFManifest
 
       def viewing_hint
         (record.respond_to?(:viewing_hint) && record.send(:viewing_hint))
+      end
+
+      def viewing_direction
+        (record.respond_to?(:viewing_direction) && record.send(:viewing_direction))
       end
 
       # Validate manifest_metadata against the IIIF spec format for metadata

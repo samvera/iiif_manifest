@@ -236,5 +236,18 @@ RSpec.describe IIIFManifest::ManifestFactory do
         expect(result['sequences'].first['canvases'].length).to eq 2
       end
     end
+
+    context 'where there is no viewing_direction method' do
+      it 'does not have a viewingDirection element' do
+        expect(result['viewingDirection']).to eq nil
+      end
+    end
+
+    context 'where there is a viewing_direction method' do
+      it 'has a viewingDirection' do
+        allow(book_presenter).to receive(:viewing_direction).and_return('right-to-left')
+        expect(result.viewingDirection).to eq 'right-to-left'
+      end
+    end
   end
 end
