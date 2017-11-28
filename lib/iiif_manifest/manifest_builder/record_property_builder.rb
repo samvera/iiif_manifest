@@ -6,6 +6,7 @@ module IIIFManifest
         @record = record
       end
 
+      # rubocop:disable Metrics/AbcSize
       def apply(manifest)
         manifest['@id'] = record.manifest_url.to_s
         manifest.label = record.to_s
@@ -15,6 +16,7 @@ module IIIFManifest
         manifest.metadata = record.manifest_metadata if valid_metadata?
         manifest
       end
+      # rubocop:enable Metrics/AbcSize
 
       private
 
