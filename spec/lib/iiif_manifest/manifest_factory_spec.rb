@@ -163,7 +163,7 @@ RSpec.describe IIIFManifest::ManifestFactory do
       end
     end
 
-    context 'where there is a no manifest_metadata method' do
+    context 'where there is no manifest_metadata method' do
       let(:file_presenter) { DisplayImagePresenter.new }
 
       it 'does not have a metadata element' do
