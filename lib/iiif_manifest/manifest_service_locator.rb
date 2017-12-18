@@ -80,7 +80,11 @@ module IIIFManifest
       end
 
       def record_property_builder
-        ManifestBuilder::RecordPropertyBuilder
+        InjectedFactory.new(
+          ManifestBuilder::RecordPropertyBuilder,
+          iiif_search_service_factory: iiif_search_service_factory,
+          iiif_autocomplete_service_factory: iiif_autocomplete_service_factory
+        )
       end
 
       def structure_builder
@@ -178,6 +182,14 @@ module IIIFManifest
 
       def iiif_range_factory
         IIIFManifest::ManifestBuilder::IIIFManifest::Range
+      end
+
+      def iiif_search_service_factory
+        IIIFManifest::ManifestBuilder::IIIFManifest::SearchService
+      end
+
+      def iiif_autocomplete_service_factory
+        IIIFManifest::ManifestBuilder::IIIFManifest::AutocompleteService
       end
     end
 

@@ -53,6 +53,14 @@ module IIIFManifest
         inner_hash['metadata'] = metadata
       end
 
+      def service
+        inner_hash['service'] || []
+      end
+
+      def service=(service)
+        inner_hash['service'] = service
+      end
+
       def see_also=(see_also)
         inner_hash['seeAlso'] = see_also
       end
@@ -146,6 +154,41 @@ module IIIFManifest
           {
             '@type' => 'oa:Annotation',
             'motivation' => 'sc:painting'
+          }
+        end
+      end
+
+      class SearchService < IIIFService
+        def service=(service)
+          inner_hash['service'] = service
+        end
+
+        def search_service=(search_service)
+          inner_hash['@id'] = search_service
+        end
+
+        def initial_attributes
+          {
+            '@context' => 'http://iiif.io/api/search/0/context.json',
+            'profile' => 'http://iiif.io/api/search/0/search',
+            'label' => 'Search within this manifest'
+          }
+        end
+      end
+
+      class AutocompleteService < IIIFService
+        def autocomplete_service
+          inner_hash['@id']
+        end
+
+        def autocomplete_service=(autocomplete_service)
+          inner_hash['@id'] = autocomplete_service
+        end
+
+        def initial_attributes
+          {
+            'profile' => 'http://iiif.io/api/search/0/autocomplete',
+            'label' => 'Get suggested words in this manifest'
           }
         end
       end

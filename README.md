@@ -13,7 +13,9 @@ Additionally it ***should*** implement `#manifest_url` that shows where the mani
 
 Additionally it ***should*** implement `#manifest_metadata` to provide an array containing hashes of metadata Label/Value pairs. 
 
-Additionally it ***may*** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at sequences level. Each hash must contain "@id", "format" (mime type) and "label" (eg. `{ "@id" => "download url", "format" => "application/pdf", "label" => "user friendly label" }`). 
+Additionally it ***may*** implement `#search_service` to contain the url for an IIIF search api compliant search endpoint and `#autocomplete_service` to contain the url for an IIIF search api compliant autocomplete endpoint. Please note, the autocomplete service is embedded within the search service description so if an autocomplete_service is supplied without a search_service it will be ignored. The IIIF `profile` added to the service descriptions is version 0 as this is the version supported by the current version of Universal Viewer. Only include a search_service within the manifest if your application has impelmented an IIIF search service at the endpoint specified in the manifest. 
+
+Additionally it ***may*** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at sequences level. Each hash must contain "@id", "format" (mime type) and "label" (eg. `{ "@id" => "download url", "format" => "application/pdf", "label" => "user friendly label" }`).
 
 Finally, It ***may*** implement `ranges`, which returns an array of objects which
 represent a table of contents or similar structure, each of which responds to
@@ -49,6 +51,14 @@ For example:
             { "label" => "Title", "value" => "Title of the Item" },
             { "label" => "Creator", "value" => "Morrissey, Stephen Patrick" }
           ]
+    end
+    
+    def search_service
+      "http://test.host/books/#{@id}/search"
+    end
+    
+    def autocomplete_service
+      "http://test.host/books/#{@id}/autocomplete"
     end
 
     def sequence_rendering
