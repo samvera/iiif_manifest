@@ -13,7 +13,11 @@ Additionally it ***should*** implement `#manifest_url` that shows where the mani
 
 Additionally it ***should*** implement `#manifest_metadata` to provide an array containing hashes of metadata Label/Value pairs. 
 
-Additionally it ***may*** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at sequences level. Each hash must contain "@id", "format" (mime type) and "label" (eg. `{ "@id" => "download url", "format" => "application/pdf", "label" => "user friendly label" }`). 
+Additionally it ***may*** implement `#search_service` to contain the url for an IIIF search api compliant search endpoint.
+
+Additionally it ***may*** implement `#search_service_version` to contain the version of the IIIF search api. Valid values are `0` or `1`. If not supplied, the default is `0`. Universal Viewer 2 and 3 support only version 0.
+ 
+Additionally it ***may*** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at sequences level. Each hash must contain "@id", "format" (mime type) and "label" (eg. `{ "@id" => "download url", "format" => "application/pdf", "label" => "user friendly label" }`).
 
 Finally, It ***may*** implement `ranges`, which returns an array of objects which
 represent a table of contents or similar structure, each of which responds to
@@ -49,6 +53,14 @@ For example:
             { "label" => "Title", "value" => "Title of the Item" },
             { "label" => "Creator", "value" => "Morrissey, Stephen Patrick" }
           ]
+    end
+    
+    def search_service
+      "http://test.host/books/#{@id}/search"
+    end
+    
+    def search_service_version
+      1
     end
 
     def sequence_rendering

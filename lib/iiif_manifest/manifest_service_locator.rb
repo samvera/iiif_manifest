@@ -80,7 +80,17 @@ module IIIFManifest
       end
 
       def record_property_builder
-        ManifestBuilder::RecordPropertyBuilder
+        InjectedFactory.new(
+          ManifestBuilder::RecordPropertyBuilder,
+          search_service_builder_factory: search_service_builder_factory
+        )
+      end
+
+      def search_service_builder_factory
+        InjectedFactory.new(
+          ManifestBuilder::SearchServiceBuilder,
+          iiif_service_factory: iiif_service_factory
+        )
       end
 
       def structure_builder

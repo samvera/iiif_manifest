@@ -192,6 +192,46 @@ RSpec.describe IIIFManifest::ManifestFactory do
       end
     end
 
+    context 'when there is no search_service method' do
+      let(:file_presenter) { DisplayImagePresenter.new }
+
+      it 'does not have a service element' do
+        allow(IIIFManifest::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
+        allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
+        expect(result['service']).to eq nil
+      end
+    end
+
+    context 'when there is a search_service method' do
+      let(:search_service) { 'http://test.host/books/book-77/search' }
+
+      it 'has a service element' do
+        allow(book_presenter).to receive(:search_service).and_return(search_service)
+        expect(result['service'][0]['@context']).to eq 'http://iiif.io/api/search/0/context.json'
+        expect(result['service'][0]['@id']).to eq 'http://test.host/books/book-77/search'
+      end
+    end
+
+    context 'when there is a search_service and search_service_version method' do
+      let(:search_service) { 'http://test.host/books/book-77/search' }
+      let(:search_service_version) { 1 }
+
+      it 'has a service element containing iiif.io/api/search version 1' do
+        allow(book_presenter).to receive(:search_service).and_return(search_service)
+        allow(book_presenter).to receive(:search_service_version).and_return(search_service_version)
+        expect(result['service'][0]['@context']).to eq 'http://iiif.io/api/search/1/context.json'
+      end
+    end
+
+    context 'when there is a search_service method that returns nil' do
+      let(:search_service) { '' }
+
+      it 'has no service' do
+        allow(book_presenter).to receive(:search_service).and_return(search_service)
+        expect(result['service']).to eq nil
+      end
+    end
+
     context 'when there are child works' do
       let(:child_work_presenter) { presenter_class.new('test2') }
 

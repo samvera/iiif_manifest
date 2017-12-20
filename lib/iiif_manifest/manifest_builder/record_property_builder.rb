@@ -1,9 +1,10 @@
 module IIIFManifest
   class ManifestBuilder
     class RecordPropertyBuilder
-      attr_reader :record, :path
-      def initialize(record)
+      attr_reader :record, :path, :search_service_builder_factory
+      def initialize(record, search_service_builder_factory:)
         @record = record
+        @search_service_builder_factory = search_service_builder_factory
       end
 
       # rubocop:disable Metrics/AbcSize
@@ -14,6 +15,7 @@ module IIIFManifest
         manifest.viewing_hint = viewing_hint if viewing_hint.present?
         manifest.viewing_direction = viewing_direction if viewing_direction.present?
         manifest.metadata = record.manifest_metadata if valid_metadata?
+        search_service_builder.apply(manifest) if valid_search_service?
         manifest
       end
       # rubocop:enable Metrics/AbcSize
@@ -26,6 +28,29 @@ module IIIFManifest
 
       def viewing_direction
         (record.respond_to?(:viewing_direction) && record.send(:viewing_direction))
+      end
+
+      def valid_search_service?
+        record.respond_to?(:search_service) && record.search_service.present?
+      end
+
+      def search_service_builder
+        search_service_builder_factory.new(iiif_search_endpoint)
+      end
+
+      def iiif_search_endpoint
+        IIIFSearchEndpoint.new(record.search_service, version: iiif_search_endpoint_version)
+      end
+
+      def iiif_search_endpoint_version
+        return '0' unless valid_search_service_version?
+        record.search_service_version.to_s
+      end
+
+      # Only versions 0 or 1 are valid
+      def valid_search_service_version?
+        return false unless record.respond_to?(:search_service_version)
+        record.search_service_version.to_s == '0' || record.search_service_version.to_s == '1'
       end
 
       # Validate manifest_metadata against the IIIF spec format for metadata
