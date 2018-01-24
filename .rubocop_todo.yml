@@ -65,6 +65,7 @@ Style/Documentation:
     - 'lib/iiif_manifest/manifest_factory.rb'
     - 'lib/iiif_manifest/manifest_service_locator.rb'
     - 'lib/iiif_manifest.rb'
+    - 'lib/iiif_manifest/manifest_builder/iiif_service.rb'
     - 'spec/lib/iiif_manifest/manifest_factory_spec.rb'
 
 # Offense count: 1

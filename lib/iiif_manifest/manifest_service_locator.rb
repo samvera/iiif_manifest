@@ -68,7 +68,7 @@ module IIIFManifest
       end
 
       def iiif_collection_factory
-        IIIF::Presentation::Collection
+        IIIFManifest::ManifestBuilder::IIIFManifest::Collection
       end
 
       def composite_builder
@@ -108,7 +108,7 @@ module IIIFManifest
       end
 
       def sequence_factory
-        IIIF::Presentation::Sequence
+        IIIFManifest::ManifestBuilder::IIIFManifest::Sequence
       end
 
       def canvas_builder_factory
@@ -157,27 +157,27 @@ module IIIFManifest
       end
 
       def iiif_service_factory
-        IIIF::Service
+        IIIFManifest::ManifestBuilder::IIIFService
       end
 
       def iiif_resource_factory
-        IIIF::Presentation::Resource
+        IIIFManifest::ManifestBuilder::IIIFManifest::Resource
       end
 
       def iiif_annotation_factory
-        IIIF::Presentation::Annotation
+        IIIFManifest::ManifestBuilder::IIIFManifest::Annotation
       end
 
       def iiif_manifest_factory
-        IIIF::Presentation::Manifest
+        IIIFManifest::ManifestBuilder::IIIFManifest
       end
 
       def iiif_canvas_factory
-        IIIF::Presentation::Canvas
+        IIIFManifest::ManifestBuilder::IIIFManifest::Canvas
       end
 
       def iiif_range_factory
-        IIIF::Presentation::Range
+        IIIFManifest::ManifestBuilder::IIIFManifest::Range
       end
     end
 

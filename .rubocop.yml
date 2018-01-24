@@ -11,5 +11,9 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
 
+Naming/MethodName:
+  Exclude:
+    - 'lib/iiif_manifest/manifest_builder/iiif_service.rb'
+
 RSpec/MultipleExpectations:
   Enabled: false
