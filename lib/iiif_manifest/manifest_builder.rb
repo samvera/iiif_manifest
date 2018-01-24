@@ -1,3 +1,4 @@
+require_relative 'manifest_builder/iiif_service'
 require_relative 'manifest_builder/canvas_builder'
 require_relative 'manifest_builder/canvas_builder_factory'
 require_relative 'manifest_builder/child_manifest_builder_factory'
