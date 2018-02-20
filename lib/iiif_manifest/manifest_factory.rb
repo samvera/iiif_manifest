@@ -16,15 +16,21 @@ module IIIFManifest
 
     def new(work)
       if !work.work_presenters.empty?
-        if work.file_set_presenters.empty?
+        if sammelband?(work) || !work.file_set_presenters.empty?
+          sammelband_manifest_builder.new(work)
+        elsif work.file_set_presenters.empty?
           work = IIIFCollection.new(work)
           collection_manifest_builder.new(work)
-        elsif !work.file_set_presenters.empty?
-          sammelband_manifest_builder.new(work)
         end
       else
         manifest_builder.new(work)
       end
+    end
+
+    private
+
+    def sammelband?(work)
+      work.respond_to?(:sammelband?) && work.sammelband?
     end
   end
 end
