@@ -192,6 +192,66 @@ RSpec.describe IIIFManifest::ManifestFactory do
       end
     end
 
+    context 'when there is no search_service method' do
+      let(:file_presenter) { DisplayImagePresenter.new }
+
+      it 'does not have a service element' do
+        allow(IIIFManifest::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
+        allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
+        expect(result['service']).to eq nil
+      end
+    end
+
+    context 'when there is a search_service method' do
+      let(:search_service) { 'http://test.host/books/book-77/search' }
+
+      it 'has a service element with the correct profile, @id and without an embedded service element' do
+        allow(book_presenter).to receive(:search_service).and_return(search_service)
+        expect(result['service'][0]['profile']).to eq 'http://iiif.io/api/search/0/search'
+        expect(result['service'][0]['@id']).to eq 'http://test.host/books/book-77/search'
+        expect(result['service'][0]['service']).to eq nil
+      end
+    end
+
+    context 'when there is a search_service method that returns nil' do
+      let(:search_service) { '' }
+
+      it 'has no service' do
+        allow(book_presenter).to receive(:search_service).and_return(search_service)
+        expect(result['service']).to eq nil
+      end
+    end
+
+    context 'when there is an autocomplete_service method' do
+      let(:search_service) { 'http://test.host/books/book-77/search' }
+      let(:autocomplete_service) { 'http://test.host/books/book-77/autocomplete' }
+
+      it 'has a service element within the first service containing @id and profile for the autocomplete service' do
+        allow(book_presenter).to receive(:search_service).and_return(search_service)
+        allow(book_presenter).to receive(:autocomplete_service).and_return(autocomplete_service)
+        expect(result['service'][0]['service']['@id']).to eq 'http://test.host/books/book-77/autocomplete'
+        expect(result['service'][0]['service']['profile']).to eq 'http://iiif.io/api/search/0/autocomplete'
+      end
+    end
+
+    context 'when there is no autocomplete_service method' do
+      let(:search_service) { 'http://test.host/books/book-77/search' }
+
+      it 'has a service element within the first service' do
+        allow(book_presenter).to receive(:search_service).and_return(search_service)
+        expect(result['service'][0]['service']).to eq nil
+      end
+    end
+
+    context 'when there is an autocomplete_service method but no search service' do
+      let(:autocomplete_service) { 'http://test.host/books/book-77/autocomplete' }
+
+      it 'has a service element within the first service' do
+        allow(book_presenter).to receive(:autocomplete_service).and_return(autocomplete_service)
+        expect(result['service']).to eq nil
+      end
+    end
+
     context 'when there are child works' do
       let(:child_work_presenter) { presenter_class.new('test2') }
 
