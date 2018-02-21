@@ -237,6 +237,26 @@ RSpec.describe IIIFManifest::ManifestFactory do
       end
     end
 
+    context 'when there are child works AMD when the work identifies itself as a sammelband' do
+      let(:child_work_presenter) { presenter_class.new('test-99') }
+      let(:file_presenter) { DisplayImagePresenter.new }
+
+      before do
+        allow(book_presenter).to receive(:sammelband?).and_return(true)
+        allow(book_presenter).to receive(:work_presenters).and_return([child_work_presenter])
+        allow(child_work_presenter).to receive(:file_set_presenters).and_return([file_presenter])
+      end
+      it 'returns a IIIF Manifest' do
+        expect(result['@type']).to eq 'sc:Manifest'
+      end
+      it "doesn't build manifests" do
+        expect(result['manifests']).to eq nil
+      end
+      it 'builds sequences from all the child file sets' do
+        expect(result['sequences'].first['canvases'].length).to eq 1
+      end
+    end
+
     context 'when there is no viewing_direction method' do
       it 'does not have a viewingDirection element' do
         expect(result['viewingDirection']).to eq nil
