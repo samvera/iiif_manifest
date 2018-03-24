@@ -2,7 +2,7 @@ module IIIFManifest::V3
   class ManifestBuilder
      class IIIFService < IIIFManifest::ManifestBuilder::IIIFService
      end
-     
+
      class IIIFManifest < IIIFService
       def label
         inner_hash['label']
@@ -15,6 +15,11 @@ module IIIFManifest::V3
       def summary=(summary)
         return unless summary.present?
         inner_hash['summary'] = summary
+      end
+
+      def behavior=(behavior)
+        return unless behavior.present?
+        inner_hash['behavior'] = behavior
       end
 
       def viewing_direction=(viewing_direction)

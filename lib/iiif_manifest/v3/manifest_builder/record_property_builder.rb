@@ -6,7 +6,7 @@ module IIIFManifest::V3
         manifest['id'] = record.manifest_url.to_s
         manifest.label = record.to_s
         manifest.summary = record.description
-        manifest.viewing_hint = viewing_hint if viewing_hint.present?
+        manifest.behavior = viewing_hint if viewing_hint.present?
         manifest.viewing_direction = viewing_direction if viewing_direction.present?
         manifest.metadata = record.manifest_metadata if valid_metadata?
         manifest.service = services if search_service.present?

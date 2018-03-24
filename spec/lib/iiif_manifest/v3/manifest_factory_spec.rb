@@ -71,7 +71,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       expect(result.label).to eq book_presenter.to_s
     end
     it 'has an ID' do
-      expect(result['@id']).to eq 'http://test.host/books/book-77/manifest'
+      expect(result['id']).to eq 'http://test.host/books/book-77/manifest'
     end
 
     context 'when there are no files' do
@@ -102,7 +102,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(structure['viewingHint']).to eq 'top'
         expect(structure['canvases']).to be_blank
         expect(structure['ranges'].length).to eq 1
-        expect(structure['ranges'][0]).not_to eq structure['@id']
+        expect(structure['ranges'][0]).not_to eq structure['id']
 
         sub_range = result['structures'].last
         expect(sub_range['ranges']).to be_blank
@@ -205,10 +205,10 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     context 'when there is a search_service method' do
       let(:search_service) { 'http://test.host/books/book-77/search' }
 
-      it 'has a service element with the correct profile, @id and without an embedded service element' do
+      it 'has a service element with the correct profile, id and without an embedded service element' do
         allow(book_presenter).to receive(:search_service).and_return(search_service)
-        expect(result['service'][0]['profile']).to eq 'http://iiif.io/api/search/0/search'
-        expect(result['service'][0]['@id']).to eq 'http://test.host/books/book-77/search'
+        expect(result['service'][0]['profile']).to eq 'http://iiif.io/api/search/1/search'
+        expect(result['service'][0]['id']).to eq 'http://test.host/books/book-77/search'
         expect(result['service'][0]['service']).to eq nil
       end
     end
@@ -226,11 +226,11 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       let(:search_service) { 'http://test.host/books/book-77/search' }
       let(:autocomplete_service) { 'http://test.host/books/book-77/autocomplete' }
 
-      it 'has a service element within the first service containing @id and profile for the autocomplete service' do
+      it 'has a service element within the first service containing id and profile for the autocomplete service' do
         allow(book_presenter).to receive(:search_service).and_return(search_service)
         allow(book_presenter).to receive(:autocomplete_service).and_return(autocomplete_service)
-        expect(result['service'][0]['service']['@id']).to eq 'http://test.host/books/book-77/autocomplete'
-        expect(result['service'][0]['service']['profile']).to eq 'http://iiif.io/api/search/0/autocomplete'
+        expect(result['service'][0]['service']['id']).to eq 'http://test.host/books/book-77/autocomplete'
+        expect(result['service'][0]['service']['profile']).to eq 'http://iiif.io/api/search/1/autocomplete'
       end
     end
 
@@ -259,19 +259,19 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         allow(book_presenter).to receive(:work_presenters).and_return([child_work_presenter])
       end
       it 'returns a IIIF Collection' do
-        expect(result['@type']).to eq 'sc:Collection'
+        expect(result['type']).to eq 'Collection'
       end
       it "doesn't build sequences" do
         expect(result['sequences']).to eq nil
       end
       it 'has a multi-part viewing hint' do
-        expect(json_result['viewingHint']).to eq 'multi-part'
+        expect(json_result['behavior']).to eq 'multi-part'
       end
       it 'builds child manifests' do
         expect(result['manifests'].length).to eq 1
         first_child = result['manifests'].first
-        expect(first_child['@id']).to eq 'http://test.host/books/test2/manifest'
-        expect(first_child['@type']).to eq 'sc:Manifest'
+        expect(first_child['id']).to eq 'http://test.host/books/test2/manifest'
+        expect(first_child['type']).to eq 'Manifest'
         expect(first_child['label']).to eq child_work_presenter.to_s
       end
     end
@@ -287,7 +287,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         allow(child_work_presenter).to receive(:file_set_presenters).and_return([file_presenter2])
       end
       it 'returns a IIIF Manifest' do
-        expect(result['@type']).to eq 'sc:Manifest'
+        expect(result['type']).to eq 'Manifest'
       end
       it "doesn't build manifests" do
         expect(result['manifests']).to eq nil
@@ -307,7 +307,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         allow(child_work_presenter).to receive(:file_set_presenters).and_return([file_presenter])
       end
       it 'returns a IIIF Manifest' do
-        expect(result['@type']).to eq 'sc:Manifest'
+        expect(result['type']).to eq 'Manifest'
       end
       it "doesn't build manifests" do
         expect(result['manifests']).to eq nil
