@@ -75,8 +75,8 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     end
 
     context 'when there are no files' do
-      it 'returns no sequences' do
-        expect(result['sequences']).to eq nil
+      it 'returns no items' do
+        expect(result['items']).to eq nil
       end
     end
 
@@ -110,13 +110,13 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
     end
 
-    context 'when there is a no sequence_rendering method' do
+    context 'when there is no sequence_rendering method' do
       let(:file_presenter) { DisplayImagePresenter.new }
 
       it 'does not have a rendering on the sequence' do
         allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
-        expect(result['sequences'][0]['rendering']).to eq []
+        expect(result['rendering']).to eq []
       end
     end
 
@@ -157,7 +157,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
 
-        expect(result['sequences'][0]['rendering']).to eq [{
+        expect(result['rendering']).to eq [{
           '@id' => 'http://test.host/file_set/id/download', 'format' => 'application/pdf', 'label' => 'Download'
         }]
       end

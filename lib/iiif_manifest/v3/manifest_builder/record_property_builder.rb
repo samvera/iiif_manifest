@@ -10,9 +10,18 @@ module IIIFManifest::V3
         manifest.viewing_direction = viewing_direction if viewing_direction.present?
         manifest.metadata = record.manifest_metadata if valid_metadata?
         manifest.service = services if search_service.present?
+        manifest.rendering = populate_rendering
         manifest
       end
       # rubocop:enable Metrics/AbcSize
+
+      def populate_rendering
+        if record.respond_to?(:sequence_rendering)
+          record.sequence_rendering.each(&:to_h)
+        else
+          []
+        end
+      end
     end
   end
 end

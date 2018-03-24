@@ -55,6 +55,10 @@ module IIIFManifest::V3
         inner_hash['seeAlso'] = see_also
       end
 
+      def rendering=(rendering)
+        inner_hash['rendering'] = rendering
+      end
+
       def rights=(rights)
         inner_hash['rights'] = rights
       end
