@@ -91,6 +91,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
         expect(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to have_received(:new)
           .exactly(1).times.with(file_presenter, anything, anything)
+        expect(result['items'].length).to eq 1
       end
       it 'builds a structure if it can' do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
@@ -297,7 +298,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
     end
 
-    context 'when there are child works AMD when the work identifies itself as a sammelband' do
+    context 'when there are child works AND when the work identifies itself as a sammelband' do
       let(:child_work_presenter) { presenter_class.new('test-99') }
       let(:file_presenter) { DisplayImagePresenter.new }
 

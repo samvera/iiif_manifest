@@ -94,6 +94,10 @@ module IIIFManifest::V3
         IIIFManifest::V3::ManifestBuilder::IIIFService
       end
 
+      def iiif_resource_factory
+        IIIFManifest::V3::ManifestBuilder::IIIFManifest::Resource
+      end
+
       def iiif_annotation_factory
         IIIFManifest::V3::ManifestBuilder::IIIFManifest::Annotation
       end

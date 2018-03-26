@@ -1,9 +1,9 @@
 module IIIFManifest::V3
   class ManifestBuilder
     class CanvasBuilder < ::IIIFManifest::ManifestBuilder::CanvasBuilder
-      def apply(items)
-        return items if canvas.items.blank?
-        items += [canvas]
+      def apply(record)
+        return record if canvas.items.blank?
+        record.items += [canvas]
       end
 
       private

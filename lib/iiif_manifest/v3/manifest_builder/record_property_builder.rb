@@ -18,7 +18,7 @@ module IIIFManifest::V3
         manifest.service = services if search_service.present?
         manifest.rendering = populate_rendering
         # Build the items array
-        canvas_builder.apply(manifest.items)
+        canvas_builder.apply(manifest)
         manifest
       end
       # rubocop:enable Metrics/AbcSize

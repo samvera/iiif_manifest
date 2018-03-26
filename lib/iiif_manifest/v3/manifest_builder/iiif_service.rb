@@ -121,6 +121,17 @@ module IIIFManifest::V3
         end
       end
 
+      class Resource < IIIFService
+        def service=(service)
+          inner_hash['service'] = service
+        end
+
+        def initial_attributes
+          {
+          }
+        end
+      end
+
       class Annotation < IIIFService
         def body=(body)
           inner_hash['body'] = body
