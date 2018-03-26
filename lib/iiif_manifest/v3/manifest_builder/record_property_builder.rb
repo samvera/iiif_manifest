@@ -25,7 +25,11 @@ module IIIFManifest::V3
 
       def populate_rendering
         if record.respond_to?(:sequence_rendering)
-          record.sequence_rendering.each(&:to_h)
+          record.sequence_rendering.collect do |rendering|
+            sequence_rendering = rendering.to_h.except('@id')
+            sequence_rendering['id'] = rendering['@id']
+            sequence_rendering
+          end
         else
           []
         end
