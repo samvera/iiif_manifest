@@ -76,7 +76,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
     context 'when there are no files' do
       it 'returns no items' do
-        expect(result['items']).to eq nil
+        expect(result['items']).to eq []
       end
     end
 
@@ -295,6 +295,8 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
       it 'builds structures from all the child file sets' do
         expect(result['structures'].first['items'].length).to eq 2
+        expect(result['structures'].first['items'].first['type']).to eq 'Canvas'
+        expect(result['structures'].first['items'].second['type']).to eq 'Range'
       end
     end
 

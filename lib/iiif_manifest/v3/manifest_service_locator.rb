@@ -11,13 +11,6 @@ module IIIFManifest::V3
         )
       end
 
-      def sammelband_manifest_builders
-        composite_builder_factory.new(
-          record_property_builder,
-          composite_builder: composite_builder
-        )
-      end
-
       def collection_manifest_builders
         composite_builder_factory.new(
           record_property_builder,
@@ -35,7 +28,8 @@ module IIIFManifest::V3
           ManifestBuilder::RecordPropertyBuilder,
           iiif_search_service_factory: iiif_search_service_factory,
           iiif_autocomplete_service_factory: iiif_autocomplete_service_factory,
-          canvas_builder_factory: canvas_builder_factory
+          canvas_builder_factory: deep_canvas_builder_factory
+          # canvas_builder_factory: canvas_builder_factory
         )
       end
 

@@ -32,7 +32,7 @@ module IIIFManifest::V3
       end
 
       def items
-        inner_hash['items'] || []
+        inner_hash['items'] ||= []
       end
 
       def items=(items)
@@ -99,7 +99,7 @@ module IIIFManifest::V3
         end
 
         def items
-          inner_hash['items'] || []
+          inner_hash['items'] ||= []
         end
 
         def items=(items)
