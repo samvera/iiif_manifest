@@ -3,6 +3,7 @@ require_relative 'manifest_builder/canvas_builder'
 require_relative 'manifest_builder/record_property_builder'
 require_relative 'manifest_builder/image_builder'
 require_relative 'manifest_builder/resource_builder'
+require_relative 'manifest_builder/structure_builder'
 
 module IIIFManifest::V3
   class ManifestBuilder

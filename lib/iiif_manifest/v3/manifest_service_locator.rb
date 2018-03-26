@@ -39,6 +39,14 @@ module IIIFManifest::V3
         )
       end
 
+      def structure_builder
+        IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+          ManifestBuilder::StructureBuilder,
+          canvas_builder_factory: canvas_builder,
+          iiif_range_factory: iiif_range_factory
+        )
+      end
+
       def canvas_builder_factory
         IIIFManifest::ManifestBuilder::CanvasBuilderFactory.new(
           composite_builder: composite_builder,

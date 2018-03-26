@@ -96,16 +96,13 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
         allow(book_presenter.ranges[0].ranges[0]).to receive(:file_set_presenters).and_return([file_presenter])
 
-        expect(result['structures'].length).to eq 2
+        expect(result['structures'].length).to eq 1
         structure = result['structures'].first
         expect(structure['label']).to eq 'Table of Contents'
-        expect(structure['viewingHint']).to eq 'top'
-        expect(structure['items']).to be_blank
-        expect(structure['ranges'].length).to eq 1
-        expect(structure['ranges'][0]).not_to eq structure['id']
-
-        sub_range = result['structures'].last
-        expect(sub_range['ranges']).to be_blank
+        expect(structure['behavior']).to eq 'top'
+        expect(structure['items'].length).to eq 1
+        expect(structure['items'][0]['type']).to eq 'Range'
+        sub_range = structure['items'][0]
         expect(sub_range['items'].length).to eq 1
       end
     end
