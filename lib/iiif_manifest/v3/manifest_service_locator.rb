@@ -34,7 +34,39 @@ module IIIFManifest::V3
         IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
           ManifestBuilder::RecordPropertyBuilder,
           iiif_search_service_factory: iiif_search_service_factory,
-          iiif_autocomplete_service_factory: iiif_autocomplete_service_factory
+          iiif_autocomplete_service_factory: iiif_autocomplete_service_factory,
+          canvas_builder_factory: canvas_builder_factory
+        )
+      end
+
+      def canvas_builder_factory
+        IIIFManifest::ManifestBuilder::CanvasBuilderFactory.new(
+          composite_builder: composite_builder,
+          canvas_builder_factory: canvas_builder
+        )
+      end
+
+      def canvas_builder
+        IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+          ManifestBuilder::CanvasBuilder,
+          iiif_canvas_factory: iiif_canvas_factory,
+          image_builder: image_builder
+        )
+      end
+
+      def image_builder
+        IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+          ManifestBuilder::ImageBuilder,
+          iiif_annotation_factory: iiif_annotation_factory,
+          resource_builder_factory: resource_builder_factory
+        )
+      end
+
+      def resource_builder_factory
+        IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+          ManifestBuilder::ResourceBuilder,
+          iiif_resource_factory: iiif_resource_factory,
+          image_service_builder_factory: image_service_builder_factory
         )
       end
 
@@ -47,7 +79,7 @@ module IIIFManifest::V3
       end
 
       def sequence_factory
-        IIIFManifest::V3::ManifestBuilder::IIIFManifest::Sequence
+        raise NotImplementedError
       end
 
       def iiif_service_factory

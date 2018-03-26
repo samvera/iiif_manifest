@@ -100,13 +100,13 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         structure = result['structures'].first
         expect(structure['label']).to eq 'Table of Contents'
         expect(structure['viewingHint']).to eq 'top'
-        expect(structure['canvases']).to be_blank
+        expect(structure['items']).to be_blank
         expect(structure['ranges'].length).to eq 1
         expect(structure['ranges'][0]).not_to eq structure['id']
 
         sub_range = result['structures'].last
         expect(sub_range['ranges']).to be_blank
-        expect(sub_range['canvases'].length).to eq 1
+        expect(sub_range['items'].length).to eq 1
       end
     end
 
@@ -292,8 +292,11 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       it "doesn't build manifests" do
         expect(result['manifests']).to eq nil
       end
-      it 'builds sequences from all the child file sets' do
-        expect(result['sequences'].first['canvases'].length).to eq 2
+      it 'builds items array from all the child file sets' do
+        expect(result['items'].length).to eq 2
+      end
+      it 'builds structures from all the child file sets' do
+        expect(result['structures'].first['items'].length).to eq 2
       end
     end
 
@@ -312,8 +315,11 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       it "doesn't build manifests" do
         expect(result['manifests']).to eq nil
       end
-      it 'builds sequences from all the child file sets' do
-        expect(result['sequences'].first['canvases'].length).to eq 1
+      it 'builds items array from all the child file sets' do
+        expect(result['items'].length).to eq 1
+      end
+      it 'builds structures from all the child file sets' do
+        expect(result['structures'].first['items'].length).to eq 1
       end
     end
 
