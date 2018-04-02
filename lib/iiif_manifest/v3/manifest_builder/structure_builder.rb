@@ -23,7 +23,7 @@ module IIIFManifest::V3
         range['id'] = path
         range['label'] = record.label
         range['behavior'] = 'top' if top?
-        range['items'] = canvas_builders.map(&:path)
+        range['items'] = canvas_builders.collect {|cb| { 'id' => cb.path, 'type' => 'Canvas' } }
       end
 
       def sub_ranges

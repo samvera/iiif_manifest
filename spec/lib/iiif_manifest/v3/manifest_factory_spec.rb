@@ -48,8 +48,12 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     end
 
     class DisplayImagePresenter
+      def initialize(id: 'test-22')
+        @id = id
+      end
+
       def id
-        'test-22'
+        @id
       end
 
       def display_image
@@ -105,6 +109,8 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(structure['items'][0]['type']).to eq 'Range'
         sub_range = structure['items'][0]
         expect(sub_range['items'].length).to eq 1
+        expect(sub_range['items'][0]['type']).to eq 'Canvas'
+        expect(sub_range['items'][0]['id']).to eq 'http://test.host/books/book-77/manifest/canvas/test-22'
       end
     end
 
@@ -276,13 +282,15 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
     context 'when there are child works AND files' do
       let(:child_work_presenter) { presenter_class.new('test-99') }
-      let(:file_presenter) { DisplayImagePresenter.new }
-      let(:file_presenter2) { DisplayImagePresenter.new }
+      let(:file_presenter) { DisplayImagePresenter.new(id: 'test-22') }
+      let(:file_presenter2) { DisplayImagePresenter.new(id: 'test-33') }
 
       before do
         allow(book_presenter).to receive(:work_presenters).and_return([child_work_presenter])
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
         allow(child_work_presenter).to receive(:file_set_presenters).and_return([file_presenter2])
+        allow(child_work_presenter).to receive(:ranges).and_return([ManifestRange.new(label: 'Child Work', file_set_presenters: [file_presenter2])])
+        allow(book_presenter.ranges[0]).to receive(:ranges).and_return([ManifestRange.new(label: 'Chapter 1', file_set_presenters: [file_presenter])] + child_work_presenter.ranges)
       end
       it 'returns a IIIF Manifest' do
         expect(result['type']).to eq 'Manifest'
@@ -295,8 +303,10 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
       it 'builds structures from all the child file sets' do
         expect(result['structures'].first['items'].length).to eq 2
-        expect(result['structures'].first['items'].first['type']).to eq 'Canvas'
-        expect(result['structures'].first['items'].second['type']).to eq 'Range'
+        expect(result['structures'].first['items'][0]['items'].first['type']).to eq 'Canvas'
+        expect(result['structures'].first['items'][0]['items'].first['id']).to eq 'http://test.host/books/book-77/manifest/canvas/test-22'
+        expect(result['structures'].first['items'][1]['items'].first['type']).to eq 'Canvas'
+        expect(result['structures'].first['items'][1]['items'].first['id']).to eq 'http://test.host/books/book-77/manifest/canvas/test-33'
       end
     end
 
@@ -317,9 +327,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
       it 'builds items array from all the child file sets' do
         expect(result['items'].length).to eq 1
-      end
-      it 'builds structures from all the child file sets' do
-        expect(result['structures'].first['items'].length).to eq 1
       end
     end
 
