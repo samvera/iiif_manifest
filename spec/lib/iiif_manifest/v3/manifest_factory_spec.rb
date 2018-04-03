@@ -8,6 +8,8 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
   before do
     class Book
+      attr_reader :id
+
       def initialize(id)
         @id = id
       end
@@ -25,7 +27,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
 
       def manifest_url
-        "http://test.host/books/#{@id}/manifest"
+        "http://test.host/books/#{id}/manifest"
       end
 
       def ranges
@@ -48,12 +50,9 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     end
 
     class DisplayImagePresenter
+      attr_reader :id
       def initialize(id: 'test-22')
         @id = id
-      end
-
-      def id
-        @id
       end
 
       def display_image
@@ -129,6 +128,8 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       before do
         class Book
+          attr_reader :id
+
           def initialize(id)
             @id = id
           end
@@ -146,7 +147,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
           end
 
           def manifest_url
-            "http://test.host/books/#{@id}/manifest"
+            "http://test.host/books/#{id}/manifest"
           end
 
           def sequence_rendering
@@ -284,13 +285,15 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       let(:child_work_presenter) { presenter_class.new('test-99') }
       let(:file_presenter) { DisplayImagePresenter.new(id: 'test-22') }
       let(:file_presenter2) { DisplayImagePresenter.new(id: 'test-33') }
+      let(:chapter_1_range) { ManifestRange.new(label: 'Chapter 1', file_set_presenters: [file_presenter]) }
+      let(:child_work_range) { ManifestRange.new(label: 'Child Work', file_set_presenters: [file_presenter2]) }
 
       before do
         allow(book_presenter).to receive(:work_presenters).and_return([child_work_presenter])
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
         allow(child_work_presenter).to receive(:file_set_presenters).and_return([file_presenter2])
-        allow(child_work_presenter).to receive(:ranges).and_return([ManifestRange.new(label: 'Child Work', file_set_presenters: [file_presenter2])])
-        allow(book_presenter.ranges[0]).to receive(:ranges).and_return([ManifestRange.new(label: 'Chapter 1', file_set_presenters: [file_presenter])] + child_work_presenter.ranges)
+        allow(child_work_presenter).to receive(:ranges).and_return([child_work_range])
+        allow(book_presenter.ranges[0]).to receive(:ranges).and_return([chapter_1_range] + child_work_presenter.ranges)
       end
       it 'returns a IIIF Manifest' do
         expect(result['type']).to eq 'Manifest'
