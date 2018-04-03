@@ -67,10 +67,13 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       def display_image
         IIIFManifest::DisplayImage.new(id, width: 100, height: 100, format: 'image/jpeg')
+        # rubocop:disable Metrics/LineLength
         # TODO: write tests for #display_content both array of size 1 and array with size greater than 1
+        # TODO: write tests for audio, video, and image cases of DisplayContent
         # [IIIFManifest::V3::DisplayContent.new(id, type: 'Video', label: 'High', width: 100, height: 100, duration: 100, format: 'video/mp4'),
         #  IIIFManifest::V3::DisplayContent.new(id, type: 'Video', label: 'Medium', width: 100, height: 100, duration: 100, format: 'video/mp4'),
         #  IIIFManifest::V3::DisplayContent.new(id, type: 'Video', label: 'Low', width: 100, height: 100, duration: 100, format: 'video/mp4')]
+        # rubocop:enable Metrics/LineLength
       end
     end
   end

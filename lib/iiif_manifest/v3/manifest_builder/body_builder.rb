@@ -10,6 +10,14 @@ module IIIFManifest
         end
 
         def apply(annotation)
+          build_body
+          image_service_builder.apply(body) if iiif_endpoint
+          annotation.body = body
+        end
+
+        private
+
+        def build_body
           body['id'] = display_content.url
           body['type'] = display_content.type if display_content.try(:type)
           body['type'] ||= 'Image' # For backwards-compatibility
@@ -17,11 +25,7 @@ module IIIFManifest
           body['width'] = display_content.width if display_content.try(:width)
           body['duration'] = display_content.duration if display_content.try(:duration)
           body['format'] = display_content.format if display_content.format
-          image_service_builder.apply(body) if iiif_endpoint
-          annotation.body = body
         end
-
-        private
 
         def body
           @body ||= iiif_body_factory.new

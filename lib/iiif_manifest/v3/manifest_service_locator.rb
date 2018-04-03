@@ -76,14 +76,6 @@ module IIIFManifest
           )
         end
 
-        # def image_builder
-        #   IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
-        #     ManifestBuilder::ImageBuilder,
-        #     iiif_annotation_factory: iiif_annotation_factory,
-        #     body_builder_factory: body_builder_factory
-        #   )
-        # end
-
         def body_builder_factory
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
             ManifestBuilder::BodyBuilder,

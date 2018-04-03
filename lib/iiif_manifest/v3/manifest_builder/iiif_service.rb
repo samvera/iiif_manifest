@@ -165,7 +165,7 @@ module IIIFManifest
 
           def initial_attributes
             {
-              'type' => 'AnnotationPage',
+              'type' => 'AnnotationPage'
             }
           end
         end

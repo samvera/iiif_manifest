@@ -2,9 +2,15 @@ module IIIFManifest
   module V3
     class ManifestBuilder
       class CanvasBuilder
-        attr_reader :record, :parent, :iiif_canvas_factory, :content_builder, :choice_builder, :iiif_annotation_page_factory
+        attr_reader :record, :parent, :iiif_canvas_factory, :content_builder,
+                    :choice_builder, :iiif_annotation_page_factory
 
-        def initialize(record, parent, iiif_canvas_factory:, content_builder:, choice_builder:, iiif_annotation_page_factory:)
+        def initialize(record,
+                       parent,
+                       iiif_canvas_factory:,
+                       content_builder:,
+                       choice_builder:,
+                       iiif_annotation_page_factory:)
           @record = record
           @parent = parent
           @iiif_canvas_factory = iiif_canvas_factory
