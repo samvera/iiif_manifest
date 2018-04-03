@@ -60,7 +60,6 @@ module IIIFManifest
           if display_content.size == 1
             content_builder.new(display_content.first).apply(canvas)
           else
-            byebug
             choice_builder.new(display_content).apply(canvas)
           end
         end

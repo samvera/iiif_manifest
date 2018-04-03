@@ -1,6 +1,7 @@
 require_relative 'manifest_builder/iiif_service'
 require_relative 'manifest_builder/canvas_builder'
 require_relative 'manifest_builder/record_property_builder'
+require_relative 'manifest_builder/choice_builder'
 require_relative 'manifest_builder/content_builder'
 require_relative 'manifest_builder/body_builder'
 require_relative 'manifest_builder/structure_builder'

@@ -54,7 +54,7 @@ module IIIFManifest
             ManifestBuilder::CanvasBuilder,
             iiif_canvas_factory: iiif_canvas_factory,
             content_builder: content_builder,
-            choice_builder: nil,
+            choice_builder: choice_builder,
             iiif_annotation_page_factory: iiif_annotation_page_factory
           )
         end
@@ -71,7 +71,8 @@ module IIIFManifest
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
             ManifestBuilder::ChoiceBuilder,
             iiif_annotation_factory: iiif_annotation_factory,
-            body_builder_factory: body_builder_factory
+            body_builder_factory: body_builder_factory,
+            iiif_choice_factory: iiif_choice_factory
           )
         end
 
@@ -109,6 +110,10 @@ module IIIFManifest
 
         def iiif_body_factory
           IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body
+        end
+
+        def iiif_choice_factory
+          IIIFManifest::V3::ManifestBuilder::IIIFManifest::Choice
         end
 
         def iiif_annotation_factory

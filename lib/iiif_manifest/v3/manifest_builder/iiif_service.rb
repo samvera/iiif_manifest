@@ -133,6 +133,23 @@ module IIIFManifest
           end
         end
 
+        class Choice < IIIFService
+          def items
+            inner_hash['items'] ||= []
+          end
+
+          def items=(items)
+            inner_hash['items'] = items
+          end
+
+          def initial_attributes
+            {
+              'type' => 'Choice',
+              'choiceHint' => 'user'
+            }
+          end
+        end
+
         class AnnotationPage < IIIFService
           def items
             inner_hash['items'] ||= []

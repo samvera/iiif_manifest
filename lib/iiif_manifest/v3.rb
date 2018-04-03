@@ -8,5 +8,6 @@ module IIIFManifest
     autoload :ManifestBuilder
     autoload :ManifestFactory
     autoload :ManifestServiceLocator
+    autoload :DisplayContent
   end
 end
