@@ -8,10 +8,11 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
   before do
     class Book
-      attr_reader :id
+      attr_reader :id, :label
 
-      def initialize(id)
+      def initialize(id, label: 'A good book')
         @id = id
+        @label = label
       end
 
       def description
@@ -28,6 +29,10 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       def manifest_url
         "http://test.host/books/#{id}/manifest"
+      end
+
+      def to_s
+        label
       end
 
       def ranges
@@ -50,9 +55,14 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     end
 
     class DisplayImagePresenter
-      attr_reader :id
-      def initialize(id: 'test-22')
+      attr_reader :id, :label
+      def initialize(id: 'test-22', label: 'Page 1')
         @id = id
+        @label = label
+      end
+
+      def to_s
+        label
       end
 
       def display_image
@@ -71,7 +81,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     let(:json_result) { JSON.parse(subject.to_h.to_json) }
 
     it 'has a label' do
-      expect(result.label).to eq book_presenter.to_s
+      expect(result.label).to eq 'A good book'
     end
     it 'has an ID' do
       expect(result['id']).to eq 'http://test.host/books/book-77/manifest'
@@ -273,7 +283,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     end
 
     context 'when there are child works' do
-      let(:child_work_presenter) { presenter_class.new('test2') }
+      let(:child_work_presenter) { presenter_class.new('test2', label: 'Inner book') }
 
       before do
         allow(book_presenter).to receive(:work_presenters).and_return([child_work_presenter])
@@ -292,14 +302,14 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         first_child = result['manifests'].first
         expect(first_child['id']).to eq 'http://test.host/books/test2/manifest'
         expect(first_child['type']).to eq 'Manifest'
-        expect(first_child['label']).to eq child_work_presenter.to_s
+        expect(first_child['label']).to eq 'Inner book'
       end
     end
 
     context 'when there are child works AND files' do
       let(:child_work_presenter) { presenter_class.new('test-99') }
       let(:file_presenter) { DisplayImagePresenter.new(id: 'test-22') }
-      let(:file_presenter2) { DisplayImagePresenter.new(id: 'test-33') }
+      let(:file_presenter2) { DisplayImagePresenter.new(id: 'test-33', label: 'Page 2') }
       let(:chapter_1_range) { ManifestRange.new(label: 'Chapter 1', file_set_presenters: [file_presenter]) }
       let(:child_work_range) { ManifestRange.new(label: 'Child Work', file_set_presenters: [file_presenter2]) }
 
