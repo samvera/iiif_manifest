@@ -53,7 +53,8 @@ module IIIFManifest
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
             ManifestBuilder::CanvasBuilder,
             iiif_canvas_factory: iiif_canvas_factory,
-            image_builder: image_builder
+            image_builder: image_builder,
+            iiif_annotation_page_factory: iiif_annotation_page_factory
           )
         end
 
@@ -95,6 +96,10 @@ module IIIFManifest
 
         def iiif_annotation_factory
           IIIFManifest::V3::ManifestBuilder::IIIFManifest::Annotation
+        end
+
+        def iiif_annotation_page_factory
+          IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage
         end
 
         def iiif_manifest_factory

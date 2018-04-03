@@ -6,7 +6,8 @@ module IIIFManifest
           annotation['target'] = canvas['id']
           canvas['width'] = annotation.body['width']
           canvas['height'] = annotation.body['height']
-          canvas.items += [annotation]
+          # Assume first item in canvas is an annotation page
+          canvas.items.first.items += [annotation]
         end
       end
     end

@@ -133,6 +133,26 @@ module IIIFManifest
           end
         end
 
+        class AnnotationPage < IIIFService
+          def items
+            inner_hash['items'] ||= []
+          end
+
+          def items=(items)
+            inner_hash['items'] = items
+          end
+
+          def index
+            @index ||= SecureRandom.uuid
+          end
+
+          def initial_attributes
+            {
+              'type' => 'AnnotationPage',
+            }
+          end
+        end
+
         class Annotation < IIIFService
           def body=(body)
             inner_hash['body'] = body

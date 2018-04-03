@@ -95,6 +95,21 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to have_received(:new)
           .exactly(1).times.with(file_presenter, anything, anything)
         expect(result['items'].length).to eq 1
+        expect(result['items'].first['type']).to eq 'Canvas'
+        expect(result['items'].first['id']).to eq 'http://test.host/books/book-77/manifest/canvas/test-22'
+        expect(result['items'].first['height']).to eq 100
+        expect(result['items'].first['width']).to eq 100
+        expect(result['items'].first['items'].first['type']).to eq 'AnnotationPage'
+        expect(result['items'].first['items'].first['id']).not_to be_empty
+        expect(result['items'].first['items'].first['items'].length).to eq 1
+        expect(result['items'].first['items'].first['items'].first['type']).to eq 'Annotation'
+        expect(result['items'].first['items'].first['items'].first['motivation']).to eq 'painting'
+        expect(result['items'].first['items'].first['items'].first['target']).to eq result['items'].first['id']
+        expect(result['items'].first['items'].first['items'].first['body']['type']).to eq 'Image'
+        expect(result['items'].first['items'].first['items'].first['body']['id']).not_to be_empty
+        expect(result['items'].first['items'].first['items'].first['body']['height']).to eq 100
+        expect(result['items'].first['items'].first['items'].first['body']['width']).to eq 100
+        expect(result['items'].first['items'].first['items'].first['body']['format']).to eq 'image/jpeg'
       end
       it 'builds a structure if it can' do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
@@ -158,7 +173,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         end
       end
 
-      it 'has a rendering on the sequence' do
+      it 'has a rendering on the canvas' do
         allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
 
