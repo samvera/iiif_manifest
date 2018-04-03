@@ -53,23 +53,40 @@ module IIIFManifest
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
             ManifestBuilder::CanvasBuilder,
             iiif_canvas_factory: iiif_canvas_factory,
-            image_builder: image_builder,
+            content_builder: content_builder,
+            choice_builder: nil,
             iiif_annotation_page_factory: iiif_annotation_page_factory
           )
         end
 
-        def image_builder
+        def content_builder
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
-            ManifestBuilder::ImageBuilder,
+            ManifestBuilder::ContentBuilder,
             iiif_annotation_factory: iiif_annotation_factory,
-            resource_builder_factory: resource_builder_factory
+            body_builder_factory: body_builder_factory
           )
         end
 
-        def resource_builder_factory
+        def choice_builder
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
-            ManifestBuilder::ResourceBuilder,
-            iiif_resource_factory: iiif_resource_factory,
+            ManifestBuilder::ChoiceBuilder,
+            iiif_annotation_factory: iiif_annotation_factory,
+            body_builder_factory: body_builder_factory
+          )
+        end
+
+        # def image_builder
+        #   IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+        #     ManifestBuilder::ImageBuilder,
+        #     iiif_annotation_factory: iiif_annotation_factory,
+        #     body_builder_factory: body_builder_factory
+        #   )
+        # end
+
+        def body_builder_factory
+          IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+            ManifestBuilder::BodyBuilder,
+            iiif_body_factory: iiif_body_factory,
             image_service_builder_factory: image_service_builder_factory
           )
         end
@@ -90,8 +107,8 @@ module IIIFManifest
           IIIFManifest::V3::ManifestBuilder::IIIFService
         end
 
-        def iiif_resource_factory
-          IIIFManifest::V3::ManifestBuilder::IIIFManifest::Resource
+        def iiif_body_factory
+          IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body
         end
 
         def iiif_annotation_factory

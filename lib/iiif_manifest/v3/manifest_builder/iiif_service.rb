@@ -122,7 +122,7 @@ module IIIFManifest
           end
         end
 
-        class Resource < IIIFService
+        class Body < IIIFService
           def service=(service)
             inner_hash['service'] = service
           end
