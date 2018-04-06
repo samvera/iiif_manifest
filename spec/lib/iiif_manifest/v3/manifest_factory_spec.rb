@@ -68,8 +68,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       def display_image
         IIIFManifest::DisplayImage.new(id, width: 100, height: 100, format: 'image/jpeg')
         # rubocop:disable Metrics/LineLength
-        # TODO: write tests for #display_content both array of size 1 and array with size greater than 1
-        # TODO: write tests for audio, video, and image cases of DisplayContent
         # [IIIFManifest::V3::DisplayContent.new(id, type: 'Video', label: 'High', width: 100, height: 100, duration: 100, format: 'video/mp4'),
         #  IIIFManifest::V3::DisplayContent.new(id, type: 'Video', label: 'Medium', width: 100, height: 100, duration: 100, format: 'video/mp4'),
         #  IIIFManifest::V3::DisplayContent.new(id, type: 'Video', label: 'Low', width: 100, height: 100, duration: 100, format: 'video/mp4')]
@@ -103,7 +101,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     context 'when there is a fileset' do
       let(:file_presenter) { DisplayImagePresenter.new }
 
-      it 'returns a sequence' do
+      it 'returns items' do
         allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
 
@@ -375,6 +373,89 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       it 'has a viewingDirection' do
         allow(book_presenter).to receive(:viewing_direction).and_return('right-to-left')
         expect(result.viewingDirection).to eq 'right-to-left'
+      end
+    end
+
+    context 'when there is display_content' do
+      before do
+        class DisplayContentPresenter
+          attr_reader :id, :label, :content
+          def initialize(id: 'test-22', label: 'Section 1', content:)
+            @id = id
+            @label = label
+            @content = content
+          end
+
+          def to_s
+            label
+          end
+
+          def display_content
+            content
+          end
+        end
+      end
+
+      after do
+        Object.send(:remove_const, :DisplayContentPresenter)
+      end
+
+      let(:file_presenter) { DisplayContentPresenter.new(content: content) }
+      let(:content_annotation_body) { result['items'].first['items'].first['items'].first["body"] }
+
+      before do
+        allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
+        allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
+        allow(file_presenter).to receive(:respond_to?).with(:display_image).and_return(false)
+        allow(file_presenter).to receive(:respond_to?).with(:display_content).and_call_original
+        expect(file_presenter).not_to receive(:display_image)
+      end
+
+      context 'with a DisplayImage' do
+        let(:content) { IIIFManifest::DisplayImage.new(SecureRandom.uuid, width: 100, height: 100, format: 'image/jpeg') }
+
+        it 'returns items' do
+          expect(content_annotation_body['type']).to eq 'Image'
+          expect(content_annotation_body['id']).not_to be_empty
+          expect(content_annotation_body['height']).to eq 100
+          expect(content_annotation_body['width']).to eq 100
+          expect(content_annotation_body['format']).to eq 'image/jpeg'
+        end
+      end
+
+      context 'with a single file' do
+        let(:content) { IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Video', label: 'High', width: 100, height: 100, duration: 100, format: 'video/mp4') }
+
+        it 'returns items' do
+          expect(content_annotation_body['type']).to eq 'Video'
+          expect(content_annotation_body['id']).not_to be_empty
+          expect(content_annotation_body['height']).to eq 100
+          expect(content_annotation_body['width']).to eq 100
+          expect(content_annotation_body['format']).to eq 'video/mp4'
+          expect(content_annotation_body['duration']).to eq 100
+          expect(content_annotation_body['label']).to eq 'High'
+        end
+      end
+
+      context 'with multiple files' do
+        let(:content) { [IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Video', label: 'High', width: 100, height: 100, duration: 100, format: 'video/mp4'),
+                         IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Video', label: 'Medium', width: 100, height: 100, duration: 100, format: 'video/mp4'),
+                         IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Video', label: 'Low', width: 100, height: 100, duration: 100, format: 'video/mp4')] }
+
+        it 'returns items' do
+          expect(content_annotation_body['type']).to eq 'Choice'
+          expect(content_annotation_body['choiceHint']).to eq 'user'
+          expect(content_annotation_body.items.size).to eq 3
+          content_annotation_body.items.each do |choice|
+            expect(choice['type']).to eq 'Video'
+            expect(choice['id']).not_to be_empty
+            expect(choice['width']).to eq 100
+            expect(choice['height']).to eq 100
+            expect(choice['format']).to eq 'video/mp4'
+            expect(choice['duration']).to eq 100
+            expect(choice['label']).not_to be_empty
+          end
+        end
       end
     end
   end

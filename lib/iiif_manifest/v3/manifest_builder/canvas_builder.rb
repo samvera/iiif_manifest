@@ -44,7 +44,7 @@ module IIIFManifest
         end
 
         def display_content
-          record.display_content if record.respond_to?(:display_content)
+          Array.wrap(record.display_content) if record.respond_to?(:display_content)
         end
 
         def apply_record_properties
