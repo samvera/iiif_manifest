@@ -19,8 +19,7 @@ module IIIFManifest
 
         def build_body
           body['id'] = display_content.url
-          body['type'] = display_content.type if display_content.try(:type)
-          body['type'] ||= 'Image' # For backwards-compatibility
+          body['type'] = body_type
           body['height'] = display_content.height if display_content.try(:height)
           body['width'] = display_content.width if display_content.try(:width)
           body['duration'] = display_content.duration if display_content.try(:duration)
@@ -30,6 +29,10 @@ module IIIFManifest
 
         def body
           @body ||= iiif_body_factory.new
+        end
+
+        def body_type
+          display_content.try(:type) || 'Image'
         end
 
         def iiif_endpoint

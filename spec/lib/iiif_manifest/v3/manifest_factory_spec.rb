@@ -394,6 +394,9 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
             content
           end
         end
+
+        allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
+        allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
       end
 
       after do
@@ -401,18 +404,14 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
 
       let(:file_presenter) { DisplayContentPresenter.new(content: content) }
-      let(:content_annotation_body) { result['items'].first['items'].first['items'].first["body"] }
-
-      before do
-        allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
-        allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
-        allow(file_presenter).to receive(:respond_to?).with(:display_image).and_return(false)
-        allow(file_presenter).to receive(:respond_to?).with(:display_content).and_call_original
-        expect(file_presenter).not_to receive(:display_image)
-      end
+      let(:content_annotation_body) { result['items'].first['items'].first['items'].first['body'] }
 
       context 'with a DisplayImage' do
-        let(:content) { IIIFManifest::DisplayImage.new(SecureRandom.uuid, width: 100, height: 100, format: 'image/jpeg') }
+        let(:content) do
+          IIIFManifest::DisplayImage.new(SecureRandom.uuid, width: 100,
+                                                            height: 100,
+                                                            format: 'image/jpeg')
+        end
 
         it 'returns items' do
           expect(content_annotation_body['type']).to eq 'Image'
@@ -424,7 +423,14 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
 
       context 'with a single file' do
-        let(:content) { IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Video', label: 'High', width: 100, height: 100, duration: 100, format: 'video/mp4') }
+        let(:content) do
+          IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, width: 100,
+                                                                  height: 100,
+                                                                  duration: 100,
+                                                                  type: 'Video',
+                                                                  format: 'video/mp4',
+                                                                  label: 'High')
+        end
 
         it 'returns items' do
           expect(content_annotation_body['type']).to eq 'Video'
@@ -438,9 +444,26 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
 
       context 'with multiple files' do
-        let(:content) { [IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Video', label: 'High', width: 100, height: 100, duration: 100, format: 'video/mp4'),
-                         IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Video', label: 'Medium', width: 100, height: 100, duration: 100, format: 'video/mp4'),
-                         IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Video', label: 'Low', width: 100, height: 100, duration: 100, format: 'video/mp4')] }
+        let(:content) do
+          [IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Video',
+                                                                   label: 'High',
+                                                                   width: 100,
+                                                                   height: 100,
+                                                                   duration: 100,
+                                                                   format: 'video/mp4'),
+           IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Video',
+                                                                   label: 'Medium',
+                                                                   width: 100,
+                                                                   height: 100,
+                                                                   duration: 100,
+                                                                   format: 'video/mp4'),
+           IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Video',
+                                                                   label: 'Low',
+                                                                   width: 100,
+                                                                   height: 100,
+                                                                   duration: 100,
+                                                                   format: 'video/mp4')]
+        end
 
         it 'returns items' do
           expect(content_annotation_body['type']).to eq 'Choice'

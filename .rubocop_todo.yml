@@ -47,6 +47,7 @@ RSpec/ExampleLength:
   Exclude:
     - 'spec/lib/iiif_manifest/manifest_factory_spec.rb'
     - 'spec/lib/iiif_manifest/v3/manifest_factory_spec.rb'
+    - 'spec/lib/iiif_manifest/v3/manifest_builder/body_builder_spec.rb'
 
 # Offense count: 20
 Style/Documentation:
@@ -108,3 +109,8 @@ Metrics/ParameterLists:
   Exclude:
     - 'lib/iiif_manifest/v3/display_content.rb'
     - 'lib/iiif_manifest/v3/manifest_builder/canvas_builder.rb'
+
+RSpec/NestedGroups:
+  Exclude:
+    - 'spec/lib/iiif_manifest/v3/manifest_factory_spec.rb'
+    - 'spec/lib/iiif_manifest/v3/manifest_builder/body_builder_spec.rb'

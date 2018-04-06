@@ -57,7 +57,13 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
 
     context 'with display content' do
       context 'with image content' do
-        let(:display_content) { IIIFManifest::V3::DisplayContent.new(url, width: 640, height: 480, type: 'Image', format: 'image/jpeg', label: 'full') }
+        let(:display_content) do
+          IIIFManifest::V3::DisplayContent.new(url, width: 640,
+                                                    height: 480,
+                                                    type: 'Image',
+                                                    format: 'image/jpeg',
+                                                    label: 'full')
+        end
 
         it 'sets a body on the annotation' do
           subject
@@ -73,7 +79,12 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
       end
 
       context 'with audio content' do
-        let(:display_content) { IIIFManifest::V3::DisplayContent.new(url, duration: 1000, type: 'Audio', label: 'Track 1', format: 'audio/aac') }
+        let(:display_content) do
+          IIIFManifest::V3::DisplayContent.new(url, duration: 1000,
+                                                    type: 'Audio',
+                                                    format: 'audio/aac',
+                                                    label: 'Track 1')
+        end
 
         it 'sets a body on the annotation' do
           subject
@@ -89,7 +100,14 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
       end
 
       context 'with video content' do
-        let(:display_content) { IIIFManifest::V3::DisplayContent.new(url, width: 640, height: 480, duration: 1000, type: 'Video', label: 'Reel 1', format: 'video/mp4') }
+        let(:display_content) do
+          IIIFManifest::V3::DisplayContent.new(url, width: 640,
+                                                    height: 480,
+                                                    duration: 1000,
+                                                    type: 'Video',
+                                                    format: 'video/mp4',
+                                                    label: 'Reel 1')
+        end
 
         it 'sets a body on the annotation' do
           subject
