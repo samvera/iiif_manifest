@@ -209,21 +209,33 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     end
 
     context 'when there is a manifest_metadata method' do
-      let(:metadata) { [{ 'label' => 'Title', 'value' => 'Title of the Item' }] }
+      context 'that returns invalid data' do
+        let(:metadata) { 'invalid data' }
 
-      it 'has metadata' do
-        allow(book_presenter).to receive(:manifest_metadata).and_return(metadata)
-        expect(result['metadata'][0]['label']).to eq 'Title'
-        expect(result['metadata'][0]['value']).to eq 'Title of the Item'
+        it 'has no metadata' do
+          allow(book_presenter).to receive(:manifest_metadata).and_return(metadata)
+          expect(result['metadata']).to eq nil
+        end
       end
-    end
 
-    context 'when there is a manifest_metadata method with invalid data' do
-      let(:metadata) { 'invalid data' }
+      context 'that returns presentation 2 style metadata' do
+        let(:metadata) { [{ 'label' => 'Title', 'value' => 'Title of the Item' }] }
 
-      it 'has no metadata' do
-        allow(book_presenter).to receive(:manifest_metadata).and_return(metadata)
-        expect(result['metadata']).to eq nil
+        it 'has metadata' do
+          allow(book_presenter).to receive(:manifest_metadata).and_return(metadata)
+          expect(result['metadata'][0]['label']).to eq('@none' => ['Title'])
+          expect(result['metadata'][0]['value']).to eq('@none' => ['Title of the Item'])
+        end
+      end
+
+      context 'that returns presentation 3 style metadata' do
+        let(:metadata) { [{ 'label' => { '@en' => ['Title'] }, 'value' => { '@en' => ['Title of the Item'] } }] }
+
+        it 'has metadata' do
+          allow(book_presenter).to receive(:manifest_metadata).and_return(metadata)
+          expect(result['metadata'][0]['label']).to eq('@en' => ['Title'])
+          expect(result['metadata'][0]['value']).to eq('@en' => ['Title of the Item'])
+        end
       end
     end
 
