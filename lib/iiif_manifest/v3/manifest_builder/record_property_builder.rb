@@ -95,8 +95,8 @@ module IIIFManifest
           { '@none' => Array(obj) }
         end
 
-        def transform_hash_value(h)
-          { h['@language'] => Array(h['@value']) }
+        def transform_hash_value(hash)
+          { hash['@language'] => Array(hash['@value']) }
         end
       end
     end

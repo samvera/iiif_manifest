@@ -209,7 +209,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     end
 
     context 'when there is a manifest_metadata method' do
-      context 'that returns invalid data' do
+      context 'with invalid data' do
         let(:metadata) { 'invalid data' }
 
         it 'has no metadata' do
@@ -218,7 +218,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         end
       end
 
-      context 'that returns presentation 2 style metadata' do
+      context 'with presentation 2 style metadata' do
         let(:metadata) { [{ 'label' => 'Title', 'value' => 'Title of the Item' }] }
 
         it 'has metadata' do
@@ -228,7 +228,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         end
       end
 
-      context 'that returns presentation 3 style metadata' do
+      context 'with presentation 3 style metadata' do
         let(:metadata) { [{ 'label' => { '@en' => ['Title'] }, 'value' => { '@en' => ['Title of the Item'] } }] }
 
         it 'has metadata' do
