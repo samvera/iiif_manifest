@@ -84,6 +84,13 @@ module IIIFManifest
           )
         end
 
+        def image_service_builder_factory
+          IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+            ManifestBuilder::ImageServiceBuilder,
+            iiif_service_factory: iiif_service_factory
+          )
+        end
+
         def sequence_builder
           raise NotImplementedError
         end

@@ -83,6 +83,7 @@ Style/Documentation:
     - 'lib/iiif_manifest/v3/manifest_builder/content_builder.rb'
     - 'lib/iiif_manifest/v3/manifest_builder/body_builder.rb'
     - 'lib/iiif_manifest/v3/manifest_builder/record_property_builder.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/image_service_builder.rb'
     - 'lib/iiif_manifest/v3/manifest_builder.rb'
     - 'lib/iiif_manifest/v3/manifest_service_locator.rb'
     - 'spec/lib/iiif_manifest/manifest_factory_spec.rb'
