@@ -11,6 +11,10 @@ Metrics/AbcSize:
   Exclude:
     - 'lib/iiif_manifest/manifest_builder/resource_builder.rb'
     - 'lib/iiif_manifest/manifest_factory.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/body_builder.rb'
+    - 'lib/iiif_manifest/v3/manifest_factory.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/content_builder.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/choice_builder.rb'
 
 # Offense count: 1
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
@@ -31,6 +35,7 @@ RSpec/NamedSubject:
     - 'spec/lib/iiif_manifest/display_image_spec.rb'
     - 'spec/lib/iiif_manifest/iiif_endpoint_spec.rb'
     - 'spec/lib/iiif_manifest/manifest_builder/resource_builder_spec.rb'
+    - 'spec/lib/iiif_manifest/v3/manifest_builder/body_builder_spec.rb'
 
 # Offense count: 1
 # Configuration parameters: IgnoreSymbolicNames.
@@ -41,6 +46,8 @@ RSpec/VerifiedDoubles:
 RSpec/ExampleLength:
   Exclude:
     - 'spec/lib/iiif_manifest/manifest_factory_spec.rb'
+    - 'spec/lib/iiif_manifest/v3/manifest_factory_spec.rb'
+    - 'spec/lib/iiif_manifest/v3/manifest_builder/body_builder_spec.rb'
 
 # Offense count: 20
 Style/Documentation:
@@ -66,7 +73,21 @@ Style/Documentation:
     - 'lib/iiif_manifest/manifest_service_locator.rb'
     - 'lib/iiif_manifest.rb'
     - 'lib/iiif_manifest/manifest_builder/iiif_service.rb'
+    - 'lib/iiif_manifest/v3.rb'
+    - 'lib/iiif_manifest/v3/display_content.rb'
+    - 'lib/iiif_manifest/v3/manifest_factory.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/structure_builder.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/iiif_service.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/canvas_builder.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/choice_builder.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/content_builder.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/body_builder.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/record_property_builder.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/image_service_builder.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder.rb'
+    - 'lib/iiif_manifest/v3/manifest_service_locator.rb'
     - 'spec/lib/iiif_manifest/manifest_factory_spec.rb'
+    - 'spec/lib/iiif_manifest/v3/manifest_factory_spec.rb'
 
 # Offense count: 1
 Style/MethodMissing:
@@ -76,6 +97,7 @@ Style/MethodMissing:
 Metrics/ClassLength:
   Exclude:
     - 'lib/iiif_manifest/manifest_service_locator.rb'
+    - 'lib/iiif_manifest/v3/manifest_service_locator.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -83,3 +105,13 @@ Metrics/ClassLength:
 # SupportedStyles: percent, brackets
 Style/SymbolArray:
   EnforcedStyle: brackets
+
+Metrics/ParameterLists:
+  Exclude:
+    - 'lib/iiif_manifest/v3/display_content.rb'
+    - 'lib/iiif_manifest/v3/manifest_builder/canvas_builder.rb'
+
+RSpec/NestedGroups:
+  Exclude:
+    - 'spec/lib/iiif_manifest/v3/manifest_factory_spec.rb'
+    - 'spec/lib/iiif_manifest/v3/manifest_builder/body_builder_spec.rb'

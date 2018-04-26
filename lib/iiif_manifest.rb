@@ -11,4 +11,5 @@ module IIIFManifest
   autoload :DisplayImage
   autoload :IIIFCollection
   autoload :IIIFEndpoint
+  autoload :V3
 end
