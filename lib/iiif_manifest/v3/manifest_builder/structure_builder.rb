@@ -17,6 +17,15 @@ module IIIFManifest
           sub_ranges.map do |sub_range|
             sub_range.apply(range['items'])
           end
+          range_items.map do |range_item|
+            if range_item.nil?
+              next
+            elsif range_item.is_a? Hash
+              range['items'] << range_item
+            else
+              range_item.apply(range['items'])
+            end
+          end
           manifest
         end
 
@@ -24,7 +33,7 @@ module IIIFManifest
           range['id'] = path
           range['label'] = record.label
           range['behavior'] = 'top' if top?
-          range['items'] = canvas_builders.collect { |cb| { 'id' => cb.path, 'type' => 'Canvas' } }
+          range['items'] = canvas_builders.collect { |cb| { 'type' => 'Canvas', 'id' => cb.path } }
         end
 
         def sub_ranges
@@ -35,6 +44,25 @@ module IIIFManifest
               canvas_builder_factory: canvas_builder_factory,
               iiif_range_factory: iiif_range_factory
             )
+          end
+        end
+
+        def range_items
+          @range_items ||= record.items.map do |range_item|
+            # Determine if this item is a range or canvas
+            if range_item.respond_to? :id
+              canvas_builder = canvas_builder_factory.new(range_item, parent)
+              { 'type' => 'Canvas', 'id' => canvas_builder.path }
+            elsif range_item.respond_to? :label
+              RangeBuilder.new(
+                range_item,
+                parent,
+                canvas_builder_factory: canvas_builder_factory,
+                iiif_range_factory: iiif_range_factory
+              )
+            else
+              nil # Throw an error?
+            end
           end
         end
       end
