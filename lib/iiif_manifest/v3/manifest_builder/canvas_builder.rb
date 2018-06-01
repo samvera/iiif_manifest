@@ -29,7 +29,8 @@ module IIIFManifest
         end
 
         def path
-          "#{parent.manifest_url}/canvas/#{record.id}"
+          path = "#{parent.manifest_url}/canvas/#{record.id}"
+          path << "##{record.media_fragment}" if record.respond_to?(:media_fragment)
         end
 
         def apply(items)
