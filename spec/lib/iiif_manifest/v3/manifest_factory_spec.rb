@@ -67,11 +67,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       def display_image
         IIIFManifest::DisplayImage.new(id, width: 100, height: 100, format: 'image/jpeg')
-        # rubocop:disable Metrics/LineLength
-        # [IIIFManifest::V3::DisplayContent.new(id, type: 'Video', label: 'High', width: 100, height: 100, duration: 100, format: 'video/mp4'),
-        #  IIIFManifest::V3::DisplayContent.new(id, type: 'Video', label: 'Medium', width: 100, height: 100, duration: 100, format: 'video/mp4'),
-        #  IIIFManifest::V3::DisplayContent.new(id, type: 'Video', label: 'Low', width: 100, height: 100, duration: 100, format: 'video/mp4')]
-        # rubocop:enable Metrics/LineLength
       end
     end
   end
