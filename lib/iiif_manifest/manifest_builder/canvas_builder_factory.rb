@@ -17,9 +17,9 @@ module IIIFManifest
 
       private
 
-      def file_set_presenters(work)
-        work.file_set_presenters
-      end
+        def file_set_presenters(work)
+          work.file_set_presenters
+        end
     end
   end
 end
