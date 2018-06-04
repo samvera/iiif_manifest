@@ -31,9 +31,9 @@ module IIIFManifest
 
       private
 
-      def top_record
-        top_record_factory.new
-      end
+        def top_record
+          top_record_factory.new
+        end
     end
   end
 end

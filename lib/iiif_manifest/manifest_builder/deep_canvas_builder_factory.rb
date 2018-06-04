@@ -26,13 +26,13 @@ module IIIFManifest
 
       private
 
-      def file_set_presenters
-        work.try(:file_set_presenters) || []
-      end
+        def file_set_presenters
+          work.try(:file_set_presenters) || []
+        end
 
-      def work_presenters
-        work.try(:work_presenters) || []
-      end
+        def work_presenters
+          work.try(:work_presenters) || []
+        end
     end
   end
 end
