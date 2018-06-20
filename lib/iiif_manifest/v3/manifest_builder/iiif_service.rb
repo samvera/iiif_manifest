@@ -13,10 +13,16 @@ module IIIFManifest
           inner_hash['label'] = label
         end
 
+        def summary
+          inner_hash['summary']
+        end
+
         def summary=(summary)
           return unless summary.present?
           inner_hash['summary'] = summary
         end
+
+        # TODO: issue 116: some other getters are missing, not needed?
 
         def behavior=(behavior)
           return unless behavior.present?

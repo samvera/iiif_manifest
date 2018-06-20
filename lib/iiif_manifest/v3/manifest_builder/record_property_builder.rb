@@ -16,8 +16,8 @@ module IIIFManifest
         # rubocop:disable Metrics/AbcSize
         def apply(manifest)
           manifest['id'] = record.manifest_url.to_s
-          manifest.label = record.to_s
-          manifest.summary = record.description
+          manifest.label = ManifestBuilder.language_map(record.to_s)
+          manifest.summary = ManifestBuilder.language_map(record.description)
           manifest.behavior = viewing_hint if viewing_hint.present?
           manifest.viewing_direction = viewing_direction if viewing_direction.present?
           if valid_v3_metadata?
@@ -37,8 +37,9 @@ module IIIFManifest
         def populate_rendering
           if record.respond_to?(:sequence_rendering)
             record.sequence_rendering.collect do |rendering|
-              sequence_rendering = rendering.to_h.except('@id')
+              sequence_rendering = rendering.to_h.except('@id', 'label')
               sequence_rendering['id'] = rendering['@id']
+              sequence_rendering['label'] = ManifestBuilder.language_map(rendering['label'])
               sequence_rendering
             end
           else
@@ -81,21 +82,9 @@ module IIIFManifest
 
           def transform_field(field)
             metadata_field = {}
-            metadata_field['label'] = transform_obj(field['label'])
-            metadata_field['value'] = transform_obj(field['value'])
+            metadata_field['label'] = ManifestBuilder.language_map(field['label'])
+            metadata_field['value'] = ManifestBuilder.language_map(field['value'])
             metadata_field
-          end
-
-          def transform_obj(obj)
-            obj.is_a?(Hash) ? transform_hash_value(obj) : transform_obj_value(obj)
-          end
-
-          def transform_obj_value(obj)
-            { '@none' => Array(obj) }
-          end
-
-          def transform_hash_value(hash)
-            { hash['@language'] => Array(hash['@value']) }
           end
       end
     end
