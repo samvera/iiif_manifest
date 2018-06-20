@@ -51,13 +51,14 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::StructureBuilder do
       it 'builds the structure' do
         subject
         top_range = manifest['structures'].first
-        expect(top_range['label']).to eq 'Table of Contents'
+        expect(top_range['label']).to eq('@none' => ['Table of Contents'])
         expect(top_range['behavior']).to eq 'top'
         expect(top_range['items'].length).to eq 2
         expect(top_range['items'][0]['type']).to eq 'Canvas'
         expect(top_range['items'][0]['id']).to eq 'http://test.host/books/book-77/manifest/canvas/Front-Cover'
-        expect(top_range['items'][1]['type']).to eq 'Range'
         sub_range = top_range['items'][1]
+        expect(sub_range['type']).to eq 'Range'
+        expect(sub_range['label']).to eq('@none' => ['Chapter 1'])
         expect(sub_range['items'].length).to eq 2
         expect(sub_range['items'][0]['type']).to eq 'Canvas'
         expect(sub_range['items'][0]['id']).to eq 'http://test.host/books/book-77/manifest/canvas/Page-1'
@@ -97,13 +98,13 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::StructureBuilder do
       it 'builds the structure' do
         subject
         top_range = manifest['structures'].first
-        expect(top_range['label']).to eq 'Table of Contents'
+        expect(top_range['label']).to eq('@none' => ['Table of Contents'])
         expect(top_range['behavior']).to eq 'top'
         expect(top_range['items'].length).to eq 3
         expect(top_range['items'][0]['type']).to eq 'Canvas'
         expect(top_range['items'][0]['id']).to eq 'http://test.host/books/book-77/manifest/canvas/Front-Cover'
-        expect(top_range['items'][1]['type']).to eq 'Range'
         sub_range = top_range['items'][1]
+        expect(sub_range['type']).to eq 'Range'
         expect(sub_range['items'].length).to eq 2
         expect(sub_range['items'][0]['type']).to eq 'Canvas'
         expect(sub_range['items'][0]['id']).to eq 'http://test.host/books/book-77/manifest/canvas/Page-1'
