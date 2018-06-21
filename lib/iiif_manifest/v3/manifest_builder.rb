@@ -35,8 +35,7 @@ module IIIFManifest
         obj.is_a?(Hash) ? transform_hash_value(obj) : transform_obj_value(obj)
       end
 
-      private
-
+      private_class_method
         def self.transform_obj_value(obj)
           { '@none' => Array(obj) }
         end
@@ -44,6 +43,8 @@ module IIIFManifest
         def self.transform_hash_value(hash)
           { hash['@language'] => Array(hash['@value']) }
         end
+
+      private
 
         # # Returns true if obj is a valid IIIF language map; false otherwise
         # def self.valid_language_map?(obj)

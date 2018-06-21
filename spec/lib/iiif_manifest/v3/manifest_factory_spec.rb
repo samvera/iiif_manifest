@@ -192,7 +192,9 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
 
         expect(result['rendering']).to eq [{
-          'id' => 'http://test.host/file_set/id/download', 'format' => 'application/pdf', 'label' => { '@none' => ['Download'] }
+          'id' => 'http://test.host/file_set/id/download',
+          'format' => 'application/pdf',
+          'label' => { '@none' => ['Download'] }
         }]
       end
     end
