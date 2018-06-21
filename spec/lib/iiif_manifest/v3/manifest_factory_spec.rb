@@ -81,7 +81,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     let(:json_result) { JSON.parse(subject.to_h.to_json) }
 
     it 'has a label' do
-      result
       expect(result.label).to eq('@none' => ['A good book'])
     end
     it 'has a summary' do
@@ -192,7 +191,9 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
 
         expect(result['rendering']).to eq [{
-          'id' => 'http://test.host/file_set/id/download', 'format' => 'application/pdf', 'label' => { '@none' => ['Download'] }
+          'id' => 'http://test.host/file_set/id/download',
+          'format' => 'application/pdf',
+          'label' => { '@none' => ['Download'] }
         }]
       end
     end
