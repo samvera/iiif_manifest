@@ -218,22 +218,22 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
 
       context 'with presentation 2 style metadata' do
-        let(:metadata) { [ { 'label' => 'Title', 'value' => { 'test' => 'Title of the Item' } } ] }
+        let(:metadata) { [{ 'label' => 'Title', 'value' => 'Title of the Item' }] }
 
         it 'has metadata' do
           allow(book_presenter).to receive(:manifest_metadata).and_return(metadata)
           expect(result['metadata'][0]['label']).to eq('@none' => ['Title'])
-          expect(result['metadata'][0]['value']).to eq('@none' => [{ 'test' => 'Title of the Item' }])
+          expect(result['metadata'][0]['value']).to eq('@none' => ['Title of the Item'])
         end
       end
 
       context 'with presentation 3 style metadata' do
-        let(:metadata) { [{ 'label' => { '@en' => ['Title'] }, 'value' => { '@en' => ['Title of the Item'], '@fr' => ['French Title'] } }] }
+        let(:metadata) { [{ 'label' => { '@en' => ['Title'] }, 'value' => { '@en' => ['Title of the Item'] } }] }
 
         it 'has metadata' do
           allow(book_presenter).to receive(:manifest_metadata).and_return(metadata)
           expect(result['metadata'][0]['label']).to eq('@en' => ['Title'])
-          expect(result['metadata'][0]['value']).to eq('@en' => ['Title of the Item'], '@fr' => ['French Title'] )
+          expect(result['metadata'][0]['value']).to eq('@en' => ['Title of the Item'])
         end
       end
     end
