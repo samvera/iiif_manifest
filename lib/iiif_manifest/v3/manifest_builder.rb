@@ -10,26 +10,6 @@ require_relative 'manifest_builder/image_service_builder'
 module IIIFManifest
   module V3
     class ManifestBuilder
-
-      # TODO issue #116: what if obj is already a lang map?
-      # Utility method to wrap the give obj into a IIIF V3 compliant language map as needed.
-      def self.language_map(obj)
-        (obj.is_a?(Hash) && obj['@language']) ? self.transform_hash_value(obj) : self.transform_obj_value(obj)
-      end
-
-      # Returns true if obj is a valid IIIF language map; false otherwise
-      def valid_language_map(obj)
-        obj.is_a?(Hash) && obj['@language'] && obj['@language']
-      end
-
-      def self.transform_obj_value(obj)
-        { '@none' => Array(obj) }
-      end
-
-      def self.transform_hash_value(hash)
-        { hash['@language'] => Array(hash['@value']) }
-      end
-
       attr_reader :work,
                   :builders,
                   :top_record_factory
@@ -49,7 +29,30 @@ module IIIFManifest
         @to_h ||= builders.new(work).apply(top_record)
       end
 
+      # Utility method to wrap the obj into a IIIF V3 compliant language map as needed.
+      def self.language_map(obj)
+        # self.valid_language_map?(obj) ? obj : self.transform(obj)
+        obj.is_a?(Hash) ? transform_hash_value(obj) : transform_obj_value(obj)
+      end
+
       private
+
+        def self.transform_obj_value(obj)
+          { '@none' => Array(obj) }
+        end
+
+        def self.transform_hash_value(hash)
+          { hash['@language'] => Array(hash['@value']) }
+        end
+
+        # # Returns true if obj is a valid IIIF language map; false otherwise
+        # def self.valid_language_map?(obj)
+        #   obj.is_a?(Hash) && obj['@language'].is_a?(Array)
+        # end
+        #
+        # def self.transform(obj)
+        #   obj.is_a?(Array) ? { '@none' => Array(obj) } : { '@none' => Array.new(1, obj) }
+        # end
 
         def top_record
           top_record_factory.new
