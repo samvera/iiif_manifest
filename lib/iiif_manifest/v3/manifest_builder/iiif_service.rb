@@ -22,8 +22,6 @@ module IIIFManifest
           inner_hash['summary'] = summary
         end
 
-        # TODO: issue 116: some other getters are missing, not needed?
-
         def behavior=(behavior)
           return unless behavior.present?
           inner_hash['behavior'] = behavior

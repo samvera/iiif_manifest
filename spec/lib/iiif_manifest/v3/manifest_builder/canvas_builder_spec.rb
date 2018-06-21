@@ -30,7 +30,6 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       before do
         allow(record).to receive(:media_fragment).and_return('xywh=160,120,320,240')
       end
-      # TODO: issue #116 add verification for canvas label
       it 'returns a canvas url' do
         expect(builder.path).to eq 'http://test.host/books/book-77/manifest/canvas/test-22#xywh=160,120,320,240'
       end
