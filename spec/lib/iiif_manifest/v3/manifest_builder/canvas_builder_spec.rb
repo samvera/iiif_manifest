@@ -14,6 +14,13 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   let(:record) { double(id: 'test-22') }
   let(:parent) { double(manifest_url: 'http://test.host/books/book-77/manifest') }
 
+  describe '#new' do
+    it 'builds a canvas with a label' do
+      allow(record).to receive(:to_s).and_return('Test Canvas')
+      expect(builder.canvas.label).to eq('@none' => ['Test Canvas'])
+    end
+  end
+
   describe '#path' do
     it 'returns a canvas url' do
       expect(builder.path).to eq 'http://test.host/books/book-77/manifest/canvas/test-22'

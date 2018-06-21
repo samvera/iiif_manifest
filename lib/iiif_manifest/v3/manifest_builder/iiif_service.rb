@@ -101,6 +101,10 @@ module IIIFManifest
         end
 
         class Canvas < IIIFService
+          def label
+            inner_hash['label']
+          end
+
           def label=(label)
             inner_hash['label'] = label
           end
