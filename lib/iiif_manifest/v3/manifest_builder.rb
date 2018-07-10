@@ -10,6 +10,23 @@ require_relative 'manifest_builder/image_service_builder'
 module IIIFManifest
   module V3
     class ManifestBuilder
+      class << self
+        # Utility method to wrap the obj into a IIIF V3 compliant language map as needed.
+        def language_map(obj)
+          obj.is_a?(Hash) ? hash_to_language_map(obj) : obj_to_language_map(obj)
+        end
+
+        private
+
+          def obj_to_language_map(obj)
+            { '@none' => Array(obj) }
+          end
+
+          def hash_to_language_map(hash)
+            { hash['@language'] => Array(hash['@value']) }
+          end
+      end
+
       attr_reader :work,
                   :builders,
                   :top_record_factory
@@ -29,11 +46,11 @@ module IIIFManifest
         @to_h ||= builders.new(work).apply(top_record)
       end
 
-      private
+     private
 
-        def top_record
-          top_record_factory.new
-        end
+       def top_record
+         top_record_factory.new
+       end
     end
   end
 end

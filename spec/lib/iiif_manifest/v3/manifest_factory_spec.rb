@@ -81,7 +81,10 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     let(:json_result) { JSON.parse(subject.to_h.to_json) }
 
     it 'has a label' do
-      expect(result.label).to eq 'A good book'
+      expect(result.label).to eq('@none' => ['A good book'])
+    end
+    it 'has a summary' do
+      expect(result.summary).to eq('@none' => ['a brief description'])
     end
     it 'has an ID' do
       expect(result['id']).to eq 'http://test.host/books/book-77/manifest'
@@ -127,11 +130,11 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
         expect(result['structures'].length).to eq 1
         structure = result['structures'].first
-        expect(structure['label']).to eq 'Table of Contents'
+        expect(structure['label']).to eq('@none' => ['Table of Contents'])
         expect(structure['behavior']).to eq 'top'
         expect(structure['items'].length).to eq 1
-        expect(structure['items'][0]['type']).to eq 'Range'
         sub_range = structure['items'][0]
+        expect(sub_range['type']).to eq 'Range'
         expect(sub_range['items'].length).to eq 1
         expect(sub_range['items'][0]['type']).to eq 'Canvas'
         expect(sub_range['items'][0]['id']).to eq 'http://test.host/books/book-77/manifest/canvas/test-22'
@@ -188,7 +191,9 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
 
         expect(result['rendering']).to eq [{
-          'id' => 'http://test.host/file_set/id/download', 'format' => 'application/pdf', 'label' => 'Download'
+          'id' => 'http://test.host/file_set/id/download',
+          'format' => 'application/pdf',
+          'label' => { '@none' => ['Download'] }
         }]
       end
     end
@@ -302,6 +307,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
       it 'returns a IIIF Collection' do
         expect(result['type']).to eq 'Collection'
+        expect(result['label']).to eq('@none' => ['A good book'])
       end
       it "doesn't build sequences" do
         expect(result['sequences']).to eq nil
@@ -314,7 +320,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         first_child = result['manifests'].first
         expect(first_child['id']).to eq 'http://test.host/books/test2/manifest'
         expect(first_child['type']).to eq 'Manifest'
-        expect(first_child['label']).to eq 'Inner book'
+        expect(first_child['label']).to eq('@none' => ['Inner book'])
       end
     end
 
@@ -446,7 +452,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
           expect(content_annotation_body['width']).to eq 100
           expect(content_annotation_body['format']).to eq 'video/mp4'
           expect(content_annotation_body['duration']).to eq 100
-          expect(content_annotation_body['label']).to eq 'High'
+          expect(content_annotation_body['label']).to eq('@none' => ['High'])
         end
       end
 
@@ -483,7 +489,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
             expect(choice['height']).to eq 100
             expect(choice['format']).to eq 'video/mp4'
             expect(choice['duration']).to eq 100
-            expect(choice['label']).not_to be_empty
+            expect(choice['label']['@none']).not_to be_empty
           end
         end
       end

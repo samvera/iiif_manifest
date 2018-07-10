@@ -30,7 +30,7 @@ module IIIFManifest
 
         def build_range
           range['id'] = path
-          range['label'] = record.label
+          range['label'] = ManifestBuilder.language_map(record.label)
           range['behavior'] = 'top' if top?
           range['items'] = canvas_builders.collect { |cb| { 'type' => 'Canvas', 'id' => cb.path } }
         end

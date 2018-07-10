@@ -13,6 +13,10 @@ module IIIFManifest
           inner_hash['label'] = label
         end
 
+        def summary
+          inner_hash['summary']
+        end
+
         def summary=(summary)
           return unless summary.present?
           inner_hash['summary'] = summary
@@ -95,6 +99,10 @@ module IIIFManifest
         end
 
         class Canvas < IIIFService
+          def label
+            inner_hash['label']
+          end
+
           def label=(label)
             inner_hash['label'] = label
           end
