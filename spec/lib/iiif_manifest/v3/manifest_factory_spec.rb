@@ -5,19 +5,19 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
   let(:presenter_class) { Book }
   let(:book_presenter) { presenter_class.new('book-77') }
-  let(:book_description) { '' }
 
   before do
     class Book
-      attr_reader :id, :label
+      attr_reader :id, :label, :description
 
-      def initialize(id, label: 'A good book')
+      def initialize(id, label: 'A good book', description: 'a brief description')
         @id = id
         @label = label
+        @description = description
       end
 
       def description
-        book_description
+        @description
       end
 
       def file_set_presenters
@@ -84,13 +84,18 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     it 'has a label' do
       expect(result.label).to eq('@none' => ['A good book'])
     end
-    it 'has an empty summary if description is empty' do
-      expect(result.summary).to eq(nil)
-    end
+
     it 'has a summary' do
-      let(:book_description) { 'a brief description' }
       expect(result.summary).to eq('@none' => ['a brief description'])
     end
+
+    context 'has a summary' do
+      let(:book_presenter) { presenter_class.new('book-77', description: nil) }
+      it 'which is nil when description is empty' do
+        expect(result.summary).to eq(nil)
+      end
+    end
+
     it 'has an ID' do
       expect(result['id']).to eq 'http://test.host/books/book-77/manifest'
     end
