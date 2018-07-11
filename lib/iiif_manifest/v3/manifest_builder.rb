@@ -19,7 +19,7 @@ module IIIFManifest
         private
 
           def obj_to_language_map(obj)
-            { '@none' => Array(obj) }
+            (obj.nil? || obj.is_a?(String) && obj.empty?) ? nil : { '@none' => Array(obj) }
           end
 
           def hash_to_language_map(hash)
