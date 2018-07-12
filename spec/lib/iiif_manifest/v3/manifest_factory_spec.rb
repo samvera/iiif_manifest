@@ -16,10 +16,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         @description = description
       end
 
-      def description
-        @description
-      end
-
       def file_set_presenters
         []
       end
@@ -93,6 +89,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       let(:book_presenter) { presenter_class.new('book-77', description: nil) }
       it 'which is nil when description is empty' do
         expect(result.summary).to eq(nil)
+        expect(json_result.key?('summary')).to be false
       end
     end
 
