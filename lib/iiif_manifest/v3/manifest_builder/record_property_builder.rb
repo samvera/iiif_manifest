@@ -16,8 +16,8 @@ module IIIFManifest
         # rubocop:disable Metrics/AbcSize
         def apply(manifest)
           manifest['id'] = record.manifest_url.to_s
-          manifest.label = ManifestBuilder.language_map(record.to_s)
-          manifest.summary = ManifestBuilder.language_map(record.description)
+          manifest.label = ManifestBuilder.language_map(record.to_s) if record.try(:to_s)
+          manifest.summary = ManifestBuilder.language_map(record.description) if record.try(:description)
           manifest.behavior = viewing_hint if viewing_hint.present?
           manifest.viewing_direction = viewing_direction if viewing_direction.present?
           if valid_v3_metadata?
@@ -39,7 +39,7 @@ module IIIFManifest
             record.sequence_rendering.collect do |rendering|
               sequence_rendering = rendering.to_h.except('@id', 'label')
               sequence_rendering['id'] = rendering['@id']
-              sequence_rendering['label'] = ManifestBuilder.language_map(rendering['label'])
+              sequence_rendering['label'] = ManifestBuilder.language_map(rendering['label']) if rendering['label']
               sequence_rendering
             end
           else
@@ -59,20 +59,18 @@ module IIIFManifest
           def valid_v3_metadata?
             return false unless record.respond_to?(:manifest_metadata)
             metadata = record.manifest_metadata
-            valid_v3_metadata_structure?(metadata) && valid_metadata_content?(metadata)
+            valid_v3_metadata_fields?(metadata)
           end
 
           # Manifest metadata must be an array containing hashes
           #
           # @param metadata [Array<Hash>] a list of metadata with label and value as required keys for each entry
           # @return [Boolean]
-          def valid_v3_metadata_structure?(metadata)
-            metadata.is_a?(Array) && metadata.all? do |v|
-              v.is_a?(Hash) && v.all? do |k2, v2|
-                k2.is_a?(String) && v2.is_a?(Hash) && v2.all? do |k3, v3|
-                  k3.is_a?(String) && v3.is_a?(Array)
-                end
-              end
+          def valid_v3_metadata_fields?(metadata)
+            metadata.is_a?(Array) && metadata.all? do |metadata_field|
+              metadata_field.is_a?(Hash) &&
+                  ManifestBuilder.valid_language_map?(metadata_field['label']) &&
+                  ManifestBuilder.valid_language_map?(metadata_field['value'])
             end
           end
 
@@ -82,8 +80,8 @@ module IIIFManifest
 
           def transform_field(field)
             metadata_field = {}
-            metadata_field['label'] = ManifestBuilder.language_map(field['label'])
-            metadata_field['value'] = ManifestBuilder.language_map(field['value'])
+            metadata_field['label'] = ManifestBuilder.language_map(field['label']) if field['label']
+            metadata_field['value'] = ManifestBuilder.language_map(field['value']) if field['value']
             metadata_field
           end
       end
