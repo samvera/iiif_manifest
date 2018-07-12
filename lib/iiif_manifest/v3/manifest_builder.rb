@@ -27,7 +27,7 @@ module IIIFManifest
         private
 
           def obj_to_language_map(obj)
-            return nil unless (obj.is_a?(String) || (obj.is_a?(Array) && obj.all? { |o| o.is_a?(String) }))
+            return nil unless obj.is_a?(String) || (obj.is_a?(Array) && obj.all? { |o| o.is_a?(String) })
             { '@none' => Array(obj) }
           end
       end
