@@ -51,7 +51,7 @@ module IIIFManifest
 
           def apply_record_properties
             canvas['id'] = path
-            canvas.label = ManifestBuilder.language_map(record.to_s) if record.try(:to_s)
+            canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
             annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
             canvas.items = [annotation_page]
           end

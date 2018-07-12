@@ -13,33 +13,21 @@ module IIIFManifest
           @canvas_builder_factory = canvas_builder_factory
         end
 
-        # rubocop:disable Metrics/AbcSize
         def apply(manifest)
-          manifest['id'] = record.manifest_url.to_s
-          manifest.label = ManifestBuilder.language_map(record.to_s) if record.try(:to_s)
-          manifest.summary = ManifestBuilder.language_map(record.description) if record.try(:description)
-          manifest.behavior = viewing_hint if viewing_hint.present?
-          manifest.viewing_direction = viewing_direction if viewing_direction.present?
-          if valid_v3_metadata?
-            manifest.metadata = record.manifest_metadata
-          elsif valid_metadata?
-            manifest.metadata = transform_metadata(record.manifest_metadata)
-          end
-          manifest.service = services if search_service.present?
-          manifest.rendering = populate_rendering
+          setup_manifest_from_record(manifest, record)
           # Build the items array
           canvas_builder.apply(manifest.items)
           manifest
         end
-        # rubocop:enable Metrics/AbcSize
-        # rubocop:enable Metrics/MethodLength
 
         def populate_rendering
           if record.respond_to?(:sequence_rendering)
             record.sequence_rendering.collect do |rendering|
               sequence_rendering = rendering.to_h.except('@id', 'label')
               sequence_rendering['id'] = rendering['@id']
-              sequence_rendering['label'] = ManifestBuilder.language_map(rendering['label']) if rendering['label']
+              if rendering['label'].present?
+                sequence_rendering['label'] = ManifestBuilder.language_map(rendering['label'])
+              end
               sequence_rendering
             end
           else
@@ -51,6 +39,25 @@ module IIIFManifest
 
           def canvas_builder
             canvas_builder_factory.from(record)
+          end
+
+          def setup_manifest_from_record(manifest, record)
+            manifest['id'] = record.manifest_url.to_s
+            manifest.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
+            manifest.summary = ManifestBuilder.language_map(record.description) if record.try(:description).present?
+            manifest.behavior = viewing_hint if viewing_hint.present?
+            manifest.metadata = metadata_from_record(record)
+            manifest.viewing_direction = viewing_direction if viewing_direction.present?
+            manifest.service = services if search_service.present?
+            manifest.rendering = populate_rendering
+          end
+
+          def metadata_from_record(record)
+            if valid_v3_metadata?
+              record.manifest_metadata
+            elsif valid_metadata?
+              transform_metadata(record.manifest_metadata)
+            end
           end
 
           # Validate manifest_metadata against the IIIF spec format for metadata
@@ -80,8 +87,8 @@ module IIIFManifest
 
           def transform_field(field)
             metadata_field = {}
-            metadata_field['label'] = ManifestBuilder.language_map(field['label']) if field['label']
-            metadata_field['value'] = ManifestBuilder.language_map(field['value']) if field['value']
+            metadata_field['label'] = ManifestBuilder.language_map(field['label'])
+            metadata_field['value'] = ManifestBuilder.language_map(field['value'])
             metadata_field
           end
       end
