@@ -69,8 +69,8 @@ module IIIFManifest
           def valid_v3_metadata_fields?(metadata)
             metadata.is_a?(Array) && metadata.all? do |metadata_field|
               metadata_field.is_a?(Hash) &&
-                  ManifestBuilder.valid_language_map?(metadata_field['label']) &&
-                  ManifestBuilder.valid_language_map?(metadata_field['value'])
+                ManifestBuilder.valid_language_map?(metadata_field['label']) &&
+                ManifestBuilder.valid_language_map?(metadata_field['value'])
             end
           end
 
