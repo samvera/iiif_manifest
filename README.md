@@ -1,5 +1,5 @@
 # IIIFManifest
-[![Build Status](https://travis-ci.org/projecthydra-labs/iiif_manifest.svg?branch=master)](https://travis-ci.org/projecthydra-labs/iiif_manifest)
+[![Build Status](https://travis-ci.org/samvera-labs/iiif_manifest.svg?branch=master)](https://travis-ci.org/projecthydra-labs/iiif_manifest)
 
 IIIF http://iiif.io/ defines an API for presenting related images in a viewer. This transforms Hydra::Works objects into that format usable by players such as http://universalviewer.io/
 
@@ -135,5 +135,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/projecthydra-labs/iiif_manifest. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/samvera-labs/iiif_manifest. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
