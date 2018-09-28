@@ -13,17 +13,22 @@ module IIIFManifest
       class << self
         # Utility method to wrap the obj into a IIIF V3 compliant language map as needed.
         def language_map(obj)
-          obj.is_a?(Hash) ? hash_to_language_map(obj) : obj_to_language_map(obj)
+          return nil if obj.blank?
+          return obj if valid_language_map?(obj)
+          obj_to_language_map(obj)
+        end
+
+        def valid_language_map?(obj)
+          obj.is_a?(Hash) && obj.all? do |k, v|
+            k.is_a?(String) && v.is_a?(Array) && v.all? { |o| o.is_a?(String) }
+          end
         end
 
         private
 
           def obj_to_language_map(obj)
+            return nil unless obj.is_a?(String) || (obj.is_a?(Array) && obj.all? { |o| o.is_a?(String) })
             { '@none' => Array(obj) }
-          end
-
-          def hash_to_language_map(hash)
-            { hash['@language'] => Array(hash['@value']) }
           end
       end
 

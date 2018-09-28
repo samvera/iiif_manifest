@@ -13,33 +13,21 @@ module IIIFManifest
           @canvas_builder_factory = canvas_builder_factory
         end
 
-        # rubocop:disable Metrics/AbcSize
         def apply(manifest)
-          manifest['id'] = record.manifest_url.to_s
-          manifest.label = ManifestBuilder.language_map(record.to_s)
-          manifest.summary = ManifestBuilder.language_map(record.description)
-          manifest.behavior = viewing_hint if viewing_hint.present?
-          manifest.viewing_direction = viewing_direction if viewing_direction.present?
-          if valid_v3_metadata?
-            manifest.metadata = record.manifest_metadata
-          elsif valid_metadata?
-            manifest.metadata = transform_metadata(record.manifest_metadata)
-          end
-          manifest.service = services if search_service.present?
-          manifest.rendering = populate_rendering
+          setup_manifest_from_record(manifest, record)
           # Build the items array
           canvas_builder.apply(manifest.items)
           manifest
         end
-        # rubocop:enable Metrics/AbcSize
-        # rubocop:enable Metrics/MethodLength
 
         def populate_rendering
           if record.respond_to?(:sequence_rendering)
             record.sequence_rendering.collect do |rendering|
               sequence_rendering = rendering.to_h.except('@id', 'label')
               sequence_rendering['id'] = rendering['@id']
-              sequence_rendering['label'] = ManifestBuilder.language_map(rendering['label'])
+              if rendering['label'].present?
+                sequence_rendering['label'] = ManifestBuilder.language_map(rendering['label'])
+              end
               sequence_rendering
             end
           else
@@ -53,26 +41,43 @@ module IIIFManifest
             canvas_builder_factory.from(record)
           end
 
+          def setup_manifest_from_record(manifest, record)
+            manifest['id'] = record.manifest_url.to_s
+            manifest.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
+            manifest.summary = ManifestBuilder.language_map(record.description) if record.try(:description).present?
+            manifest.behavior = viewing_hint if viewing_hint.present?
+            manifest.metadata = metadata_from_record(record)
+            manifest.viewing_direction = viewing_direction if viewing_direction.present?
+            manifest.service = services if search_service.present?
+            manifest.rendering = populate_rendering
+          end
+
+          def metadata_from_record(record)
+            if valid_v3_metadata?
+              record.manifest_metadata
+            elsif valid_metadata?
+              transform_metadata(record.manifest_metadata)
+            end
+          end
+
           # Validate manifest_metadata against the IIIF spec format for metadata
           #
           # @return [Boolean]
           def valid_v3_metadata?
             return false unless record.respond_to?(:manifest_metadata)
             metadata = record.manifest_metadata
-            valid_v3_metadata_structure?(metadata) && valid_metadata_content?(metadata)
+            valid_v3_metadata_fields?(metadata)
           end
 
           # Manifest metadata must be an array containing hashes
           #
           # @param metadata [Array<Hash>] a list of metadata with label and value as required keys for each entry
           # @return [Boolean]
-          def valid_v3_metadata_structure?(metadata)
-            metadata.is_a?(Array) && metadata.all? do |v|
-              v.is_a?(Hash) && v.all? do |k2, v2|
-                k2.is_a?(String) && v2.is_a?(Hash) && v2.all? do |k3, v3|
-                  k3.is_a?(String) && v3.is_a?(Array)
-                end
-              end
+          def valid_v3_metadata_fields?(metadata)
+            metadata.is_a?(Array) && metadata.all? do |metadata_field|
+              metadata_field.is_a?(Hash) &&
+                ManifestBuilder.valid_language_map?(metadata_field['label']) &&
+                ManifestBuilder.valid_language_map?(metadata_field['value'])
             end
           end
 
