@@ -12,6 +12,7 @@ module IIIFManifest
         def apply(annotation)
           build_body
           image_service_builder.apply(body) if iiif_endpoint
+          apply_auth_service if auth_service
           annotation.body = body
         end
 
@@ -41,6 +42,18 @@ module IIIFManifest
 
           def image_service_builder
             image_service_builder_factory.new(iiif_endpoint)
+          end
+
+          def auth_service
+            display_content.try(:auth_service)
+          end
+
+          def apply_auth_service
+            body.service = if body['service'].blank?
+                             [auth_service]
+                           else
+                             body['service'] + [auth_service]
+                           end
           end
       end
     end

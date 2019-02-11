@@ -13,7 +13,7 @@ Additionally it ***should*** implement `#manifest_url` that shows where the mani
 
 Additionally it ***should*** implement `#manifest_metadata` to provide an array containing hashes of metadata Label/Value pairs.
 
-Additionally it ***may*** implement `#search_service` to contain the url for an IIIF search api compliant search endpoint and `#autocomplete_service` to contain the url for an IIIF search api compliant autocomplete endpoint. Please note, the autocomplete service is embedded within the search service description so if an autocomplete_service is supplied without a search_service it will be ignored. The IIIF `profile` added to the service descriptions is version 0 as this is the version supported by the current version of Universal Viewer. Only include a search_service within the manifest if your application has impelmented an IIIF search service at the endpoint specified in the manifest.
+Additionally it ***may*** implement `#search_service` to contain the url for a IIIF search api compliant search endpoint and `#autocomplete_service` to contain the url for a IIIF search api compliant autocomplete endpoint. Please note, the autocomplete service is embedded within the search service description so if an autocomplete_service is supplied without a search_service it will be ignored. The IIIF `profile` added to the service descriptions is version 0 as this is the version supported by the current version of Universal Viewer. Only include a search_service within the manifest if your application has implemented a IIIF search service at the endpoint specified in the manifest.
 
 Additionally it ***may*** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at sequences level. Each hash must contain "@id", "format" (mime type) and "label" (eg. `{ "@id" => "download url", "format" => "application/pdf", "label" => "user friendly label" }`).
 
@@ -144,6 +144,7 @@ The presentation 3.0 support has been contained to the `V3` namespace.  Version 
 - File set presenters may target a fragment of its content by providing `#media_fragment` which will be appended to its `id`.
 - Range objects may now implement `#items` instead of `#ranges` and `#file_set_presenters` to allow for interleaving these objects.  `#items` is not required and existing range objects should continue to work.
 - File set presenters may provide `#display_content` which should return an instance of `IIIFManifest::V3::DisplayContent` (or an array of instances in the case of a user `Choice`).  `#display_image` is no longer required but will still work if provided.
+- DisplayContent may provide `#auth_service` which should return a hash containing a IIIF Authentication service definition (https://iiif.io/api/auth/1.0/) that will be included on the content resource.
 
 ## Development
 

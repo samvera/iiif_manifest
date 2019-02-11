@@ -126,6 +126,57 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
           expect(annotation.body['format']).to eq 'video/mp4'
         end
       end
+
+      context 'with auth service' do
+        let(:auth_service) do
+          {
+            context: "http://iiif.io/api/auth/1/context.json",
+            id: "http://example.org/iiif/loginservice",
+            confirmLabel: "Login",
+            description: "...",
+            failureDescription: "<a href=\"http://example.org/policy\">Access Policy</a>",
+            failureHeader: "Authentication Failed",
+            header: "This material requires authorization",
+            label: "This material requires authorization",
+            profile: "http://iiif.io/api/auth/1/login",
+            service: [
+              {
+                context: "http://iiif.io/api/auth/1/context.json",
+                id: "http://example.org/iiif/token",
+                profile: "http://iiif.io/api/auth/1/token"
+              },
+              {
+                context: "http://iiif.io/api/auth/1/context.json",
+                id: "http://example.org/iiif/logout",
+                label: "Log out",
+                profile: "http://iiif.io/api/auth/1/logout"
+              }
+            ]
+          }
+        end
+        let(:display_content) do
+          IIIFManifest::V3::DisplayContent.new(url, width: 640,
+                                                    height: 480,
+                                                    duration: 1000,
+                                                    type: 'Video',
+                                                    format: 'video/mp4',
+                                                    label: 'Reel 1',
+                                                    auth_service: auth_service)
+        end
+
+        it 'sets a body on the annotation' do
+          subject
+          expect(annotation.body).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body
+          expect(annotation.body['id']).to eq url
+          expect(annotation.body['type']).to eq 'Video'
+          expect(annotation.body['width']).to eq 640
+          expect(annotation.body['height']).to eq 480
+          expect(annotation.body['duration']).to eq 1000
+          expect(annotation.body['label']).to eq('@none' => ['Reel 1'])
+          expect(annotation.body['format']).to eq 'video/mp4'
+          expect(annotation.body['service']).to include auth_service
+        end
+      end
     end
   end
 end
