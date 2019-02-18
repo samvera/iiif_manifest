@@ -68,6 +68,10 @@ module IIIFManifest
           inner_hash['rights'] = rights
         end
 
+        def homepage=(homepage)
+          inner_hash['homepage'] = homepage
+        end
+
         def initial_attributes
           {
             '@context' => [

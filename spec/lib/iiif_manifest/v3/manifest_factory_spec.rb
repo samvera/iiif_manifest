@@ -501,5 +501,58 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         end
       end
     end
+
+    context 'when there is a homepage' do
+      before do
+        class BookWithHomepage
+          attr_reader :id, :label, :description
+
+          def initialize(id, label: 'A good book', description: 'a brief description')
+            @id = id
+            @label = label
+            @description = description
+          end
+
+          def file_set_presenters
+            []
+          end
+
+          def work_presenters
+            []
+          end
+
+          def manifest_url
+            "http://test.host/books/#{id}/manifest"
+          end
+
+          def to_s
+            label
+          end
+
+          def homepage
+            {
+              id: "https://example.com/info/",
+              type: "Text",
+              label: { "en" => ["Homepage for Example Object"] },
+              format: "text/html"
+            }
+          end
+        end
+      end
+
+      after do
+        Object.send(:remove_const, :BookWithHomepage)
+      end
+
+      let(:presenter_class) { BookWithHomepage }
+
+      it 'includes the homepage in the manifest' do
+        homepage = json_result["homepage"]
+        expect(homepage['id']).to eq "https://example.com/info/"
+        expect(homepage['format']).to eq "text/html"
+        expect(homepage['type']).to eq "Text"
+        expect(homepage['label']['en']).to eq ["Homepage for Example Object"]
+      end
+    end
   end
 end
