@@ -17,7 +17,7 @@ Additionally it ***may*** implement `#search_service` to contain the url for a I
 
 Additionally it ***may*** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at sequences level. Each hash must contain "@id", "format" (mime type) and "label" (eg. `{ "@id" => "download url", "format" => "application/pdf", "label" => "user friendly label" }`).
 
-Finally, It ***may*** implement `ranges`, which returns an array of objects which
+Finally, it ***may*** implement `ranges`, which returns an array of objects which
 represent a table of contents or similar structure, each of which responds to
 `label`, `ranges`, and `file_set_presenters`.
 
@@ -131,7 +131,7 @@ Then you can produce the manifest on the book object like this:
 
 Provisional support for the [3.0 alpha version of the IIIF presentation api spec](https://iiif.io/api/presentation/3.0/) has been added with a focus on audiovisual content.  The [change log](https://iiif.io/api/presentation/3.0/change-log/) lists the changes to the specification.
 
-The presentation 3.0 support has been contained to the `V3` namespace.  Version 2.0 manifests are still be built using `IIIFManifest::ManifestFactory` while version 3.0 manifets can now be built using `IIIFManifest::V3::ManifestFactory`.
+The presentation 3.0 support has been contained to the `V3` namespace.  Version 2.0 manifests are still be built using `IIIFManifest::ManifestFactory` while version 3.0 manifests can now be built using `IIIFManifest::V3::ManifestFactory`.
 
 ```ruby
   book = Book.new('book-77',[Page.new('page-99')])
