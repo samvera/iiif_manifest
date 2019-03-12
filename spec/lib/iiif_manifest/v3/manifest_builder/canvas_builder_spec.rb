@@ -33,6 +33,15 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       it 'returns a canvas url' do
         expect(builder.path).to eq 'http://test.host/books/book-77/manifest/canvas/test-22#xywh=160,120,320,240'
       end
+
+      context 'and is blank' do
+        before do
+          allow(record).to receive(:media_fragment).and_return(nil)
+        end
+        it 'returns a canvas url' do
+          expect(builder.path).to eq 'http://test.host/books/book-77/manifest/canvas/test-22'
+        end
+      end
     end
   end
 end
