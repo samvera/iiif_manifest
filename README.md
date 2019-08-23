@@ -1,10 +1,26 @@
 # IIIFManifest
-[![CircleCI](https://circleci.com/gh/samvera/iiif_manifest.svg?style=svg)](https://circleci.com/gh/samvera/iiif_manifest)
+Code: [![CircleCI](https://circleci.com/gh/samvera/iiif_manifest.svg?style=svg)](https://circleci.com/gh/samvera/iiif_manifest)
 [![Coverage Status](https://coveralls.io/repos/github/samvera/iiif_manifest/badge.svg)](https://coveralls.io/github/samvera/iiif_manifest)
 
+Docs: [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./CONTRIBUTING.md)
+[![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
+
+Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samvera.org/)
+
+# What is IIIFManifest
 IIIF http://iiif.io/ defines an API for presenting related images in a viewer. This transforms Hydra::Works objects into that format usable by players such as http://universalviewer.io/
 
-## Usage
+## Product Owner & Maintenance
+
+`iiif_manifest` is a Core Component of the Samvera community. The documentation for
+what this means can be found
+[here](http://samvera.github.io/core_components.html#requirements-for-a-core-component).
+
+### Product Owner
+
+[awead](https://github.com/awead)
+
+# Usage
 
 Your application ***must*** have an object that implements `#file_set_presenters` and `#work_presenters`.  The former method should return as set of leaf nodes and the later any interstitial nodes. If none are found an empty array should be returned.
 
@@ -148,7 +164,7 @@ The presentation 3.0 support has been contained to the `V3` namespace.  Version 
 - File set presenters may provide `#display_content` which should return an instance of `IIIFManifest::V3::DisplayContent` (or an array of instances in the case of a user `Choice`).  `#display_image` is no longer required but will still work if provided.
 - DisplayContent may provide `#auth_service` which should return a hash containing a IIIF Authentication service definition (https://iiif.io/api/auth/1.0/) that will be included on the content resource.
 
-## Development
+# Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
@@ -157,3 +173,14 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/samvera-labs/iiif_manifest. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+
+## Help
+
+The Samvera community is here to help. Please see our [support guide](./SUPPORT.md).
+
+# Acknowledgments
+
+This software has been developed by and is brought to you by the Samvera community.  Learn more at the
+[Samvera website](http://samvera.org/).
+
+![Samvera Logo](https://wiki.duraspace.org/download/thumbnails/87459292/samvera-fall-font2-200w.png?version=1&modificationDate=1498550535816&api=v2)
