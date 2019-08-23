@@ -12,7 +12,7 @@ jobs:
         type: string
       bundler_version:
         type: string
-        default: 1.17.2
+        default: 2.0.2
 
     executor:
       name: 'samvera/ruby'
