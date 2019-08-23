@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Generate IIIF presentation manifests for Hydra::Works'
   spec.description   = 'IIIF http://iiif.io/ defines an API for presenting related images in a viewer. This transforms Hydra::Works objects into that format usable by players such as http://universalviewer.io/'
-  spec.homepage      = 'http://github.com/projecthydra-labs/iiif_manifest'
+  spec.homepage      = 'https://github.com/samvera/iiif_manifest'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = 'exe'
