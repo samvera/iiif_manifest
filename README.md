@@ -1,5 +1,6 @@
 # IIIFManifest
-[![Build Status](https://travis-ci.org/samvera-labs/iiif_manifest.svg?branch=master)](https://travis-ci.org/projecthydra-labs/iiif_manifest)
+[![CircleCI](https://circleci.com/gh/samvera/iiif_manifest.svg?style=svg)](https://circleci.com/gh/samvera/iiif_manifest)
+[![Coverage Status](https://coveralls.io/repos/github/samvera/iiif_manifest/badge.svg)](https://coveralls.io/github/samvera/iiif_manifest)
 
 IIIF http://iiif.io/ defines an API for presenting related images in a viewer. This transforms Hydra::Works objects into that format usable by players such as http://universalviewer.io/
 
