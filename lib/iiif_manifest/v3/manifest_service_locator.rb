@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module IIIFManifest
   module V3
     class ManifestServiceLocator < IIIFManifest::ManifestServiceLocator

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module IIIFManifest
   module V3
     class ManifestBuilder
@@ -17,18 +18,18 @@ module IIIFManifest
 
         private
 
-          def determine_type(context)
-            case context
-            when 'http://iiif.io/api/image/1/context.json'
-              'ImageService1'
-            when 'http://iiif.io/api/image/2/context.json'
-              'ImageService2'
-            end
+        def determine_type(context)
+          case context
+          when 'http://iiif.io/api/image/1/context.json'
+            'ImageService1'
+          when 'http://iiif.io/api/image/2/context.json'
+            'ImageService2'
           end
+        end
 
-          def service
-            @service ||= iiif_service_factory.new
-          end
+        def service
+          @service ||= iiif_service_factory.new
+        end
       end
     end
   end

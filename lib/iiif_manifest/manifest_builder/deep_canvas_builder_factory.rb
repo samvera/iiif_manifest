@@ -1,11 +1,12 @@
+# frozen_string_literal: true
 module IIIFManifest
   class ManifestBuilder
     class DeepCanvasBuilderFactory < CanvasBuilderFactory
       private
 
-        def file_set_presenters(work)
-          DeepFileSetEnumerator.new(work).to_a
-        end
+      def file_set_presenters(work)
+        DeepFileSetEnumerator.new(work).to_a
+      end
     end
 
     class DeepFileSetEnumerator
@@ -26,13 +27,13 @@ module IIIFManifest
 
       private
 
-        def file_set_presenters
-          work.try(:file_set_presenters) || []
-        end
+      def file_set_presenters
+        work.try(:file_set_presenters) || []
+      end
 
-        def work_presenters
-          work.try(:work_presenters) || []
-        end
+      def work_presenters
+        work.try(:work_presenters) || []
+      end
     end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module IIIFManifest
   class DisplayImage
     attr_reader :url, :width, :height, :iiif_endpoint, :format

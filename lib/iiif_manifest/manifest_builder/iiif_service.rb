@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module IIIFManifest
   class ManifestBuilder
     class IIIFService

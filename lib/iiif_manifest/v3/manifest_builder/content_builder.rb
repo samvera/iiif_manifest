@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module IIIFManifest
   module V3
     class ManifestBuilder
@@ -21,17 +22,17 @@ module IIIFManifest
 
         private
 
-          def build_resource
-            body_builder.apply(annotation)
-          end
+        def build_resource
+          body_builder.apply(annotation)
+        end
 
-          def body_builder
-            body_builder_factory.new(display_content)
-          end
+        def body_builder
+          body_builder_factory.new(display_content)
+        end
 
-          def annotation
-            @annotation ||= iiif_annotation_factory.new
-          end
+        def annotation
+          @annotation ||= iiif_annotation_factory.new
+        end
       end
     end
   end

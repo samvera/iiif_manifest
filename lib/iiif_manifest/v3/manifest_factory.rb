@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module IIIFManifest
   module V3
     class ManifestFactory
@@ -30,9 +31,9 @@ module IIIFManifest
 
       private
 
-        def sammelband?(work)
-          work.respond_to?(:sammelband?) && work.sammelband?
-        end
+      def sammelband?(work)
+        work.respond_to?(:sammelband?) && work.sammelband?
+      end
     end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module IIIFManifest
   class IIIFEndpoint
     attr_reader :url, :profile

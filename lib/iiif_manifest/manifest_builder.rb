@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative 'manifest_builder/iiif_service'
 require_relative 'manifest_builder/canvas_builder'
 require_relative 'manifest_builder/canvas_builder_factory'
@@ -35,12 +36,12 @@ module IIIFManifest
 
     private
 
-      def manifest
-        @manifest ||= manifest_builder_class
-      end
+    def manifest
+      @manifest ||= manifest_builder_class
+    end
 
-      def top_record
-        top_record_factory.new
-      end
+    def top_record
+      top_record_factory.new
+    end
   end
 end

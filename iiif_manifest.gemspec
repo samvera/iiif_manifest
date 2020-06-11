@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'iiif_manifest/version'
@@ -19,12 +20,10 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'activesupport', '>= 4'
 
-  spec.add_development_dependency 'bixby', '~> 1.0'
+  spec.add_development_dependency 'bixby', '~> 3.0'
   spec.add_development_dependency 'coveralls'
   spec.add_development_dependency 'pry-byebug'
   spec.add_development_dependency 'rake', '~> 10'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rspec_junit_formatter'
-  spec.add_development_dependency 'rubocop'
-  spec.add_development_dependency 'rubocop-rspec'
 end

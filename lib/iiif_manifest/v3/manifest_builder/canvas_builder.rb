@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module IIIFManifest
   module V3
     class ManifestBuilder
@@ -41,36 +42,36 @@ module IIIFManifest
 
         private
 
-          def display_image
-            record.display_image if record.respond_to?(:display_image)
-          end
+        def display_image
+          record.display_image if record.respond_to?(:display_image)
+        end
 
-          def display_content
-            Array.wrap(record.display_content) if record.respond_to?(:display_content) && record.display_content.present?
-          end
+        def display_content
+          Array.wrap(record.display_content) if record.respond_to?(:display_content) && record.display_content.present?
+        end
 
-          def apply_record_properties
-            canvas['id'] = path
-            canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
-            annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
-            canvas.items = [annotation_page]
-          end
+        def apply_record_properties
+          canvas['id'] = path
+          canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
+          annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
+          canvas.items = [annotation_page]
+        end
 
-          def annotation_page
-            @annotation_page ||= iiif_annotation_page_factory.new
-          end
+        def annotation_page
+          @annotation_page ||= iiif_annotation_page_factory.new
+        end
 
-          def attach_image
-            content_builder.new(display_image).apply(canvas)
-          end
+        def attach_image
+          content_builder.new(display_image).apply(canvas)
+        end
 
-          def attach_content
-            if display_content.size == 1
-              content_builder.new(display_content.first).apply(canvas)
-            else
-              choice_builder.new(display_content).apply(canvas)
-            end
+        def attach_content
+          if display_content.size == 1
+            content_builder.new(display_content.first).apply(canvas)
+          else
+            choice_builder.new(display_content).apply(canvas)
           end
+        end
       end
     end
   end

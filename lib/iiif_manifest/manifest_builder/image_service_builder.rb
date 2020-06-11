@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module IIIFManifest
   class ManifestBuilder
     class ImageServiceBuilder
@@ -16,9 +17,9 @@ module IIIFManifest
 
       private
 
-        def service
-          @service ||= iiif_service_factory.new
-        end
+      def service
+        @service ||= iiif_service_factory.new
+      end
     end
   end
 end
