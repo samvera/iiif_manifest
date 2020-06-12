@@ -20,17 +20,17 @@ module IIIFManifest
 
       private
 
-        def resource
-          @resource ||= iiif_resource_factory.new
-        end
+      def resource
+        @resource ||= iiif_resource_factory.new
+      end
 
-        def iiif_endpoint
-          display_image.try(:iiif_endpoint)
-        end
+      def iiif_endpoint
+        display_image.try(:iiif_endpoint)
+      end
 
-        def image_service_builder
-          image_service_builder_factory.new(iiif_endpoint)
-        end
+      def image_service_builder
+        image_service_builder_factory.new(iiif_endpoint)
+      end
     end
   end
 end

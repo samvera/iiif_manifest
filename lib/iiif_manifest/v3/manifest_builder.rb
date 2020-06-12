@@ -26,10 +26,10 @@ module IIIFManifest
 
         private
 
-          def obj_to_language_map(obj)
-            return nil unless obj.is_a?(String) || (obj.is_a?(Array) && obj.all? { |o| o.is_a?(String) })
-            { '@none' => Array(obj) }
-          end
+        def obj_to_language_map(obj)
+          return nil unless obj.is_a?(String) || (obj.is_a?(Array) && obj.all? { |o| o.is_a?(String) })
+          { '@none' => Array(obj) }
+        end
       end
 
       attr_reader :work,
@@ -53,9 +53,9 @@ module IIIFManifest
 
      private
 
-       def top_record
-         top_record_factory.new
-       end
+      def top_record
+        top_record_factory.new
+      end
     end
   end
 end

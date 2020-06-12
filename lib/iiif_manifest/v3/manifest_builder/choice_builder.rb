@@ -23,24 +23,24 @@ module IIIFManifest
 
         private
 
-          def build_choice
-            display_content.each do |content|
-              content_body = body_builder(content).apply(iiif_annotation_factory.new)
-              choice.items += [content_body]
-            end
+        def build_choice
+          display_content.each do |content|
+            content_body = body_builder(content).apply(iiif_annotation_factory.new)
+            choice.items += [content_body]
           end
+        end
 
-          def body_builder(content)
-            body_builder_factory.new(content)
-          end
+        def body_builder(content)
+          body_builder_factory.new(content)
+        end
 
-          def annotation
-            @annotation ||= iiif_annotation_factory.new
-          end
+        def annotation
+          @annotation ||= iiif_annotation_factory.new
+        end
 
-          def choice
-            @choice ||= iiif_choice_factory.new
-          end
+        def choice
+          @choice ||= iiif_choice_factory.new
+        end
       end
     end
   end

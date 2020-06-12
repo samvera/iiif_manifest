@@ -16,9 +16,9 @@ module IIIFManifest
 
       private
 
-        def service
-          @service ||= iiif_service_factory.new
-        end
+      def service
+        @service ||= iiif_service_factory.new
+      end
     end
   end
 end

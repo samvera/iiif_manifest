@@ -30,9 +30,9 @@ module IIIFManifest
 
       private
 
-        def sammelband?(work)
-          work.respond_to?(:sammelband?) && work.sammelband?
-        end
+      def sammelband?(work)
+        work.respond_to?(:sammelband?) && work.sammelband?
+      end
     end
   end
 end
