@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 RSpec.describe IIIFManifest::ManifestBuilder::ResourceBuilder do

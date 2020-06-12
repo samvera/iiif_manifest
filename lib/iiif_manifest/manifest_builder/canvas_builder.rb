@@ -28,18 +28,18 @@ module IIIFManifest
 
       private
 
-        def display_image
-          record.display_image if record.respond_to?(:display_image)
-        end
+      def display_image
+        record.display_image if record.respond_to?(:display_image)
+      end
 
-        def apply_record_properties
-          canvas['@id'] = path
-          canvas.label = record.to_s
-        end
+      def apply_record_properties
+        canvas['@id'] = path
+        canvas.label = record.to_s
+      end
 
-        def attach_image
-          image_builder.new(display_image).apply(canvas)
-        end
+      def attach_image
+        image_builder.new(display_image).apply(canvas)
+      end
     end
   end
 end
