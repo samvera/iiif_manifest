@@ -28,7 +28,7 @@ module IIIFManifest
         @sequence ||=
           begin
             sequence = sequence_factory.new
-            sequence['@id'] ||= work.manifest_url + '/sequence/normal'
+            sequence['@id'] ||= work.manifest_url + 'sequence/normal'
             sequence['rendering'] ||= populate_sequence_rendering
             canvas_builder.apply(sequence)
             sequence
