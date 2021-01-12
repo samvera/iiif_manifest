@@ -195,13 +195,13 @@ module IIIFManifest
 
     class InjectedFactory
       attr_reader :factory, :hash_args
-      def initialize(factory, hash_args)
+      def initialize(factory, **hash_args)
         @hash_args = hash_args
         @factory = factory
       end
 
       def new(*args)
-        factory.new(*args, hash_args)
+        factory.new(*args, **hash_args)
       end
     end
   end
