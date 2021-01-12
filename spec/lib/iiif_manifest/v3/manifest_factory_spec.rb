@@ -108,13 +108,10 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       let(:file_presenter) { DisplayImagePresenter.new }
 
       it 'returns items' do
-        allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
 
         result
 
-        expect(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to have_received(:new)
-          .exactly(1).times.with(file_presenter, anything, anything)
         expect(result['items'].length).to eq 1
         expect(result['items'].first['type']).to eq 'Canvas'
         expect(result['items'].first['id']).to eq 'http://test.host/books/book-77/manifest/canvas/test-22'
