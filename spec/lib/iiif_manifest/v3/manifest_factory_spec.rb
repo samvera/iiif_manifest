@@ -153,7 +153,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       let(:file_presenter) { DisplayImagePresenter.new }
 
       it 'does not have a rendering on the sequence' do
-        allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
         expect(result['rendering']).to eq []
       end
@@ -195,7 +194,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
 
       it 'has a rendering on the canvas' do
-        allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
 
         expect(result['rendering']).to eq [{
@@ -210,7 +208,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       let(:file_presenter) { DisplayImagePresenter.new }
 
       it 'does not have a metadata element' do
-        allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
         expect(result['metadata']).to eq nil
       end
@@ -251,7 +248,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       let(:file_presenter) { DisplayImagePresenter.new }
 
       it 'does not have a service element' do
-        allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
         expect(result['service']).to eq nil
       end
@@ -416,7 +412,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
           end
         end
 
-        allow(IIIFManifest::V3::ManifestBuilder::CanvasBuilder).to receive(:new).and_call_original
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
       end
 
