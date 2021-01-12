@@ -35,6 +35,9 @@ workflows:
   ci:
     jobs:
       - test:
+          name: "ruby3-0"
+          ruby_version: "3.0.0"
+      - test:
           name: "ruby2-7"
           ruby_version: "2.7.0"
       - test:
