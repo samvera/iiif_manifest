@@ -43,6 +43,9 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
     end
 
+    class AudioBook < Book
+    end
+
     class ManifestRange
       attr_reader :label, :ranges, :file_set_presenters
       def initialize(label:, ranges: [], file_set_presenters: [])
@@ -67,10 +70,28 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         IIIFManifest::DisplayImage.new(id, width: 100, height: 100, format: 'image/jpeg')
       end
     end
+
+    class AudioFilePresenter
+      attr_reader :id, :label
+      def initialize(id: 'test-22', label: 'Disc 1')
+        @id = id
+        @label = label
+      end
+
+      def to_s
+        label
+      end
+
+      def display_content
+        IIIFManifest::V3::DisplayContent.new(id, type: 'Sound', duration: 360_000, format: 'audio/mp4')
+      end
+    end
   end
 
   after do
     Object.send(:remove_const, :DisplayImagePresenter)
+    Object.send(:remove_const, :AudioFilePresenter)
+    Object.send(:remove_const, :AudioBook)
     Object.send(:remove_const, :Book)
   end
 
@@ -143,6 +164,36 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(sub_range['items'].length).to eq 1
         expect(sub_range['items'][0]['type']).to eq 'Canvas'
         expect(sub_range['items'][0]['id']).to eq 'http://test.host/books/book-77/manifest/canvas/test-22'
+      end
+
+      context 'with audio file' do
+        let(:presenter_class) { AudioBook }
+        let(:file_presenter) { AudioFilePresenter.new }
+
+        it 'returns items' do
+          allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
+
+          result
+
+          expect(result['items'].length).to eq 1
+          expect(result['items'].first['type']).to eq 'Canvas'
+          expect(result['items'].first['id']).to eq 'http://test.host/books/book-77/manifest/canvas/test-22'
+          expect(result['items'].first.key?('height')).to eq false
+          expect(result['items'].first.key?('width')).to eq false
+          expect(result['items'].first['duration']).to eq 360_000
+          expect(result['items'].first['items'].first['type']).to eq 'AnnotationPage'
+          expect(result['items'].first['items'].first['id']).not_to be_empty
+          expect(result['items'].first['items'].first['items'].length).to eq 1
+          expect(result['items'].first['items'].first['items'].first['type']).to eq 'Annotation'
+          expect(result['items'].first['items'].first['items'].first['motivation']).to eq 'painting'
+          expect(result['items'].first['items'].first['items'].first['target']).to eq result['items'].first['id']
+          expect(result['items'].first['items'].first['items'].first['body']['type']).to eq 'Sound'
+          expect(result['items'].first['items'].first['items'].first['body']['id']).not_to be_empty
+          expect(result['items'].first['items'].first['items'].first['body'].key?('height')).to eq false
+          expect(result['items'].first['items'].first['items'].first['body'].key?('width')).to eq false
+          expect(result['items'].first['items'].first['items'].first['body']['duration']).to eq 360_000
+          expect(result['items'].first['items'].first['items'].first['body']['format']).to eq 'audio/mp4'
+        end
       end
     end
 
@@ -453,6 +504,25 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
           expect(content_annotation_body['format']).to eq 'video/mp4'
           expect(content_annotation_body['duration']).to eq 100
           expect(content_annotation_body['label']).to eq('@none' => ['High'])
+        end
+
+        context 'with audio file' do
+          let(:content) do
+            IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, duration: 100,
+                                                                    type: 'Sound',
+                                                                    format: 'audio/mp4',
+                                                                    label: 'High')
+          end
+
+          it 'returns items' do
+            expect(content_annotation_body['type']).to eq 'Sound'
+            expect(content_annotation_body['id']).not_to be_empty
+            expect(content_annotation_body.key?('height')).to eq false
+            expect(content_annotation_body.key?('width')).to eq false
+            expect(content_annotation_body['format']).to eq 'audio/mp4'
+            expect(content_annotation_body['duration']).to eq 100
+            expect(content_annotation_body['label']).to eq('@none' => ['High'])
+          end
         end
       end
 

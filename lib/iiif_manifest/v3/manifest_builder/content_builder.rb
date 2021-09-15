@@ -12,9 +12,9 @@ module IIIFManifest
 
         def apply(canvas)
           annotation['target'] = canvas['id']
-          canvas['width'] = annotation.body['width']
-          canvas['height'] = annotation.body['height']
-          canvas['duration'] = annotation.body['duration']
+          canvas['width'] = annotation.body['width'] if annotation.body['width'].present?
+          canvas['height'] = annotation.body['height'] if annotation.body['height'].present?
+          canvas['duration'] = annotation.body['duration'] if annotation.body['duration'].present?
           # Assume first item in canvas is an annotation page
           canvas.items.first.items += [annotation]
         end
