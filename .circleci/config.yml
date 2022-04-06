@@ -1,7 +1,7 @@
 ---
 version: 2.1
 orbs:
-  samvera: samvera/circleci-orb@0
+  samvera: samvera/circleci-orb@1.0
 
 jobs:
  test:
@@ -10,7 +10,7 @@ jobs:
         type: string
       bundler_version:
         type: string
-        default: 2.0.2
+        default: 2.3.10
 
     executor:
       name: 'samvera/ruby'
@@ -36,16 +36,35 @@ workflows:
     jobs:
       - test:
           name: "ruby3-0"
-          ruby_version: "3.0.0"
+          ruby_version: "3.0.3"
       - test:
           name: "ruby2-7"
-          ruby_version: "2.7.0"
+          ruby_version: "2.7.5"
       - test:
           name: "ruby2-6"
-          ruby_version: "2.6.5"
+          ruby_version: "2.6.9"
       - test:
           name: "ruby2-5"
-          ruby_version: "2.5.7"
+          ruby_version: "2.5.9"
+
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
       - test:
-          name: "ruby2-4"
-          ruby_version: "2.4.9"
+          name: "ruby3-0"
+          ruby_version: "3.0.3"
+      - test:
+          name: "ruby2-7"
+          ruby_version: "2.7.5"
+      - test:
+          name: "ruby2-6"
+          ruby_version: "2.6.9"
+      - test:
+          name: "ruby2-5"
+          ruby_version: "2.5.9"
