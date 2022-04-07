@@ -6,7 +6,7 @@ module IIIFManifest
         @inner_hash = initial_attributes
       end
 
-      delegate :[]=, :[], :as_json, :to_json, :has_key?, to: :inner_hash
+      delegate :[]=, :[], :as_json, :to_json, :has_key?, :key?, to: :inner_hash
 
       def initial_attributes
         {}
