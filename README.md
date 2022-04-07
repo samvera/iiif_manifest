@@ -4,7 +4,7 @@ Code: [![CircleCI](https://circleci.com/gh/samvera/iiif_manifest.svg?style=svg)]
 
 Docs: [![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./CONTRIBUTING.md) [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 
-Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samvera.org/)
+Join the conversation on slack: [![Slack Status](https://raw.githubusercontent.com/samvera/maintenance/main/assets/slack_icon.png)](http://slack.samvera.org/)
 
 # What is IIIFManifest
 
@@ -171,21 +171,6 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 Bug reports and pull requests are welcome on GitHub at <https://github.com/samvera-labs/iiif_manifest>. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
-## Releasing
-
-1. `bundle install`
-2. Increase the version number in `lib/iiif_manifest/version.rb`
-3. Increase the same version number in `.github_changelog_generator`
-4. Update `CHANGELOG.md` by running this command:
-
-  ```
-  github_changelog_generator --user samvera --project iiif_manifest --token YOUR_GITHUB_TOKEN_HERE
-  ```
-
-5. Commit these changes to the master branch
-
-6. Run `rake release`
-
 ## Help
 
 The Samvera community is here to help. Please see our [support guide](./SUPPORT.md).
@@ -194,4 +179,4 @@ The Samvera community is here to help. Please see our [support guide](./SUPPORT.
 
 This software has been developed by and is brought to you by the Samvera community. Learn more at the [Samvera website](http://samvera.org/).
 
-![Samvera Logo](https://wiki.duraspace.org/download/thumbnails/87459292/samvera-fall-font2-200w.png?version=1&modificationDate=1498550535816&api=v2)
+![Samvera Logo](https://raw.githubusercontent.com/samvera/maintenance/main/assets/samvera_tree.png)
