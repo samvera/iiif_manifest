@@ -142,6 +142,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(result['items'].first['items'].first['id']).not_to be_empty
         expect(result['items'].first['items'].first['items'].length).to eq 1
         expect(result['items'].first['items'].first['items'].first['type']).to eq 'Annotation'
+        expect(result['items'].first['items'].first['items'].first['id']).not_to be_empty
         expect(result['items'].first['items'].first['items'].first['motivation']).to eq 'painting'
         expect(result['items'].first['items'].first['items'].first['target']).to eq result['items'].first['id']
         expect(result['items'].first['items'].first['items'].first['body']['type']).to eq 'Image'
@@ -185,6 +186,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
           expect(result['items'].first['items'].first['id']).not_to be_empty
           expect(result['items'].first['items'].first['items'].length).to eq 1
           expect(result['items'].first['items'].first['items'].first['type']).to eq 'Annotation'
+          expect(result['items'].first['items'].first['items'].first['id']).not_to be_empty
           expect(result['items'].first['items'].first['items'].first['motivation']).to eq 'painting'
           expect(result['items'].first['items'].first['items'].first['target']).to eq result['items'].first['id']
           expect(result['items'].first['items'].first['items'].first['body']['type']).to eq 'Sound'
