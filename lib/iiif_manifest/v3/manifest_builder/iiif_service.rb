@@ -191,6 +191,10 @@ module IIIFManifest
             inner_hash['body']
           end
 
+          def index
+            @index ||= SecureRandom.uuid
+          end
+
           def initial_attributes
             {
               'type' => 'Annotation',
