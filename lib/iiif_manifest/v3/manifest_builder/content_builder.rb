@@ -11,12 +11,12 @@ module IIIFManifest
         end
 
         def apply(canvas)
-          annotation['id'] = canvas['id'].to_s.gsub(/manifest.*/, "annotation/#{annotation.index}")
+          # Assume first item in canvas is an annotation page
+          annotation['id'] = "#{canvas.items.first['id']}/annotation/#{annotation.index}"
           annotation['target'] = canvas['id']
           canvas['width'] = annotation.body['width'] if annotation.body['width'].present?
           canvas['height'] = annotation.body['height'] if annotation.body['height'].present?
           canvas['duration'] = annotation.body['duration'] if annotation.body['duration'].present?
-          # Assume first item in canvas is an annotation page
           canvas.items.first.items += [annotation]
         end
 
