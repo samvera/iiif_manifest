@@ -21,7 +21,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   describe '#new' do
     it 'builds a canvas with a label' do
       allow(record).to receive(:to_s).and_return('Test Canvas')
-      expect(builder.canvas.label).to eq('@none' => ['Test Canvas'])
+      expect(builder.canvas.label).to eq('none' => ['Test Canvas'])
     end
   end
 
