@@ -80,7 +80,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
           expect(annotation.body['height']).to eq 480
           expect(annotation.body['format']).to eq 'image/jpeg'
           expect(annotation.body['duration']).to be_nil
-          expect(annotation.body['label']).to eq('@none' => ['full'])
+          expect(annotation.body['label']).to eq('none' => ['full'])
         end
       end
 
@@ -99,7 +99,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
           expect(annotation.body['type']).to eq 'Audio'
           expect(annotation.body['duration']).to eq 1000
           expect(annotation.body['format']).to eq 'audio/aac'
-          expect(annotation.body['label']).to eq('@none' => ['Track 1'])
+          expect(annotation.body['label']).to eq('none' => ['Track 1'])
           expect(annotation.body['width']).to be_nil
           expect(annotation.body['height']).to be_nil
         end
@@ -123,7 +123,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
           expect(annotation.body['width']).to eq 640
           expect(annotation.body['height']).to eq 480
           expect(annotation.body['duration']).to eq 1000
-          expect(annotation.body['label']).to eq('@none' => ['Reel 1'])
+          expect(annotation.body['label']).to eq('none' => ['Reel 1'])
           expect(annotation.body['format']).to eq 'video/mp4'
         end
       end
@@ -173,7 +173,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
           expect(annotation.body['width']).to eq 640
           expect(annotation.body['height']).to eq 480
           expect(annotation.body['duration']).to eq 1000
-          expect(annotation.body['label']).to eq('@none' => ['Reel 1'])
+          expect(annotation.body['label']).to eq('none' => ['Reel 1'])
           expect(annotation.body['format']).to eq 'video/mp4'
           expect(annotation.body['service']).to include auth_service
         end
