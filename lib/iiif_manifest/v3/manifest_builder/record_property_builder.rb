@@ -45,7 +45,7 @@ module IIIFManifest
         def setup_manifest_from_record(manifest, record)
           manifest['id'] = record.manifest_url.to_s
           manifest.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
-          manifest.summary = ManifestBuilder.language_map(record.description) if record.try(:description).present?
+          manifest.summary = ManifestBuilder.language_map(record.abstract) if record.present?
           manifest.behavior = viewing_hint if viewing_hint.present?
           manifest.metadata = metadata_from_record(record)
           manifest.viewing_direction = viewing_direction if viewing_direction.present?
