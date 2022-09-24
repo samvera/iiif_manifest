@@ -48,7 +48,7 @@ module IIIFManifest
           manifest.summary = ManifestBuilder.language_map(record.abstract) if record.present?
           manifest.rights = record.rights_statement if record.try(:rights_statement).present?
           manifest.behavior = viewing_hint if viewing_hint.present?
-          manifest.metadata = metadata_from_record(record)
+          manifest.metadata = metadata_from_record(record) if metadata_from_record(record).present?
           manifest.viewing_direction = viewing_direction if viewing_direction.present?
           manifest.service = services if search_service.present?
           manifest.rendering = populate_rendering
