@@ -65,7 +65,7 @@ module IIIFManifest
         end
 
         def rights=(rights)
-          inner_hash['rights'] = rights
+          inner_hash['rights'] = Array(rights).first
         end
 
         def homepage=(homepage)
