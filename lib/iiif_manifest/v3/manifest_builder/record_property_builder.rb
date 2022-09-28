@@ -41,7 +41,7 @@ module IIIFManifest
           canvas_builder_factory.from(record)
         end
 
-          # rubocop:disable Metrics/CyclomaticComplexity
+          # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         def setup_manifest_from_record(manifest, record)
           manifest['id'] = record.manifest_url.to_s
           manifest.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
@@ -54,7 +54,7 @@ module IIIFManifest
           manifest.rendering = populate_rendering if populate_rendering.first.present?
           manifest.homepage = record.homepage if record.try(:homepage).present?
         end
-          # rubocop:enable Metrics/CyclomaticComplexity
+          # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
         def metadata_from_record(record)
           if valid_v3_metadata?
