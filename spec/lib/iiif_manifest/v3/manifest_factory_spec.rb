@@ -9,12 +9,12 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
   before do
     class Book
-      attr_reader :id, :label, :description
+      attr_reader :id, :label, :abstract
 
-      def initialize(id, label: 'A good book', description: 'a brief description')
+      def initialize(id, label: 'A good book', abstract: 'a brief description')
         @id = id
         @label = label
-        @description = description
+        @abstract = abstract
       end
 
       def file_set_presenters
@@ -108,8 +108,8 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     end
 
     context 'has a summary' do
-      let(:book_presenter) { presenter_class.new('book-77', description: nil) }
-      it 'which is nil when description is empty' do
+      let(:book_presenter) { presenter_class.new('book-77', abstract: nil) }
+      it 'which is nil when abstract is empty' do
         expect(result.summary).to eq(nil)
         expect(json_result.key?('summary')).to be false
       end
@@ -219,7 +219,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
             @id = id
           end
 
-          def description
+          def abstract
             'a brief description'
           end
 
@@ -570,12 +570,12 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     context 'when there is a homepage' do
       before do
         class BookWithHomepage
-          attr_reader :id, :label, :description
+          attr_reader :id, :label, :abstract
 
-          def initialize(id, label: 'A good book', description: 'a brief description')
+          def initialize(id, label: 'A good book', abstract: 'a brief description')
             @id = id
             @label = label
-            @description = description
+            @abstract = abstract
           end
 
           def file_set_presenters
