@@ -100,7 +100,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     let(:json_result) { JSON.parse(subject.to_h.to_json) }
 
     before do
-      # UTK is leaning towards using a Work as their FileSet to have more flexible metadata properties
+      # UTK using a Work as their FileSet to have more flexible metadata properties
       # FileSets should return the title/label of their parent work
       allow(book_presenter).to receive(:title).and_return(book_presenter.label)
     end
