@@ -618,7 +618,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       let(:presenter_class) { BookWithHomepage }
 
-      it 'includes the homepage in the manifest', :skip => "homepage is taken care of in hyku" do
+      it 'includes the homepage in the manifest', skip: "homepage is taken care of in hyku" do
         homepage = json_result["homepage"]
         expect(homepage['id']).to eq "https://example.com/info/"
         expect(homepage['format']).to eq "text/html"
