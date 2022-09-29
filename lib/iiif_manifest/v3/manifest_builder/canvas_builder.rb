@@ -51,9 +51,7 @@ module IIIFManifest
 
         def apply_record_properties
           canvas['id'] = path
-          if parent._source[:title_tesim].present?
-            canvas.label = ManifestBuilder.language_map(Array(parent._source[:title_tesim]).first)
-          end
+          canvas.label = ManifestBuilder.language_map(Array(parent.title).first)
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
         end
