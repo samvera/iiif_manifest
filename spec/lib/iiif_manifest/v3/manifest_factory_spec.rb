@@ -99,6 +99,12 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
     let(:result) { subject.to_h }
     let(:json_result) { JSON.parse(subject.to_h.to_json) }
 
+    before do
+      # UTK is leaning towards using a Work as their FileSet to have more flexible metadata properties
+      # FileSets should return the title/label of their parent work
+      allow(book_presenter).to receive(:title).and_return(book_presenter.label)
+    end
+
     it 'has a label' do
       expect(result.label).to eq('none' => ['A good book'])
     end
@@ -204,7 +210,8 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       it 'does not have a rendering on the sequence' do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
-        expect(result['rendering']).to eq []
+        # instead of `"rendering": []`, just don't have "rendering" at all
+        expect(result['rendering']).to eq nil
       end
     end
 
@@ -611,7 +618,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       let(:presenter_class) { BookWithHomepage }
 
-      it 'includes the homepage in the manifest' do
+      it 'includes the homepage in the manifest', :skip => "homepage is taken care of in hyku" do
         homepage = json_result["homepage"]
         expect(homepage['id']).to eq "https://example.com/info/"
         expect(homepage['format']).to eq "text/html"
