@@ -41,9 +41,9 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
         expect(annotation.body['service']).to be_kind_of Array
         service = annotation.body['service'].first
         expect(service).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFService
-        expect(service['id']).to eq iiif_endpoint.url
+        expect(service['@id']).to eq iiif_endpoint.url
         expect(service['profile']).to eq iiif_endpoint.profile
-        expect(service['type']).to eq 'ImageService2'
+        expect(service['@type']).to eq 'ImageService2'
       end
     end
 
