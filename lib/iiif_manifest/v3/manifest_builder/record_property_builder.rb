@@ -50,7 +50,7 @@ module IIIFManifest
           manifest.metadata = metadata_from_record(record)
           manifest.viewing_direction = viewing_direction if viewing_direction.present?
           manifest.service = services if search_service.present?
-          manifest.rendering = populate_rendering
+          manifest.rendering = populate_rendering if populate_rendering.first.present?
           manifest.homepage = record.homepage if record.try(:homepage).present?
         end
           # rubocop:enable Metrics/CyclomaticComplexity
