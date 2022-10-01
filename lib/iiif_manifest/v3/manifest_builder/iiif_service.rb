@@ -216,7 +216,8 @@ module IIIFManifest
             {
               '@context' => 'http://iiif.io/api/search/1/context.json',
               'profile' => 'http://iiif.io/api/search/1/search',
-              'label' => 'Search within this manifest'
+              'label' => 'Search within this manifest',
+              'type' => 'SearchService1'
             }
           end
         end
