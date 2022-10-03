@@ -204,7 +204,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       it 'does not have a rendering on the sequence' do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
-        expect(result['rendering']).to be_nil
+        expect(result.key?('rendering')).to be_false
       end
     end
 
