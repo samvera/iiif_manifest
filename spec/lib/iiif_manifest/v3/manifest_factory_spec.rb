@@ -400,7 +400,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(result['type']).to eq 'Manifest'
       end
       it "doesn't build manifests" do
-        expect(result.key?('metadata')).to be false
+        expect(result.key?('manifest')).to be false
       end
       it 'builds items array from all the child file sets' do
         expect(result['items'].length).to eq 2
@@ -427,7 +427,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(result['type']).to eq 'Manifest'
       end
       it "doesn't build manifests" do
-        expect(result.key?('metadata')).to be false
+        expect(result.key?('manifest')).to be false
       end
       it 'builds items array from all the child file sets' do
         expect(result['items'].length).to eq 1
