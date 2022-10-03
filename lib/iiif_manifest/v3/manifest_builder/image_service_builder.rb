@@ -9,9 +9,9 @@ module IIIFManifest
         end
 
         def apply(resource)
-          service['id'] = iiif_endpoint.url
+          service['@id'] = iiif_endpoint.url
           service['profile'] = iiif_endpoint.profile
-          service['type'] = determine_type(iiif_endpoint.context)
+          service['@type'] = determine_type(iiif_endpoint.context)
           resource.service = [service]
         end
 
