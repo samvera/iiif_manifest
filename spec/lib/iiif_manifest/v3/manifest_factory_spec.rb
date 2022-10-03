@@ -259,7 +259,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       it 'does not have a metadata element' do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
-        expect(result['metadata']).to eq nil
+        expect(result.key?('metadata')).to be false
       end
     end
 
@@ -269,7 +269,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
         it 'has no metadata' do
           allow(book_presenter).to receive(:manifest_metadata).and_return(metadata)
-          expect(result['metadata']).to eq nil
+          expect(result.key?('metadata')).to be false
         end
       end
 
@@ -400,7 +400,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(result['type']).to eq 'Manifest'
       end
       it "doesn't build manifests" do
-        expect(result['manifests']).to eq nil
+        expect(result.key?('metadata')).to be false
       end
       it 'builds items array from all the child file sets' do
         expect(result['items'].length).to eq 2
@@ -427,7 +427,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(result['type']).to eq 'Manifest'
       end
       it "doesn't build manifests" do
-        expect(result['manifests']).to eq nil
+        expect(result.key?('metadata')).to be false
       end
       it 'builds items array from all the child file sets' do
         expect(result['items'].length).to eq 1
