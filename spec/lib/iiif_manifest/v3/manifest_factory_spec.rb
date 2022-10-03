@@ -310,6 +310,8 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         allow(book_presenter).to receive(:search_service).and_return(search_service)
         expect(result['service'][0]['profile']).to eq 'http://iiif.io/api/search/1/search'
         expect(result['service'][0]['id']).to eq 'http://test.host/books/book-77/search'
+        expect(result['service'][0]['label']).to eq 'Search within this manifest'
+        expect(result['service'][0]['type']).to eq 'SearchService1'
         expect(result['service'][0]['service']).to eq nil
       end
     end
@@ -332,6 +334,8 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         allow(book_presenter).to receive(:autocomplete_service).and_return(autocomplete_service)
         expect(result['service'][0]['service']['id']).to eq 'http://test.host/books/book-77/autocomplete'
         expect(result['service'][0]['service']['profile']).to eq 'http://iiif.io/api/search/1/autocomplete'
+        expect(result['service'][0]['service']['label']).to eq 'Get suggested words in this manifest'
+        expect(result['service'][0]['service']['type']).to eq 'AutoCompleteService1'
       end
     end
 
