@@ -216,7 +216,8 @@ module IIIFManifest
             {
               '@context' => 'http://iiif.io/api/search/1/context.json',
               'profile' => 'http://iiif.io/api/search/1/search',
-              'label' => 'Search within this manifest'
+              'label' => 'Search within this manifest',
+              'type' => 'SearchService1'
             }
           end
         end
@@ -233,7 +234,8 @@ module IIIFManifest
           def initial_attributes
             {
               'profile' => 'http://iiif.io/api/search/1/autocomplete',
-              'label' => 'Get suggested words in this manifest'
+              'label' => 'Get suggested words in this manifest',
+              'type' => 'AutoCompleteService1'
             }
           end
         end
