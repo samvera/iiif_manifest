@@ -254,6 +254,28 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
     end
 
+    context 'when there are no rights on the presenter' do
+      it 'does not have a rights element' do
+        allow(book_presenter).to receive(:rights_statement).and_return(nil)
+        expect(result.key?('rights')).to be false
+      end
+    end
+
+    context 'when there are a rights on the presenter' do
+      it 'does have a rights element as a String' do
+        allow(book_presenter).to receive(:rights_statement).and_return('the rights')
+        expect(result['rights'].class).to eq String
+      end
+
+      context 'when the rights on the presenter is an Array' do
+        it 'still has a rights element as a String' do
+          allow(book_presenter).to receive(:rights_statement).and_return(['the rights'])
+          expect(result['rights'].class).not_to eq Array
+          expect(result['rights'].class).to eq String
+        end
+      end
+    end
+
     context 'when there is no manifest_metadata method' do
       let(:file_presenter) { DisplayImagePresenter.new }
 
