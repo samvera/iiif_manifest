@@ -41,15 +41,19 @@ module IIIFManifest
           # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         def setup_manifest_from_record(manifest, record)
           manifest['id'] = record.manifest_url.to_s
-          manifest.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
-          manifest.summary = ManifestBuilder.language_map(record.description) if record.try(:description).present?
-          manifest.rights = record.rights_statement if record.try(:rights_statement).present?
+          label = ::IIIFManifest.config.manifest_value_for(record, property: :label)
+          manifest.label = ManifestBuilder.language_map(label) if label.present?
+          summary = ::IIIFManifest.config.manifest_value_for(record, property: :summary)
+          manifest.summary = ManifestBuilder.language_map(summary) if summary.present?
+          rights = ::IIIFManifest.config.manifest_value_for(record, property: :rights)
+          manifest.rights = rights if rights.present?
           manifest.behavior = viewing_hint if viewing_hint.present?
           manifest.metadata = metadata_from_record(record) if metadata_from_record(record).present?
           manifest.viewing_direction = viewing_direction if viewing_direction.present?
           manifest.service = services if search_service.present?
           manifest.rendering = populate_rendering if populate_rendering.present?
-          manifest.homepage = record.homepage if record.try(:homepage).present?
+          homepage = ::IIIFManifest.config.manifest_value_for(record, property: :homepage)
+          manifest.homepage = homepage if homepage.present?
         end
           # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
