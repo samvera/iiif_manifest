@@ -20,10 +20,12 @@ module IIIFManifest
     attr_writer :manifest_property_to_record_method_name_map
     # Used to map a record's public method to a manifest property.
     # @see manifest_value_for
-    # @see DEFAULT_MANIFEST_PROPERTY_TO_RECORD_METHOD_NAME_MAP DEFAULT_MANIFEST_PROPERTY_TO_RECORD_METHOD_NAME_MAP are the default values
+    # @see DEFAULT_MANIFEST_PROPERTY_TO_RECORD_METHOD_NAME_MAP DEFAULT_MANIFEST_PROPERTY_TO_RECORD_METHOD_NAME_MAP
+    #   are the default values
     # @return [Hash<Symbol, Symbol>]
     def manifest_property_to_record_method_name_map
-      @manifest_property_to_record_method_name_map ||= DEFAULT_MANIFEST_PROPERTY_TO_RECORD_METHOD_NAME_MAP
+      # the constant is frozen but we need to be able to configure something unfrozen
+      @manifest_property_to_record_method_name_map ||= DEFAULT_MANIFEST_PROPERTY_TO_RECORD_METHOD_NAME_MAP.dup
     end
 
     ##

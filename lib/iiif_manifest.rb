@@ -30,7 +30,7 @@ module IIIFManifest
   #
   #   # use the default configuration but amend the summary property
   #   IIIFManifest.config do |config|
-  #     config.manifest_property_to_record_method_name_map.merge! { summary: :abstract }
+  #     config.manifest_property_to_record_method_name_map.merge!(summary: :abstract)
   #   end
   #
   # @yield [IIIFManifest::Configuration] if a block is passed
