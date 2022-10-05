@@ -321,7 +321,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       it 'does not have a service element' do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
-        expect(result['service']).to eq nil
+        expect(result.key?('service')).to be false
       end
     end
 
@@ -331,10 +331,10 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       it 'has a service element with the correct profile, id and without an embedded service element' do
         allow(book_presenter).to receive(:search_service).and_return(search_service)
         expect(result['service'][0]['profile']).to eq 'http://iiif.io/api/search/1/search'
-        expect(result['service'][0]['id']).to eq 'http://test.host/books/book-77/search'
+        expect(result['service'][0]['@id']).to eq 'http://test.host/books/book-77/search'
         expect(result['service'][0]['label']).to eq 'Search within this manifest'
         expect(result['service'][0]['type']).to eq 'SearchService1'
-        expect(result['service'][0]['service']).to eq nil
+        expect(result['service'][0].key?('service')).to be false
       end
     end
 
@@ -343,7 +343,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       it 'has no service' do
         allow(book_presenter).to receive(:search_service).and_return(search_service)
-        expect(result['service']).to eq nil
+        expect(result.key?('service')).to be false
       end
     end
 
@@ -366,7 +366,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       it 'has a service element within the first service' do
         allow(book_presenter).to receive(:search_service).and_return(search_service)
-        expect(result['service'][0]['service']).to eq nil
+        expect(result['service'][0].key?('service')).to be false
       end
     end
 
@@ -375,7 +375,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
       it 'has a service element within the first service' do
         allow(book_presenter).to receive(:autocomplete_service).and_return(autocomplete_service)
-        expect(result['service']).to eq nil
+        expect(result.key?('service')).to be false
       end
     end
 

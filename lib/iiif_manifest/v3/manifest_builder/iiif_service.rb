@@ -209,7 +209,7 @@ module IIIFManifest
           end
 
           def search_service=(search_service)
-            inner_hash['id'] = search_service
+            inner_hash['@id'] = search_service
           end
 
           def initial_attributes
