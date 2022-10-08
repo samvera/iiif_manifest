@@ -12,7 +12,7 @@ module IIIFManifest
         manifest['@id'] = record.manifest_url.to_s
         label = Array(::IIIFManifest.config.manifest_value_for(record, property: :label)).first
         manifest.label = label
-        description = ::IIIFManifest.config.manifest_value_for(record, property: :description)
+        description = Array(::IIIFManifest.config.manifest_value_for(record, property: :description)).first
         manifest.description = description
         manifest.viewing_hint = viewing_hint if viewing_hint.present?
         manifest.viewing_direction = viewing_direction if viewing_direction.present?
