@@ -10,8 +10,10 @@ module IIIFManifest
 
       def apply(manifest)
         manifest['@id'] = record.manifest_url.to_s
-        manifest.label = record.to_s
-        manifest.description = record.description
+        label = Array(::IIIFManifest.config.manifest_value_for(record, property: :label)).first
+        manifest.label = label
+        description = ::IIIFManifest.config.manifest_value_for(record, property: :description)
+        manifest.description = description
         manifest.viewing_hint = viewing_hint if viewing_hint.present?
         manifest.viewing_direction = viewing_direction if viewing_direction.present?
         manifest.metadata = record.manifest_metadata if valid_metadata?

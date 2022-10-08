@@ -8,6 +8,7 @@ module IIIFManifest
   class Configuration
     DEFAULT_MANIFEST_PROPERTY_TO_RECORD_METHOD_NAME_MAP = {
       summary: :description,
+      description: :description,
       label: :to_s,
       rights: :rights_statement,
       homepage: :homepage
