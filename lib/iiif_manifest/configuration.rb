@@ -7,8 +7,8 @@ module IIIFManifest
   # @see IIIFManifest.config
   class Configuration
     DEFAULT_MANIFEST_PROPERTY_TO_RECORD_METHOD_NAME_MAP = {
-      summary: :description,
-      description: :description,
+      summary: :description, # for V3 manifests
+      description: :description, # for V2 manifests
       label: :to_s,
       rights: :rights_statement,
       homepage: :homepage
