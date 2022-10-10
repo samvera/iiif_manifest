@@ -144,7 +144,7 @@ Then you can produce the manifest on the book object like this:
 
 Provisional support for the [3.0 alpha version of the IIIF presentation api spec](https://iiif.io/api/presentation/3.0/) has been added with a focus on audiovisual content. The [change log](https://iiif.io/api/presentation/3.0/change-log/) lists the changes to the specification.
 
-The presentation 3.0 support has been contained to the `V3` namespace. Version 2.0 manifests are still be built using `IIIFManifest::ManifestFactory` while version 3.0 manifests can now be built using `IIIFManifest::V3::ManifestFactory`.
+The presentation 3.0 support has been contained to the `V3` namespace. Version 2.0 manifests are still being built using `IIIFManifest::ManifestFactory` while version 3.0 manifests can now be built using `IIIFManifest::V3::ManifestFactory`.
 
 ```ruby
   book = Book.new('book-77',[Page.new('page-99')])
@@ -160,6 +160,21 @@ The presentation 3.0 support has been contained to the `V3` namespace. Version 2
 - Range objects may now implement `#items` instead of `#ranges` and `#file_set_presenters` to allow for interleaving these objects. `#items` is not required and existing range objects should continue to work.
 - File set presenters may provide `#display_content` which should return an instance of `IIIFManifest::V3::DisplayContent` (or an array of instances in the case of a user `Choice`). `#display_image` is no longer required but will still work if provided.
 - DisplayContent may provide `#auth_service` which should return a hash containing a IIIF Authentication service definition (<https://iiif.io/api/auth/1.0/>) that will be included on the content resource.
+
+## Configuration
+
+The `label`, `rights`, `homepage`, `description` (V2 only), and `summary` (V3 only) properties can be configured to pull its information from different attributes.
+
+**NOTE:** In the V2 manifest, `label` and `description` is expected to be a string so if the model's attribute is multivalued, only the first value would be used.
+
+To enable this, add the following code to a config file at `config/initializers/iiif_manifest_config.rb` in your application.
+```ruby
+  # Example: use the default configuration but amend the summary property
+  IIIFManifest.config do |config|
+    config.manifest_property_to_record_method_name_map.merge!(summary: :abstract, rights: :license)
+  end
+```
+In the above example of a V3 manifest (since it is a `summary` instead of `description`), the `summary` property will be using the model's `#abstract` attribute value instead of the default `#description`. The `rights` property will use the model's `#license` attribute instead of the default `#rights_statement`. All other configurable properties will use their defaults.
 
 # Development
 
