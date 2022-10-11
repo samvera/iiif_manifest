@@ -173,6 +173,9 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(thumbnail).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Thumbnail
         thumbnail_values = thumbnail.inner_hash
         expect(thumbnail_values).to include "type" => "Image"
+        # binding.pry
+        expect(thumbnail_values).to include "id"
+        # expect(thumbnail_values).to include "id" => 'http://example.com/img1/full/!200,200/0/default.jpg'
 
         items = values['items']
         expect(items.length).to eq 1

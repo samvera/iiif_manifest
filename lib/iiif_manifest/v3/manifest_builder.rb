@@ -6,6 +6,7 @@ require_relative 'manifest_builder/content_builder'
 require_relative 'manifest_builder/body_builder'
 require_relative 'manifest_builder/structure_builder'
 require_relative 'manifest_builder/image_service_builder'
+require_relative 'manifest_builder/thumbnail_builder'
 
 module IIIFManifest
   module V3

@@ -120,7 +120,7 @@ module IIIFManifest
           end
 
           def thumbnail
-            inner_hash['thumbnail'] ||= []
+            inner_hash['thumbnail']
           end
 
           def thumbnail=(thumbnail)
