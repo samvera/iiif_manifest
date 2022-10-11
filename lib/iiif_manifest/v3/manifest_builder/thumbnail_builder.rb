@@ -9,7 +9,6 @@ module IIIFManifest
         end
 
         def apply(canvas)
-          
         end
       end
     end

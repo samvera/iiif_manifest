@@ -2,6 +2,7 @@ module IIIFManifest
   class ManifestBuilder
     class IIIFService
       attr_reader :inner_hash
+
       def initialize
         @inner_hash = initial_attributes
       end
