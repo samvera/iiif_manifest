@@ -12,7 +12,8 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       iiif_canvas_factory: IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas,
       content_builder: content_builder,
       choice_builder: IIIFManifest::V3::ManifestBuilder::ChoiceBuilder,
-      iiif_annotation_page_factory: IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage
+      iiif_annotation_page_factory: IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage,
+      iiif_thumbnail_factory: IIIFManifest::V3::ManifestBuilder::IIIFManifest::Thumbnail
     )
   end
   let(:record) { double(id: 'test-22') }
@@ -89,7 +90,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     end
 
     context 'when the display content is populated for a record' do
-      let(:url) { 'http://example.com/img1' }
+      let(:url) { 'http://example.com/img1/full/600,/0/default.jpg' }
       let(:display_content) do
         IIIFManifest::V3::DisplayContent.new(url,
                                              width: 640,
@@ -168,6 +169,11 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(values).to include "id" => "http://test.host/books/book-77/manifest/canvas/test-22"
 
         expect(values).to include 'items'
+        thumbnail = values['thumbnail'].first
+        expect(thumbnail).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Thumbnail
+        thumbnail_values = thumbnail.inner_hash
+        expect(thumbnail_values).to include "type" => "Image"
+
         items = values['items']
         expect(items.length).to eq 1
         page = items.first

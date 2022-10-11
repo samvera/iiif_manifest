@@ -3,20 +3,22 @@ module IIIFManifest
     class ManifestBuilder
       class CanvasBuilder
         attr_reader :record, :parent, :iiif_canvas_factory, :content_builder,
-                    :choice_builder, :iiif_annotation_page_factory
+                    :choice_builder, :iiif_annotation_page_factory, :iiif_thumbnail_factory
 
         def initialize(record,
                        parent,
                        iiif_canvas_factory:,
                        content_builder:,
                        choice_builder:,
-                       iiif_annotation_page_factory:)
+                       iiif_annotation_page_factory:,
+                       iiif_thumbnail_factory:)
           @record = record
           @parent = parent
           @iiif_canvas_factory = iiif_canvas_factory
           @content_builder = content_builder
           @choice_builder = choice_builder
           @iiif_annotation_page_factory = iiif_annotation_page_factory
+          @iiif_thumbnail_factory = iiif_thumbnail_factory
           apply_record_properties
           # Presentation 2.x approach
           attach_image if display_image
@@ -54,6 +56,11 @@ module IIIFManifest
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
+          canvas.thumbnail = [thumbnail]
+        end
+
+        def thumbnail
+          @thumbnail ||= iiif_thumbnail_factory.new
         end
 
         def annotation_page
