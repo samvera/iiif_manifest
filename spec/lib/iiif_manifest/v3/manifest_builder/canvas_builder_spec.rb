@@ -13,7 +13,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       content_builder: content_builder,
       choice_builder: IIIFManifest::V3::ManifestBuilder::ChoiceBuilder,
       iiif_annotation_page_factory: IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage,
-      iiif_thumbnail_factory: IIIFManifest::V3::ManifestBuilder::IIIFManifest::Thumbnail
+      thumbnail_builder_factory: thumbnail_builder_factory
     )
   end
   let(:record) { double(id: 'test-22') }
@@ -122,6 +122,8 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         allow(body_builder_factory).to receive(:new).and_return(body_builder)
         allow(iiif_annotation_factory).to receive(:new).and_return(iiif_annotation)
         allow(content_builder).to receive(:new).and_return(built_content)
+        allow(thumbnail_builder).to receive(:apply).and_return(iiif_thumbnail)
+        allow(thumbnail_builder_factory).to receive(:new).and_return(thumbnail_builder)
       end
 
       let(:iiif_body) do
@@ -130,6 +132,14 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         body['height'] = '100px'
         body['duration'] = nil
         body
+      end
+
+      let(:iiif_thumbnail) do
+        thumbnail = IIIFManifest::V3::ManifestBuilder::IIIFManifest::Thumbnail.new
+        thumbnail['width'] = 200
+        thumbnail['height'] = 150
+        thumbnail['duration'] = nil
+        thumbnail
       end
 
       let(:iiif_annotation) do
@@ -147,6 +157,14 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       end
 
       let(:body_builder_factory) do
+        double
+      end
+
+      let(:thumbnail_builder) do
+        instance_double(IIIFManifest::V3::ManifestBuilder::ThumbnailBuilder)
+      end
+
+      let(:thumbnail_builder_factory) do
         double
       end
 
@@ -176,8 +194,6 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(thumbnail).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Thumbnail
         thumbnail_values = thumbnail.inner_hash
         expect(thumbnail_values).to include "type" => "Image"
-        expect(thumbnail_values).to include "id"
-        expect(thumbnail_values).to include "id" => "http://example.com/img1/full/!200,200/0/default.jpg"
         expect(thumbnail_values).to include "width" => 200
         expect(thumbnail_values).to include "height" => 150
 

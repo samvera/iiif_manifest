@@ -56,7 +56,7 @@ module IIIFManifest
             content_builder: content_builder,
             choice_builder: choice_builder,
             iiif_annotation_page_factory: iiif_annotation_page_factory,
-            iiif_thumbnail_factory: iiif_thumbnail_factory
+            thumbnail_builder_factory: thumbnail_builder_factory
           )
         end
 
@@ -81,6 +81,14 @@ module IIIFManifest
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
             ManifestBuilder::BodyBuilder,
             iiif_body_factory: iiif_body_factory,
+            image_service_builder_factory: image_service_builder_factory
+          )
+        end
+
+        def thumbnail_builder_factory
+          IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+            ManifestBuilder::ThumbnailBuilder,
+            iiif_thumbnail_factory: iiif_thumbnail_factory,
             image_service_builder_factory: image_service_builder_factory
           )
         end

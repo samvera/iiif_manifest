@@ -3,7 +3,7 @@ module IIIFManifest
     class ManifestBuilder
       class CanvasBuilder
         attr_reader :record, :parent, :iiif_canvas_factory, :content_builder,
-                    :choice_builder, :iiif_annotation_page_factory, :iiif_thumbnail_factory
+                    :choice_builder, :iiif_annotation_page_factory, :thumbnail_builder_factory
 
         def initialize(record,
                        parent,
@@ -11,14 +11,14 @@ module IIIFManifest
                        content_builder:,
                        choice_builder:,
                        iiif_annotation_page_factory:,
-                       iiif_thumbnail_factory:)
+                       thumbnail_builder_factory:)
           @record = record
           @parent = parent
           @iiif_canvas_factory = iiif_canvas_factory
           @content_builder = content_builder
           @choice_builder = choice_builder
           @iiif_annotation_page_factory = iiif_annotation_page_factory
-          @iiif_thumbnail_factory = iiif_thumbnail_factory
+          @thumbnail_builder_factory = thumbnail_builder_factory
           apply_record_properties
           # Presentation 2.x approach
           attach_image if display_image
@@ -56,29 +56,11 @@ module IIIFManifest
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
-          canvas.thumbnail = [build_thumbnail(record.display_content)] if display_content
-        end
-
-        def build_thumbnail(image)
-          thumbnail['id'] = File.join(image.iiif_endpoint.url, "full", "!200,200", "0", "default.jpg")
-          thumbnail['height'] = (image.height * reduction_ratio).round
-          thumbnail['width'] = (image.width * reduction_ratio).round
-          thumbnail['format'] = image.format
-          thumbnail
-        end
-
-        def reduction_ratio
-          width = record.display_content.width
-          height = record.display_content.height
-          max_edge = 200.0
-          return 1 if width <= max_edge && height <= max_edge
-
-          long_edge = [height, width].max
-          max_edge / long_edge
+          canvas.thumbnail = [thumbnail]
         end
 
         def thumbnail
-          @thumbnail ||= iiif_thumbnail_factory.new
+          thumbnail_builder_factory.new(display_content.first).apply(canvas)
         end
 
         def annotation_page
