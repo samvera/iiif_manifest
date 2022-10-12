@@ -56,7 +56,7 @@ module IIIFManifest
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
-          canvas.thumbnail = [build_thumbnail(record.display_image)] if record.respond_to?(:display_image)
+          canvas.thumbnail = [build_thumbnail(record.display_content)] if display_content
         end
 
         def build_thumbnail(image)
@@ -68,8 +68,8 @@ module IIIFManifest
         end
 
         def reduction_ratio
-          width = record.display_image.width
-          height = record.display_image.height
+          width = record.display_content.width
+          height = record.display_content.height
           max_edge = 200.0
           return 1 if width <= max_edge && height <= max_edge
 

@@ -90,14 +90,16 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     end
 
     context 'when the display content is populated for a record' do
-      let(:url) { 'http://example.com/img1' }
+      let(:url) { 'http://example.com/img1/full/600,/0/default.jpg' }
+      let(:iiif_endpoint) { double('endpoint', url: 'http://example.com/img1') }
       let(:display_content) do
         IIIFManifest::V3::DisplayContent.new(url,
                                              width: 640,
                                              height: 480,
                                              type: 'Image',
                                              format: 'image/jpeg',
-                                             label: 'full')
+                                             label: 'full',
+                                             iiif_endpoint: iiif_endpoint)
       end
       let(:record) do
         MyWork.new(display_content: display_content)
@@ -167,6 +169,17 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
 
         expect(values).to include "type" => "Canvas"
         expect(values).to include "id" => "http://test.host/books/book-77/manifest/canvas/test-22"
+        expect(values).to include "items"
+
+        expect(values).to include "thumbnail"
+        thumbnail = values['thumbnail'].first
+        expect(thumbnail).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Thumbnail
+        thumbnail_values = thumbnail.inner_hash
+        expect(thumbnail_values).to include "type" => "Image"
+        expect(thumbnail_values).to include "id"
+        expect(thumbnail_values).to include "id" => "http://example.com/img1/full/!200,200/0/default.jpg"
+        expect(thumbnail_values).to include "width" => 200
+        expect(thumbnail_values).to include "height" => 150
 
         items = values['items']
         expect(items.length).to eq 1
