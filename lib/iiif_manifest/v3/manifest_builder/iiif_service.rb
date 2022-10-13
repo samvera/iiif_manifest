@@ -72,6 +72,10 @@ module IIIFManifest
           inner_hash['homepage'] = homepage
         end
 
+        def thumbnail=(thumbnail)
+          inner_hash['thumbnail'] = thumbnail
+        end
+
         def initial_attributes
           {
             '@context' => [

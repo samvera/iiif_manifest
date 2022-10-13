@@ -2,15 +2,17 @@ module IIIFManifest
   module V3
     class ManifestBuilder
       class RecordPropertyBuilder < ::IIIFManifest::ManifestBuilder::RecordPropertyBuilder
-        attr_reader :canvas_builder_factory
+        attr_reader :canvas_builder_factory, :iiif_thumbnail_factory
         def initialize(record,
                        iiif_search_service_factory:,
                        iiif_autocomplete_service_factory:,
-                       canvas_builder_factory:)
+                       canvas_builder_factory:,
+                       iiif_thumbnail_factory:)
           super(record,
                 iiif_search_service_factory: iiif_search_service_factory,
                 iiif_autocomplete_service_factory: iiif_autocomplete_service_factory)
           @canvas_builder_factory = canvas_builder_factory
+          @iiif_thumbnail_factory = iiif_thumbnail_factory
         end
 
         def apply(manifest)
@@ -38,7 +40,7 @@ module IIIFManifest
           canvas_builder_factory.from(record)
         end
 
-          # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize, Metrics/MethodLength
         def setup_manifest_from_record(manifest, record)
           manifest['id'] = record.manifest_url.to_s
           label = ::IIIFManifest.config.manifest_value_for(record, property: :label)
@@ -54,8 +56,9 @@ module IIIFManifest
           manifest.rendering = populate_rendering if populate_rendering.present?
           homepage = ::IIIFManifest.config.manifest_value_for(record, property: :homepage)
           manifest.homepage = homepage if homepage.present?
+          manifest.thumbnail = thumbnail if thumbnail.present?
         end
-          # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize, Metrics/MethodLength
 
         def metadata_from_record(record)
           if valid_v3_metadata?
@@ -95,6 +98,10 @@ module IIIFManifest
           metadata_field['label'] = ManifestBuilder.language_map(field['label'])
           metadata_field['value'] = ManifestBuilder.language_map(field['value'])
           metadata_field
+        end
+
+        def thumbnail
+          @thumbnail ||= iiif_thumbnail_factory.new
         end
       end
     end
