@@ -60,7 +60,7 @@ module IIIFManifest
         end
 
         def thumbnail
-          thumbnail_builder_factory.new(display_content.first).apply(canvas)
+          thumbnail_builder_factory.new(display_content&.first).apply(canvas)
         end
 
         def annotation_page
