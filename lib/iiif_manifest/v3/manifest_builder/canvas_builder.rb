@@ -56,11 +56,15 @@ module IIIFManifest
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
-          canvas.thumbnail = [thumbnail] if display_content && iiif_endpoint
+          canvas.thumbnail = [thumbnail] if iiif_endpoint
         end
 
         def thumbnail
-          thumbnail_builder_factory.new(display_content&.first).apply(canvas)
+          if display_image
+            thumbnail_builder_factory.new(display_image).apply(canvas)
+          elsif display_content
+            thumbnail_builder_factory.new(display_content.first).apply(canvas)
+          end
         end
 
         def annotation_page
@@ -80,7 +84,9 @@ module IIIFManifest
         end
 
         def iiif_endpoint
-          display_content.try(:iiif_endpoint) || display_content.first.try(:iiif_endpoint)
+          display_image.try(:iiif_endpoint) ||
+            display_content.try(:iiif_endpoint) ||
+            display_content&.first.try(:iiif_endpoint)
         end
       end
     end
