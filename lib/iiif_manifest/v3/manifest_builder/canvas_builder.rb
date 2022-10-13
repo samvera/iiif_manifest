@@ -56,7 +56,7 @@ module IIIFManifest
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
-          canvas.thumbnail = [thumbnail]
+          canvas.thumbnail = [thumbnail] if display_content && iiif_endpoint
         end
 
         def thumbnail
@@ -77,6 +77,10 @@ module IIIFManifest
           else
             choice_builder.new(display_content).apply(canvas)
           end
+        end
+
+        def iiif_endpoint
+          display_content.try(:iiif_endpoint) || display_content.first.try(:iiif_endpoint)
         end
       end
     end
