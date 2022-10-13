@@ -11,7 +11,7 @@ module IIIFManifest
 
         def apply(canvas)
           build_thumbnail
-          # image_service_builder
+          image_service_builder.apply(thumbnail)
           canvas.thumbnail = thumbnail
         end
 
@@ -36,6 +36,14 @@ module IIIFManifest
 
         def thumbnail
           @thumbnail ||= iiif_thumbnail_factory.new
+        end
+
+        def iiif_endpoint
+          display_content.try(:iiif_endpoint)
+        end
+
+        def image_service_builder
+          image_service_builder_factory.new(iiif_endpoint)
         end
       end
     end

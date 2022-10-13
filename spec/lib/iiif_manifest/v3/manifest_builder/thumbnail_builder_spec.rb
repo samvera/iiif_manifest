@@ -2,6 +2,7 @@
 require 'spec_helper'
 
 RSpec.describe IIIFManifest::V3::ManifestBuilder::ThumbnailBuilder do
+  subject(:thumbnail_builder) { builder.apply(canvas) }
   let(:builder) do
     described_class.new(
       display_content,
@@ -10,7 +11,12 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::ThumbnailBuilder do
     )
   end
   let(:url) { 'http://example.com/img1' }
-  let(:iiif_endpoint) { double }
+  let(:iiif_endpoint) do
+    instance_double('endpoint',
+      url: url,
+      profile: 'http://iiif.io/api/image/2/level2.json',
+      context: 'http://iiif.io/api/image/2/context.json')
+  end
   let(:display_content) do
     IIIFManifest::DisplayImage.new(
       url,
@@ -24,8 +30,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::ThumbnailBuilder do
   let(:image_service_builder_factory) { IIIFManifest::V3::ManifestServiceLocator.image_service_builder_factory }
 
   before do
-    allow(iiif_endpoint).to receive(:url).and_return(url)
-    builder.apply(canvas)
+    thumbnail_builder
   end
 
   describe '#apply' do
@@ -40,6 +45,13 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::ThumbnailBuilder do
       expect(canvas.thumbnail['id']).to eq url + '/full/!200,200/0/default.jpg'
       expect(canvas.thumbnail['width']).to eq 200
       expect(canvas.thumbnail['height']).to eq 150
+
+      expect(canvas.thumbnail['service']).to be_an Array
+      service = canvas.thumbnail['service'].first
+      expect(service).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFService
+      expect(service['@id']).to eq iiif_endpoint.url
+      expect(service['profile']).to eq iiif_endpoint.profile
+      expect(service['@type']).to eq 'ImageService2'
     end
   end
 

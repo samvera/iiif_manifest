@@ -249,6 +249,10 @@ module IIIFManifest
         end
 
         class Thumbnail < IIIFService
+          def service=(service)
+            inner_hash['service'] = service
+          end
+
           def initial_attributes
             {
               'type' => 'Image'
