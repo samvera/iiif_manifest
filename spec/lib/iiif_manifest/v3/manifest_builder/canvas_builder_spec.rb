@@ -182,7 +182,6 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     end
   end
 
-
   describe '#new' do
     it 'builds a canvas with a label' do
       allow(record).to receive(:to_s).and_return('Test Canvas')
@@ -213,5 +212,4 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       end
     end
   end
-
 end
