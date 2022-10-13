@@ -2,17 +2,17 @@ module IIIFManifest
   module V3
     class ManifestBuilder
       class RecordPropertyBuilder < ::IIIFManifest::ManifestBuilder::RecordPropertyBuilder
-        attr_reader :canvas_builder_factory, :iiif_thumbnail_factory
+        attr_reader :canvas_builder_factory, :thumbnail_builder_factory
         def initialize(record,
                        iiif_search_service_factory:,
                        iiif_autocomplete_service_factory:,
                        canvas_builder_factory:,
-                       iiif_thumbnail_factory:)
+                       thumbnail_builder_factory:)
           super(record,
                 iiif_search_service_factory: iiif_search_service_factory,
                 iiif_autocomplete_service_factory: iiif_autocomplete_service_factory)
           @canvas_builder_factory = canvas_builder_factory
-          @iiif_thumbnail_factory = iiif_thumbnail_factory
+          @thumbnail_builder_factory = thumbnail_builder_factory
         end
 
         def apply(manifest)
@@ -56,7 +56,7 @@ module IIIFManifest
           manifest.rendering = populate_rendering if populate_rendering.present?
           homepage = ::IIIFManifest.config.manifest_value_for(record, property: :homepage)
           manifest.homepage = homepage if homepage.present?
-          manifest.thumbnail = thumbnail if thumbnail.present?
+          apply_thumbnail_to(manifest)
         end
         # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize, Metrics/MethodLength
 
@@ -100,8 +100,22 @@ module IIIFManifest
           metadata_field
         end
 
-        def thumbnail
-          @thumbnail ||= iiif_thumbnail_factory.new
+        def apply_thumbnail_to(manifest)
+          if display_image
+            thumbnail_builder_factory.new(display_image).apply(manifest)
+          elsif display_content
+            thumbnail_builder_factory.new(display_content).apply(manifest)
+          end
+        end
+
+        def display_image
+          return @display_image if defined?(@display_image)
+          @display_image = record.try(:member_presenters)&.first&.display_image
+        end
+
+        def display_content
+          return @display_content if defined?(@display_content)
+          @display_content = record.try(:member_presenters)&.first&.display_content
         end
       end
     end

@@ -30,7 +30,7 @@ module IIIFManifest
             iiif_search_service_factory: iiif_search_service_factory,
             iiif_autocomplete_service_factory: iiif_autocomplete_service_factory,
             canvas_builder_factory: deep_canvas_builder_factory,
-            iiif_thumbnail_factory: iiif_thumbnail_factory
+            thumbnail_builder_factory: thumbnail_builder_factory
             # canvas_builder_factory: canvas_builder_factory
           )
         end
