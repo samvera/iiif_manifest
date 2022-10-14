@@ -137,8 +137,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       it 'returns items' do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
 
-        result
-
         expect(result['items'].length).to eq 1
         expect(result['items'].first['type']).to eq 'Canvas'
         expect(result['items'].first['id']).to eq 'http://test.host/books/book-77/manifest/canvas/test-22'
@@ -161,9 +159,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       it 'has a thumbnail property' do
         allow(book_presenter).to receive(:member_presenters).and_return([file_presenter])
 
-        result
-
-        thumbnail = result['thumbnail'].inner_hash
+        thumbnail = result['thumbnail'].first
         expect(thumbnail['id']).to eq 'test.host/images/image-77/full/!200,200/0/default.jpg'
         expect(thumbnail['height']).to eq 150
         expect(thumbnail['width']).to eq 200
@@ -193,8 +189,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
         it 'returns items' do
           allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
-
-          result
 
           expect(result['items'].length).to eq 1
           expect(result['items'].first['type']).to eq 'Canvas'

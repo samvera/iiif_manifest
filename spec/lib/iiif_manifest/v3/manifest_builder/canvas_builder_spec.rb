@@ -55,7 +55,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     allow(body_builder_factory).to receive(:new).and_return(body_builder)
     allow(iiif_annotation_factory).to receive(:new).and_return(iiif_annotation)
     allow(content_builder).to receive(:new).and_return(built_content)
-    allow(thumbnail_builder).to receive(:apply).and_return(iiif_thumbnail)
+    allow(thumbnail_builder).to receive(:build).and_return(iiif_thumbnail)
     allow(thumbnail_builder_factory).to receive(:new).and_return(thumbnail_builder)
   end
 
@@ -82,7 +82,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   end
 
   let(:iiif_annotation_factory) do
-    double
+    double('IIIF Annotation Factory')
   end
 
   let(:body_builder) do
@@ -90,7 +90,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   end
 
   let(:body_builder_factory) do
-    double
+    double('Body Builder')
   end
 
   let(:thumbnail_builder) do
@@ -98,7 +98,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   end
 
   let(:thumbnail_builder_factory) do
-    double
+    double('Thumbnail Builder')
   end
 
   let(:built_content) do
@@ -110,7 +110,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   end
 
   let(:content_builder) do
-    double
+    double('Content Builder')
   end
 
   describe '#canvas' do

@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 RSpec.describe IIIFManifest::V3::ManifestBuilder::ThumbnailBuilder do
-  subject(:thumbnail_builder) { builder.apply(canvas) }
+  subject(:thumbnail_builder) { builder.build }
   let(:builder) do
     described_class.new(
       display_content,
@@ -28,26 +28,26 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::ThumbnailBuilder do
   end
   let(:canvas) { IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas.new }
   let(:image_service_builder_factory) { IIIFManifest::V3::ManifestServiceLocator.image_service_builder_factory }
-
+  let(:thumbnail) { thumbnail_builder.first }
   before do
     thumbnail_builder
   end
 
-  describe '#apply' do
+  describe '#build' do
     it 'sets a thumbnail on the canvas' do
-      expect(canvas.thumbnail).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Thumbnail
+      expect(thumbnail).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFManifest::Thumbnail
     end
   end
 
   describe '#build_thumbnail' do
     it 'sets properties on the thumbnail' do
-      expect(canvas.thumbnail['type']).to eq 'Image'
-      expect(canvas.thumbnail['id']).to eq url + '/full/!200,200/0/default.jpg'
-      expect(canvas.thumbnail['width']).to eq 200
-      expect(canvas.thumbnail['height']).to eq 150
+      expect(thumbnail['type']).to eq 'Image'
+      expect(thumbnail['id']).to eq url + '/full/!200,200/0/default.jpg'
+      expect(thumbnail['width']).to eq 200
+      expect(thumbnail['height']).to eq 150
 
-      expect(canvas.thumbnail['service']).to be_an Array
-      service = canvas.thumbnail['service'].first
+      expect(thumbnail['service']).to be_an Array
+      service = thumbnail['service'].first
       expect(service).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFService
       expect(service['@id']).to eq iiif_endpoint.url
       expect(service['profile']).to eq iiif_endpoint.profile

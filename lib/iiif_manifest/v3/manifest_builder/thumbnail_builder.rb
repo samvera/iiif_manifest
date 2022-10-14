@@ -9,11 +9,11 @@ module IIIFManifest
           @image_service_builder_factory = image_service_builder_factory
         end
 
-        # @param canvas_or_manifest [#thumbnail=]
-        def apply(canvas_or_manifest)
+        # @return [Array<Object>]
+        def build
           build_thumbnail
           image_service_builder.apply(thumbnail)
-          canvas_or_manifest.thumbnail = thumbnail
+          [thumbnail]
         end
 
         private

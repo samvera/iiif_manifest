@@ -47,6 +47,8 @@ module IIIFManifest
           record.display_image if record.respond_to?(:display_image)
         end
 
+        # @return [Array<Object>] if the record has a display content
+        # @return [NilClass] if there is no display content
         def display_content
           Array.wrap(record.display_content) if record.respond_to?(:display_content) && record.display_content.present?
         end
@@ -56,14 +58,16 @@ module IIIFManifest
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
-          canvas.thumbnail = [thumbnail] if iiif_endpoint
+          apply_thumbnail_to(canvas)
         end
 
-        def thumbnail
+        def apply_thumbnail_to(canvas)
+          return unless iiif_endpoint
+
           if display_image
-            thumbnail_builder_factory.new(display_image).apply(canvas)
-          elsif display_content
-            thumbnail_builder_factory.new(display_content.first).apply(canvas)
+            canvas.thumbnail = Array(thumbnail_builder_factory.new(display_image).build)
+          elsif display_content.try(:first)
+            canvas.thumbnail = Array(thumbnail_builder_factory.new(display_content.first).build)
           end
         end
 
@@ -84,9 +88,7 @@ module IIIFManifest
         end
 
         def iiif_endpoint
-          display_image.try(:iiif_endpoint) ||
-            display_content.try(:iiif_endpoint) ||
-            display_content&.first.try(:iiif_endpoint)
+          display_image.try(:iiif_endpoint) || Array(display_content).first.try(:iiif_endpoint)
         end
       end
     end

@@ -101,10 +101,12 @@ module IIIFManifest
         end
 
         def apply_thumbnail_to(manifest)
+          return unless iiif_endpoint
+
           if display_image
-            thumbnail_builder_factory.new(display_image).apply(manifest)
+            manifest.thumbnail = Array(thumbnail_builder_factory.new(display_image).build)
           elsif display_content
-            thumbnail_builder_factory.new(display_content).apply(manifest)
+            manifest.thumbnail = Array(thumbnail_builder_factory.new(display_content).build)
           end
         end
 
@@ -116,6 +118,10 @@ module IIIFManifest
         def display_content
           return @display_content if defined?(@display_content)
           @display_content = record.try(:member_presenters)&.first&.display_content
+        end
+
+        def iiif_endpoint
+          display_image.try(:iiif_endpoint) || Array(display_content).first.try(:iiif_endpoint)
         end
       end
     end
