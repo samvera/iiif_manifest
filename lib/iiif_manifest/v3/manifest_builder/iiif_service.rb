@@ -259,7 +259,6 @@ module IIIFManifest
 
           def initial_attributes
             {
-              'type' => 'Image'
             }
           end
         end

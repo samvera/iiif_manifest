@@ -20,6 +20,7 @@ module IIIFManifest
 
         def build_thumbnail
           thumbnail['id'] = File.join(display_content.iiif_endpoint.url, 'full', '!200,200', '0', 'default.jpg')
+          thumbnail['type'] = display_content.type
           thumbnail['height'] = (display_content.height * reduction_ratio).round
           thumbnail['width'] = (display_content.width * reduction_ratio).round
           thumbnail['format'] = display_content.format

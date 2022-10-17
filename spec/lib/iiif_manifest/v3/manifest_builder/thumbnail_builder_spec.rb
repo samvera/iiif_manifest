@@ -23,12 +23,13 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::ThumbnailBuilder do
       width: 640,
       height: 480,
       iiif_endpoint: iiif_endpoint,
-      format: 'Image'
+      format: 'image/jpeg'
     )
   end
   let(:canvas) { IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas.new }
   let(:image_service_builder_factory) { IIIFManifest::V3::ManifestServiceLocator.image_service_builder_factory }
   let(:thumbnail) { thumbnail_builder.first }
+
   before do
     thumbnail_builder
   end
@@ -45,7 +46,6 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::ThumbnailBuilder do
       expect(thumbnail['id']).to eq url + '/full/!200,200/0/default.jpg'
       expect(thumbnail['width']).to eq 200
       expect(thumbnail['height']).to eq 150
-
       expect(thumbnail['service']).to be_an Array
       service = thumbnail['service'].first
       expect(service).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFService

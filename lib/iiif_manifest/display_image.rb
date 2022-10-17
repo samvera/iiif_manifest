@@ -1,8 +1,9 @@
 module IIIFManifest
   class DisplayImage
-    attr_reader :url, :width, :height, :iiif_endpoint, :format
+    attr_reader :url, :type, :width, :height, :iiif_endpoint, :format
     def initialize(url, width:, height:, format: nil, iiif_endpoint: nil)
       @url = url
+      @type = 'Image'
       @width = width
       @height = height
       @format = format

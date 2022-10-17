@@ -69,6 +69,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
 
   let(:iiif_thumbnail) do
     thumbnail = IIIFManifest::V3::ManifestBuilder::IIIFManifest::Thumbnail.new
+    thumbnail['type'] = 'Image'
     thumbnail['width'] = 200
     thumbnail['height'] = 150
     thumbnail['duration'] = nil
