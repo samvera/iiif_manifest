@@ -19,7 +19,13 @@ module IIIFManifest
         private
 
         def build_thumbnail
-          thumbnail['id'] = File.join(display_content.iiif_endpoint.url, 'full', '!200,200', '0', 'default.jpg')
+          thumbnail['id'] = File.join(
+            display_content.iiif_endpoint.url,
+            'full',
+            "!#{max_edge},#{max_edge}",
+            '0',
+            'default.jpg'
+          )
           thumbnail['type'] = display_content.type
           thumbnail['height'] = (display_content.height * reduction_ratio).round
           thumbnail['width'] = (display_content.width * reduction_ratio).round
@@ -29,11 +35,15 @@ module IIIFManifest
         def reduction_ratio
           width = display_content.width
           height = display_content.height
-          max_edge = 200.0
+          max_edge = self.max_edge.to_f
           return 1 if width <= max_edge && height <= max_edge
 
           long_edge = [height, width].max
           max_edge / long_edge
+        end
+
+        def max_edge
+          @max_edge = ::IIIFManifest.config.max_edge_for_thumbnail
         end
 
         def thumbnail

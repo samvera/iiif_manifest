@@ -33,6 +33,12 @@ module IIIFManifest
   #     config.manifest_property_to_record_method_name_map.merge!(summary: :abstract)
   #   end
   #
+  #   # set max edge length for thumbnail images
+  #   # the below example will set the max edge to 100px
+  #   IIIFManifest.confg do |config|
+  #     config.max_edge_for_thumbnail = 100
+  #   end
+  #
   # @yield [IIIFManifest::Configuration] if a block is passed
   # @return [IIIFManifest::Configuration]
   # @see IIIFManifest::Configuration for configuration options

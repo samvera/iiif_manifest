@@ -30,6 +30,16 @@ module IIIFManifest
     end
 
     ##
+    # @param value [Integer]
+    attr_writer :max_edge_for_thumbnail
+    # Used to set max edge length for thumbnail generation.
+    # @return [Integer]
+    def max_edge_for_thumbnail
+      return @max_edge_for_thumbnail unless @max_edge_for_thumbnail.nil?
+      @max_edge_for_thumbnail = 200
+    end
+
+    ##
     # @api private
     # @param record [Object] has the value for the :property we want to set
     # @param property [Symbol] IIIF manifest property
