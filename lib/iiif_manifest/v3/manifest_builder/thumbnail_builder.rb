@@ -35,7 +35,7 @@ module IIIFManifest
         def reduction_ratio
           width = display_content.width
           height = display_content.height
-          max_edge = self.max_edge.to_f
+          max_edge = @max_edge.to_f
           return 1 if width <= max_edge && height <= max_edge
 
           long_edge = [height, width].max
