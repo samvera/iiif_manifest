@@ -78,7 +78,7 @@ module IIIFManifest
 
       def canvas_builders
         @canvas_builders ||= file_set_presenters.map do |file_set_presenter|
-          canvas_builder_factory.new(file_set_presenter, parent)
+          canvas_builder_factory.new(file_set_presenter, parent, nil)
         end
       end
 

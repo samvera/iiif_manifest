@@ -18,7 +18,7 @@ module IIIFManifest
         def apply(manifest)
           setup_manifest_from_record(manifest, record)
           # Build the items array
-          canvas_builder.apply(manifest.items)
+          canvas_builder(manifest).apply(manifest.items)
           manifest
         end
 
@@ -36,8 +36,8 @@ module IIIFManifest
 
         private
 
-        def canvas_builder
-          canvas_builder_factory.from(record)
+        def canvas_builder(manifest)
+          canvas_builder_factory.from(record, manifest)
         end
 
         # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize, Metrics/MethodLength
@@ -56,7 +56,6 @@ module IIIFManifest
           manifest.rendering = populate_rendering if populate_rendering.present?
           homepage = ::IIIFManifest.config.manifest_value_for(record, property: :homepage)
           manifest.homepage = homepage if homepage.present?
-          apply_thumbnail_to(manifest)
         end
         # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize, Metrics/MethodLength
 
@@ -98,30 +97,6 @@ module IIIFManifest
           metadata_field['label'] = ManifestBuilder.language_map(field['label'])
           metadata_field['value'] = ManifestBuilder.language_map(field['value'])
           metadata_field
-        end
-
-        def apply_thumbnail_to(manifest)
-          return unless iiif_endpoint
-
-          if display_image
-            manifest.thumbnail = Array(thumbnail_builder_factory.new(display_image).build)
-          elsif display_content
-            manifest.thumbnail = Array(thumbnail_builder_factory.new(display_content).build)
-          end
-        end
-
-        def display_image
-          return @display_image if defined?(@display_image)
-          @display_image = record.try(:member_presenters)&.first&.display_image
-        end
-
-        def display_content
-          return @display_content if defined?(@display_content)
-          @display_content = record.try(:member_presenters)&.first&.display_content
-        end
-
-        def iiif_endpoint
-          display_image.try(:iiif_endpoint) || Array(display_content).first.try(:iiif_endpoint)
         end
       end
     end

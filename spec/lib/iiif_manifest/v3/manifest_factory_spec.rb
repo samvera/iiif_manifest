@@ -156,17 +156,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(result['items'].first['items'].first['items'].first['body']['format']).to eq 'image/jpeg'
       end
 
-      it 'has a thumbnail property' do
-        allow(book_presenter).to receive(:member_presenters).and_return([file_presenter])
-
-        thumbnail = result['thumbnail'].first
-        expect(thumbnail['id']).to eq 'test.host/images/image-77/full/!200,200/0/default.jpg'
-        expect(thumbnail['height']).to eq 150
-        expect(thumbnail['width']).to eq 200
-        expect(thumbnail['format']).to eq 'image/jpeg'
-        expect(thumbnail['service'].first).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFService
-      end
-
       it 'builds a structure if it can' do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
         allow(book_presenter.ranges[0].ranges[0]).to receive(:file_set_presenters).and_return([file_presenter])
