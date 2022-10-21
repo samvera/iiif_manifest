@@ -62,8 +62,6 @@ module IIIFManifest
         end
 
         def apply_thumbnail_to(canvas)
-          return unless iiif_endpoint
-
           if display_image
             canvas.thumbnail = Array(thumbnail_builder_factory.new(display_image).build)
           elsif display_content.try(:first)
@@ -85,10 +83,6 @@ module IIIFManifest
           else
             choice_builder.new(display_content).apply(canvas)
           end
-        end
-
-        def iiif_endpoint
-          display_image.try(:iiif_endpoint) || Array(display_content).first.try(:iiif_endpoint)
         end
       end
     end
