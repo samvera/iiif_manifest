@@ -58,7 +58,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     allow(content_builder).to receive(:new).and_return(built_content)
     allow(thumbnail_builder).to receive(:build).and_return(iiif_thumbnail)
     allow(thumbnail_builder_factory).to receive(:new).and_return(thumbnail_builder)
-    allow(manifest).to receive(:thumbnail).and_return(iiif_thumbnail)
+    # allow(manifest).to receive(:thumbnail).and_return(iiif_thumbnail)
   end
 
   let(:iiif_body) do
@@ -105,7 +105,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   end
 
   let(:manifest) do
-    instance_double(IIIFManifest::V3::ManifestBuilder::IIIFManifest)
+    IIIFManifest::V3::ManifestBuilder::IIIFManifest.new
   end
 
   let(:built_content) do
@@ -155,10 +155,17 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(values).to include "width" => "100px"
         expect(values).to include "height" => "100px"
         expect(values).to include "duration" => nil
-        expect(manifest.thumbnail['type']).to eq 'Image'
-        expect(manifest.thumbnail['width']).to eq 200
-        expect(manifest.thumbnail['height']).to eq 150
-        expect(manifest.thumbnail['duration']).to be_nil
+      end
+
+      it 'sets the manifest thumbnail as well' do
+        builder.canvas
+        expect(manifest.thumbnail).to be_an Array
+        manifest_thumbnail = manifest.thumbnail.first
+        expect(manifest_thumbnail).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Thumbnail
+        expect(manifest_thumbnail['type']).to eq 'Image'
+        expect(manifest_thumbnail['width']).to eq 200
+        expect(manifest_thumbnail['height']).to eq 150
+        expect(manifest_thumbnail['duration']).to be_nil
       end
     end
 
