@@ -55,6 +55,10 @@ module IIIFManifest
           Array.wrap(record.display_content) if record.respond_to?(:display_content) && record.display_content.present?
         end
 
+        def manifest_can_have_thumbnail
+          manifest.respond_to?(:thumbnail)
+        end
+
         def apply_record_properties
           canvas['id'] = path
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
@@ -63,32 +67,31 @@ module IIIFManifest
           apply_thumbnail_to(manifest, canvas)
         end
 
-        # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
         def apply_thumbnail_to(manifest, canvas)
           return unless iiif_endpoint
 
           if display_image
-            if collection?
-              manifest&.thumbnail = [] if manifest&.thumbnail.nil?
-              manifest.thumbnail << Array(thumbnail_builder_factory.new(display_image).build)
-            else
-              manifest&.thumbnail ||= Array(thumbnail_builder_factory.new(display_image).build)
-            end
+            apply_manifest_thumbnail(manifest, display_image)
             canvas.thumbnail = Array(thumbnail_builder_factory.new(display_image).build)
           elsif display_content.try(:first)
-            if collection?
-              manifest&.thumbnail = [] if manifest&.thumbnail.nil?
-              manifest.thumbnail << Array(thumbnail_builder_factory.new(display_content.first).build)
-            else
-              manifest&.thumbnail ||= Array(thumbnail_builder_factory.new(display_content.first).build)
-            end
+            apply_manifest_thumbnail(manifest, display_content.first)
             canvas.thumbnail = Array(thumbnail_builder_factory.new(display_content.first).build)
           end
         end
-        # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
 
         def collection?
-          manifest.class.inspect == 'IIIFManifest::V3::ManifestBuilder::IIIFManifest::Collection'
+          manifest.is_a? IIIFManifest::Collection
+        end
+
+        def apply_manifest_thumbnail(manifest, display_type)
+          return unless manifest_can_have_thumbnail
+
+          if collection?
+            # if manifest.thumbnail is nil, make it an Array, then add more thumbnails into it
+            (manifest.thumbnail ||= []) << Array(thumbnail_builder_factory.new(display_type).build)
+          else
+            manifest.thumbnail ||= Array(thumbnail_builder_factory.new(display_type).build)
+          end
         end
 
         def annotation_page
