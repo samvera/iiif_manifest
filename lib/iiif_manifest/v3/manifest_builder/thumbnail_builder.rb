@@ -11,6 +11,12 @@ module IIIFManifest
 
         # @return [Array<Object>]
         def build
+          if !display_content.thumbnail.nil?
+            return Array(display_content.thumbnail.map(&:stringify_keys))
+          elsif display_content.type != "Image" || iiif_endpoint.nil?
+            return nil
+          end
+
           build_thumbnail
           image_service_builder.apply(thumbnail)
           [thumbnail]
