@@ -157,8 +157,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
 
       it 'has a thumbnail property' do
-        allow(book_presenter).to receive(:member_presenters).and_return([file_presenter])
-
+        allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
         thumbnail = result['thumbnail'].first
         expect(thumbnail['id']).to eq 'test.host/images/image-77/full/!200,200/0/default.jpg'
         expect(thumbnail['height']).to eq 150
