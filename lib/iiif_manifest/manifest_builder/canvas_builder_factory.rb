@@ -7,10 +7,10 @@ module IIIFManifest
         @canvas_builder_factory = canvas_builder_factory
       end
 
-      def from(work, *manifest)
+      def from(work)
         composite_builder.new(
           *file_set_presenters(work).map do |presenter|
-            canvas_builder_factory.new(presenter, work, manifest.first)
+            canvas_builder_factory.new(presenter, work)
           end
         )
       end

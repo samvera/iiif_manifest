@@ -1,12 +1,11 @@
 module IIIFManifest
   class ManifestBuilder
     class CanvasBuilder
-      attr_reader :record, :parent, :manifest, :iiif_canvas_factory, :image_builder
+      attr_reader :record, :parent, :iiif_canvas_factory, :image_builder
 
-      def initialize(record, parent, manifest, iiif_canvas_factory:, image_builder:)
+      def initialize(record, parent, iiif_canvas_factory:, image_builder:)
         @record = record
         @parent = parent
-        @manifest = manifest
         @iiif_canvas_factory = iiif_canvas_factory
         @image_builder = image_builder
         apply_record_properties

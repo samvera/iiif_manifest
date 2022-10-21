@@ -38,7 +38,7 @@ module IIIFManifest
         def canvas_builders
           @canvas_builders ||= [] unless record.respond_to?(:file_set_presenters)
           @canvas_builders ||= file_set_presenters.map do |file_set_presenter|
-            canvas_builder_factory.new(file_set_presenter, parent, nil)
+            canvas_builder_factory.new(file_set_presenter, parent)
           end
           @canvas_builders
         end
@@ -69,7 +69,7 @@ module IIIFManifest
         end
 
         def canvas_range_item(range_item)
-          canvas_builder = canvas_builder_factory.new(range_item, parent, nil)
+          canvas_builder = canvas_builder_factory.new(range_item, parent)
           { 'type' => 'Canvas', 'id' => canvas_builder.path }
         end
 

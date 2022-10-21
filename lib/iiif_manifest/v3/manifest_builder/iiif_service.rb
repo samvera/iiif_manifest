@@ -72,10 +72,6 @@ module IIIFManifest
           inner_hash['homepage'] = homepage
         end
 
-        def thumbnail
-          inner_hash['thumbnail']
-        end
-
         def thumbnail=(thumbnail)
           inner_hash['thumbnail'] = thumbnail
         end
