@@ -63,16 +63,32 @@ module IIIFManifest
           apply_thumbnail_to(manifest, canvas)
         end
 
+        # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
         def apply_thumbnail_to(manifest, canvas)
           return unless iiif_endpoint
 
           if display_image
-            manifest&.thumbnail ||= Array(thumbnail_builder_factory.new(display_image).build)
+            if collection?
+              manifest&.thumbnail = [] if manifest&.thumbnail.nil?
+              manifest.thumbnail << Array(thumbnail_builder_factory.new(display_image).build)
+            else
+              manifest&.thumbnail ||= Array(thumbnail_builder_factory.new(display_image).build)
+            end
             canvas.thumbnail = Array(thumbnail_builder_factory.new(display_image).build)
           elsif display_content.try(:first)
-            manifest&.thumbnail ||= Array(thumbnail_builder_factory.new(display_content.first).build)
+            if collection?
+              manifest&.thumbnail = [] if manifest&.thumbnail.nil?
+              manifest.thumbnail << Array(thumbnail_builder_factory.new(display_content.first).build)
+            else
+              manifest&.thumbnail ||= Array(thumbnail_builder_factory.new(display_content.first).build)
+            end
             canvas.thumbnail = Array(thumbnail_builder_factory.new(display_content.first).build)
           end
+        end
+        # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
+
+        def collection?
+          manifest.class.inspect == 'IIIFManifest::V3::ManifestBuilder::IIIFManifest::Collection'
         end
 
         def annotation_page
