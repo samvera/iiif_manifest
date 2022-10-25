@@ -39,6 +39,12 @@ module IIIFManifest
   #     config.max_edge_for_thumbnail = 100
   #   end
   #
+  #   # disable the thumbnail property on the manifest level
+  #   # since it will be shown by default
+  #   IIIFManifest.confg do |config|
+  #     config.manifest_thumbnail = false
+  #   end
+  #
   # @yield [IIIFManifest::Configuration] if a block is passed
   # @return [IIIFManifest::Configuration]
   # @see IIIFManifest::Configuration for configuration options
