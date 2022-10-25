@@ -103,8 +103,8 @@ module IIIFManifest
         def apply_thumbnail_to(manifest)
           if manifest.is_a? IIIFManifest::Collection
             manifest.thumbnail = manifest.items.collect(&:thumbnail).compact
-          else
-            manifest.thumbnail = manifest.items.first&.thumbnail if manifest.items.first&.thumbnail.present?
+          elsif manifest.items.first&.thumbnail.present?
+            manifest.thumbnail = manifest.items.first&.thumbnail
           end
         end
       end

@@ -564,24 +564,26 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
             expect(content_annotation_body['duration']).to eq 100
             expect(content_annotation_body['label']).to eq('none' => ['High'])
           end
+        end
 
-	  context 'with thumbnail provided' do
-	    let(:content) do
-	      IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, duration: 100,
-								      type: 'Sound',
-								      format: 'audio/mp4',
-								      label: 'High',
-								      thumbnail: [{ id: "test.host/thumbnails/thumb.mp4", format: "audio/mp4" }])
-	    end
-	    it 'sets thumbnail on manifest and canvas' do
-	      manifest_thumbnail = result['thumbnail'].first
-	      expect(manifest_thumbnail['id']).to eq 'test.host/thumbnails/thumb.mp4'
-	      expect(manifest_thumbnail['format']).to eq 'audio/mp4'
-              canvas_thumbnail = result.items.first['thumbnail'].first
-	      expect(canvas_thumbnail['id']).to eq 'test.host/thumbnails/thumb.mp4'
-	      expect(canvas_thumbnail['format']).to eq 'audio/mp4'
-	    end
-	  end
+        context 'with thumbnail provided' do
+          let(:content) do
+            IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid,
+                   duration: 100,
+                   type: 'Sound',
+                   format: 'audio/mp4',
+                   label: 'High',
+                   thumbnail: [{ id: "test.host/thumbnails/thumb.mp4",
+                                 format: "audio/mp4" }])
+          end
+          it 'uses provided thumbnail on manifest and canvas' do
+            manifest_thumbnail = result['thumbnail'].first
+            expect(manifest_thumbnail['id']).to eq 'test.host/thumbnails/thumb.mp4'
+            expect(manifest_thumbnail['format']).to eq 'audio/mp4'
+            canvas_thumbnail = result.items.first['thumbnail'].first
+            expect(canvas_thumbnail['id']).to eq 'test.host/thumbnails/thumb.mp4'
+            expect(canvas_thumbnail['format']).to eq 'audio/mp4'
+          end
         end
       end
 
