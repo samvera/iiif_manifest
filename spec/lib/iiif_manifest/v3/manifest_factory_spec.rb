@@ -584,6 +584,20 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
             expect(canvas_thumbnail['id']).to eq 'test.host/thumbnails/thumb.mp4'
             expect(canvas_thumbnail['format']).to eq 'audio/mp4'
           end
+
+          # rubocop:disable RSpec/NestedGroups
+          context 'when manifest thumbnail is disabled' do
+            let(:config) { instance_double(IIIFManifest::Configuration) }
+            it 'does not have a thumbnail property on the manifest' do
+              allow(IIIFManifest).to receive(:config).and_return config
+              allow(config).to receive(:manifest_thumbnail).and_return false
+              # adding this line to get past Rpsec unexpected message error
+              allow(config).to receive(:manifest_value_for).and_return 'A good book'
+
+              expect(result.key?('thumbnail')).to be false
+            end
+          end
+          # rubocop:enable RSpec/NestedGroups
         end
       end
 

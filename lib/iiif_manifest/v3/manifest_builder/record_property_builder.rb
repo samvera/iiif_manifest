@@ -19,7 +19,7 @@ module IIIFManifest
           setup_manifest_from_record(manifest, record)
           # Build the items array
           canvas_builder.apply(manifest.items)
-          apply_thumbnail_to(manifest)
+          apply_thumbnail_to(manifest) unless manifest_thumbnail?
           manifest
         end
 
@@ -106,6 +106,10 @@ module IIIFManifest
           elsif manifest.items.first&.thumbnail.present?
             manifest.thumbnail = manifest.items.first&.thumbnail
           end
+        end
+
+        def manifest_thumbnail?
+          ::IIIFManifest.config.manifest_thumbnail == false
         end
       end
     end
