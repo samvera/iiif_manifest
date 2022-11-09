@@ -67,7 +67,13 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
 
       def display_image
-        IIIFManifest::DisplayImage.new(id, width: 100, height: 100, format: 'image/jpeg')
+        IIIFManifest::DisplayImage.new(
+          'test.host/images/image-77/full/600,/0/default.jpg',
+          width: 2000,
+          height: 1500,
+          format: 'image/jpeg',
+          iiif_endpoint: IIIFManifest::IIIFEndpoint.new('test.host/images/image-77')
+        )
       end
     end
 
@@ -131,13 +137,11 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       it 'returns items' do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
 
-        result
-
         expect(result['items'].length).to eq 1
         expect(result['items'].first['type']).to eq 'Canvas'
         expect(result['items'].first['id']).to eq 'http://test.host/books/book-77/manifest/canvas/test-22'
-        expect(result['items'].first['height']).to eq 100
-        expect(result['items'].first['width']).to eq 100
+        expect(result['items'].first['height']).to eq 1500
+        expect(result['items'].first['width']).to eq 2000
         expect(result['items'].first['items'].first['type']).to eq 'AnnotationPage'
         expect(result['items'].first['items'].first['id']).not_to be_empty
         expect(result['items'].first['items'].first['items'].length).to eq 1
@@ -147,10 +151,21 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(result['items'].first['items'].first['items'].first['target']).to eq result['items'].first['id']
         expect(result['items'].first['items'].first['items'].first['body']['type']).to eq 'Image'
         expect(result['items'].first['items'].first['items'].first['body']['id']).not_to be_empty
-        expect(result['items'].first['items'].first['items'].first['body']['height']).to eq 100
-        expect(result['items'].first['items'].first['items'].first['body']['width']).to eq 100
+        expect(result['items'].first['items'].first['items'].first['body']['height']).to eq 1500
+        expect(result['items'].first['items'].first['items'].first['body']['width']).to eq 2000
         expect(result['items'].first['items'].first['items'].first['body']['format']).to eq 'image/jpeg'
       end
+
+      it 'has a thumbnail property' do
+        allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
+        thumbnail = result['thumbnail'].first
+        expect(thumbnail['id']).to eq 'test.host/images/image-77/full/!200,200/0/default.jpg'
+        expect(thumbnail['height']).to eq 150
+        expect(thumbnail['width']).to eq 200
+        expect(thumbnail['format']).to eq 'image/jpeg'
+        expect(thumbnail['service'].first).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFService
+      end
+
       it 'builds a structure if it can' do
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
         allow(book_presenter.ranges[0].ranges[0]).to receive(:file_set_presenters).and_return([file_presenter])
@@ -173,8 +188,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
 
         it 'returns items' do
           allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
-
-          result
 
           expect(result['items'].length).to eq 1
           expect(result['items'].first['type']).to eq 'Canvas'
@@ -551,6 +564,40 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
             expect(content_annotation_body['duration']).to eq 100
             expect(content_annotation_body['label']).to eq('none' => ['High'])
           end
+        end
+
+        context 'with thumbnail provided' do
+          let(:content) do
+            IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid,
+                   duration: 100,
+                   type: 'Sound',
+                   format: 'audio/mp4',
+                   label: 'High',
+                   thumbnail: [{ id: "test.host/thumbnails/thumb.mp4",
+                                 format: "audio/mp4" }])
+          end
+          it 'uses provided thumbnail on manifest and canvas' do
+            manifest_thumbnail = result['thumbnail'].first
+            expect(manifest_thumbnail['id']).to eq 'test.host/thumbnails/thumb.mp4'
+            expect(manifest_thumbnail['format']).to eq 'audio/mp4'
+            canvas_thumbnail = result.items.first['thumbnail'].first
+            expect(canvas_thumbnail['id']).to eq 'test.host/thumbnails/thumb.mp4'
+            expect(canvas_thumbnail['format']).to eq 'audio/mp4'
+          end
+
+          # rubocop:disable RSpec/NestedGroups
+          context 'when manifest thumbnail is disabled' do
+            let(:config) { instance_double(IIIFManifest::Configuration) }
+            it 'does not have a thumbnail property on the manifest' do
+              allow(IIIFManifest).to receive(:config).and_return config
+              allow(config).to receive(:manifest_thumbnail).and_return false
+              # adding this line to get past Rpsec unexpected message error
+              allow(config).to receive(:manifest_value_for).and_return 'A good book'
+
+              expect(result.key?('thumbnail')).to be false
+            end
+          end
+          # rubocop:enable RSpec/NestedGroups
         end
       end
 

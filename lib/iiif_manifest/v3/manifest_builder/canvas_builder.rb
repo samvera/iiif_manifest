@@ -3,20 +3,22 @@ module IIIFManifest
     class ManifestBuilder
       class CanvasBuilder
         attr_reader :record, :parent, :iiif_canvas_factory, :content_builder,
-                    :choice_builder, :iiif_annotation_page_factory
+                    :choice_builder, :iiif_annotation_page_factory, :thumbnail_builder_factory
 
         def initialize(record,
                        parent,
                        iiif_canvas_factory:,
                        content_builder:,
                        choice_builder:,
-                       iiif_annotation_page_factory:)
+                       iiif_annotation_page_factory:,
+                       thumbnail_builder_factory:)
           @record = record
           @parent = parent
           @iiif_canvas_factory = iiif_canvas_factory
           @content_builder = content_builder
           @choice_builder = choice_builder
           @iiif_annotation_page_factory = iiif_annotation_page_factory
+          @thumbnail_builder_factory = thumbnail_builder_factory
           apply_record_properties
           # Presentation 2.x approach
           attach_image if display_image
@@ -45,6 +47,8 @@ module IIIFManifest
           record.display_image if record.respond_to?(:display_image)
         end
 
+        # @return [Array<Object>] if the record has a display content
+        # @return [NilClass] if there is no display content
         def display_content
           Array.wrap(record.display_content) if record.respond_to?(:display_content) && record.display_content.present?
         end
@@ -54,6 +58,15 @@ module IIIFManifest
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
+          apply_thumbnail_to(canvas)
+        end
+
+        def apply_thumbnail_to(canvas)
+          if display_image
+            canvas.thumbnail = Array(thumbnail_builder_factory.new(display_image).build)
+          elsif display_content.try(:first)
+            canvas.thumbnail = Array(thumbnail_builder_factory.new(display_content.first).build)
+          end
         end
 
         def annotation_page

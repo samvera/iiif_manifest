@@ -176,6 +176,26 @@ To enable this, add the following code to a config file at `config/initializers/
 ```
 In the above example of a V3 manifest (since it is a `summary` instead of `description`), the `summary` property will be using the model's `#abstract` attribute value instead of the default `#description`. The `rights` property will use the model's `#license` attribute instead of the default `#rights_statement`. All other configurable properties will use their defaults.
 
+```ruby
+  # Example: use this configuration to set the max edge length of thumbnails, default is 200
+   IIIFManifest.confg do |config|
+     config.max_edge_for_thumbnail = 100
+   end
+```
+Thumbnails have been added for version 3 manifests because [Universal Viewer](https://github.com/UniversalViewer/universalviewer/issues/102) currently require them to be explicitly set otherwise they would not show up.  The above example is used to configure what the default size for the thumbnails would be.
+
+```ruby
+# Example: use this configuration to disable thumbnails to show up by default on the manifest level (version 3 only)
+  IIIFManifest.confg do |config|
+    config.manifest_thumbnail = false
+  end
+```
+According to the Presentation API 3.0 [specifications](https://iiif.io/api/presentation/3.0/#thumbnail):
+> A Manifest *SHOULD* have the `thumbnail` property with at least one item.
+
+The above configuration allows you to disable that if desired since it is not a *MUST*.
+
+
 # Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

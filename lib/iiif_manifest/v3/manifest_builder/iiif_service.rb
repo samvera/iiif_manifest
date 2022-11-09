@@ -72,6 +72,10 @@ module IIIFManifest
           inner_hash['homepage'] = homepage
         end
 
+        def thumbnail=(thumbnail)
+          inner_hash['thumbnail'] = thumbnail
+        end
+
         def initial_attributes
           {
             '@context' => [
@@ -117,6 +121,14 @@ module IIIFManifest
 
           def items=(items)
             inner_hash['items'] = items
+          end
+
+          def thumbnail
+            inner_hash['thumbnail']
+          end
+
+          def thumbnail=(thumbnail)
+            inner_hash['thumbnail'] = thumbnail
           end
 
           def initial_attributes
@@ -236,6 +248,17 @@ module IIIFManifest
               'profile' => 'http://iiif.io/api/search/1/autocomplete',
               'label' => 'Get suggested words in this manifest',
               'type' => 'AutoCompleteService1'
+            }
+          end
+        end
+
+        class Thumbnail < IIIFService
+          def service=(service)
+            inner_hash['service'] = service
+          end
+
+          def initial_attributes
+            {
             }
           end
         end

@@ -2,21 +2,24 @@ module IIIFManifest
   module V3
     class ManifestBuilder
       class RecordPropertyBuilder < ::IIIFManifest::ManifestBuilder::RecordPropertyBuilder
-        attr_reader :canvas_builder_factory
+        attr_reader :canvas_builder_factory, :thumbnail_builder_factory
         def initialize(record,
                        iiif_search_service_factory:,
                        iiif_autocomplete_service_factory:,
-                       canvas_builder_factory:)
+                       canvas_builder_factory:,
+                       thumbnail_builder_factory:)
           super(record,
                 iiif_search_service_factory: iiif_search_service_factory,
                 iiif_autocomplete_service_factory: iiif_autocomplete_service_factory)
           @canvas_builder_factory = canvas_builder_factory
+          @thumbnail_builder_factory = thumbnail_builder_factory
         end
 
         def apply(manifest)
           setup_manifest_from_record(manifest, record)
           # Build the items array
           canvas_builder.apply(manifest.items)
+          apply_thumbnail_to(manifest) unless manifest_thumbnail?
           manifest
         end
 
@@ -38,7 +41,7 @@ module IIIFManifest
           canvas_builder_factory.from(record)
         end
 
-          # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize, Metrics/MethodLength
         def setup_manifest_from_record(manifest, record)
           manifest['id'] = record.manifest_url.to_s
           label = ::IIIFManifest.config.manifest_value_for(record, property: :label)
@@ -55,7 +58,7 @@ module IIIFManifest
           homepage = ::IIIFManifest.config.manifest_value_for(record, property: :homepage)
           manifest.homepage = homepage if homepage.present?
         end
-          # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize, Metrics/MethodLength
 
         def metadata_from_record(record)
           if valid_v3_metadata?
@@ -95,6 +98,18 @@ module IIIFManifest
           metadata_field['label'] = ManifestBuilder.language_map(field['label'])
           metadata_field['value'] = ManifestBuilder.language_map(field['value'])
           metadata_field
+        end
+
+        def apply_thumbnail_to(manifest)
+          if manifest.is_a? IIIFManifest::Collection
+            manifest.thumbnail = manifest.items.collect(&:thumbnail).compact
+          elsif manifest.items.first&.thumbnail.present?
+            manifest.thumbnail = manifest.items.first&.thumbnail
+          end
+        end
+
+        def manifest_thumbnail?
+          ::IIIFManifest.config.manifest_thumbnail == false
         end
       end
     end
