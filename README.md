@@ -107,6 +107,8 @@ For example:
 
 The class that represents the leaf nodes, must implement `#id`. It must also implement `#display_image` which returns an instance of `IIIFManifest::DisplayImage`
 
+Additionally it **_may_** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at each leaf node. This follows a similar format as `#sequence_rendering` at sequences level.
+
 ```ruby
   class Page
     def initialize(id)
@@ -124,6 +126,10 @@ The class that represents the leaf nodes, must implement `#id`. It must also imp
                                      format: "image/jpeg",
                                      iiif_endpoint: endpoint
                                      )
+    end
+
+    def sequence_rendering
+      [{"@id" => "http://test.host/display_image/id/download", "format" => "application/pdf", "label" => "Download"}]
     end
 
     private
