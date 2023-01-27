@@ -499,6 +499,17 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
           def display_content
             content
           end
+
+          def sequence_rendering
+            [
+              {
+                '@id' => 'http://example.com/file_to_download.json',
+                'format' => 'application/json',
+                'type' => 'Dataset',
+                'label' => 'index.json'
+              }
+            ]
+          end
         end
 
         allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
@@ -525,6 +536,14 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
           expect(content_annotation_body['width']).to eq 100
           expect(content_annotation_body['format']).to eq 'image/jpeg'
         end
+
+        it 'returns rendering' do
+          canvas = result['items'].first
+          expect(canvas.key?('rendering')).to eq true
+          expect(canvas['rendering'].first['type']).to eq "Dataset"
+          expect(canvas['rendering'].first['format']).to eq "application/json"
+          expect(canvas['rendering'].first['label']).to eq({ "none" => ["index.json"] })
+        end
       end
 
       context 'with a single file' do
@@ -545,6 +564,14 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
           expect(content_annotation_body['format']).to eq 'video/mp4'
           expect(content_annotation_body['duration']).to eq 100
           expect(content_annotation_body['label']).to eq('none' => ['High'])
+        end
+
+        it 'returns rendering' do
+          canvas = result['items'].first
+          expect(canvas.key?('rendering')).to eq true
+          expect(canvas['rendering'].first['type']).to eq "Dataset"
+          expect(canvas['rendering'].first['format']).to eq "application/json"
+          expect(canvas['rendering'].first['label']).to eq({ "none" => ["index.json"] })
         end
 
         context 'with audio file' do
@@ -636,6 +663,14 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
             expect(choice['duration']).to eq 100
             expect(choice['label']['none']).not_to be_empty
           end
+        end
+
+        it 'returns rendering' do
+          canvas = result['items'].first
+          expect(canvas.key?('rendering')).to eq true
+          expect(canvas['rendering'].first['type']).to eq "Dataset"
+          expect(canvas['rendering'].first['format']).to eq "application/json"
+          expect(canvas['rendering'].first['label']).to eq({ "none" => ["index.json"] })
         end
       end
     end

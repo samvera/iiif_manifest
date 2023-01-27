@@ -136,6 +136,10 @@ module IIIFManifest
               'type' => 'Canvas'
             }
           end
+
+          def rendering=(rendering)
+            inner_hash['rendering'] = rendering
+          end
         end
 
         class Range < IIIFService

@@ -59,6 +59,7 @@ module IIIFManifest
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
           apply_thumbnail_to(canvas)
+          canvas.rendering = populate_rendering if populate_rendering.present?
         end
 
         def apply_thumbnail_to(canvas)
@@ -82,6 +83,18 @@ module IIIFManifest
             content_builder.new(display_content.first).apply(canvas)
           else
             choice_builder.new(display_content).apply(canvas)
+          end
+        end
+
+        def populate_rendering
+          return unless record.respond_to?(:sequence_rendering)
+          record.sequence_rendering.collect do |rendering|
+            sequence_rendering = rendering.to_h.except('@id', 'label')
+            sequence_rendering['id'] = rendering['@id']
+            if rendering['label'].present?
+              sequence_rendering['label'] = ManifestBuilder.language_map(rendering['label'])
+            end
+            sequence_rendering
           end
         end
       end
