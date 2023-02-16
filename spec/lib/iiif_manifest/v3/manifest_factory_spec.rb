@@ -520,6 +520,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
 
       let(:file_presenter) { DisplayContentPresenter.new(content: content) }
+      let(:content_annotation_id) { result['items'].first['items'].first['items'].first['id'] }
       let(:content_annotation_body) { result['items'].first['items'].first['items'].first['body'] }
 
       context 'with a DisplayImage' do
@@ -651,6 +652,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         end
 
         it 'returns items' do
+          expect(content_annotation_id).not_to be_empty
           expect(content_annotation_body['type']).to eq 'Choice'
           expect(content_annotation_body['choiceHint']).to eq 'user'
           expect(content_annotation_body.items.size).to eq 3
