@@ -12,12 +12,13 @@ module IIIFManifest
         end
 
         def apply(canvas)
+          # Assume first item in canvas is an annotation page
+          annotation['id'] = "#{canvas.items.first['id']}/annotation/#{annotation.index}"
           annotation['target'] = canvas['id']
           canvas['width'] = choice.items.first['width']
           canvas['height'] = choice.items.first['height']
           canvas['duration'] = choice.items.first['duration']
           annotation.body = choice
-          # Assume first item in canvas is an annotation page
           canvas.items.first.items += [annotation]
         end
 
