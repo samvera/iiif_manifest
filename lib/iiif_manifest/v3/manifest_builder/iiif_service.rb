@@ -140,6 +140,10 @@ module IIIFManifest
           def rendering=(rendering)
             inner_hash['rendering'] = rendering
           end
+
+          def placeholderCanvas=(placeholderCanvas)
+            inner_hash['placeholderCanvas'] = placeholderCanvas
+          end
         end
 
         class Range < IIIFService

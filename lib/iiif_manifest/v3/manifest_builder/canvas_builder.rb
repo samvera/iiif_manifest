@@ -3,7 +3,8 @@ module IIIFManifest
     class ManifestBuilder
       class CanvasBuilder
         attr_reader :record, :parent, :iiif_canvas_factory, :content_builder,
-                    :choice_builder, :iiif_annotation_page_factory, :thumbnail_builder_factory
+                    :choice_builder, :iiif_annotation_page_factory, :thumbnail_builder_factory,
+                    :placeholder_canvas_builder
 
         def initialize(record,
                        parent,
@@ -11,7 +12,8 @@ module IIIFManifest
                        content_builder:,
                        choice_builder:,
                        iiif_annotation_page_factory:,
-                       thumbnail_builder_factory:)
+                       thumbnail_builder_factory:,
+                       placeholder_canvas_builder:)
           @record = record
           @parent = parent
           @iiif_canvas_factory = iiif_canvas_factory
@@ -19,8 +21,9 @@ module IIIFManifest
           @choice_builder = choice_builder
           @iiif_annotation_page_factory = iiif_annotation_page_factory
           @thumbnail_builder_factory = thumbnail_builder_factory
+          @placeholder_canvas_builder = placeholder_canvas_builder
           apply_record_properties
-          # Presentation 2.x approach
+          # Presentation 3.0 approach
           attach_image if display_image
           # Presentation 3.0 approach
           attach_content if display_content
@@ -75,7 +78,8 @@ module IIIFManifest
         end
 
         def attach_image
-          content_builder.new(display_image).apply(canvas)
+          return unless display_image
+          canvas.placeholderCanvas = placeholder_canvas_builder.new(display_image)
         end
 
         def attach_content
