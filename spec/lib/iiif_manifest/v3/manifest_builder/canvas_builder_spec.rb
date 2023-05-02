@@ -5,6 +5,9 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   let(:content_builder) do
     IIIFManifest::V3::ManifestBuilder::ContentBuilder
   end
+  let(:placeholder_canvas_builder) do
+    IIIFManifest::V3::ManifestBuilder::PlaceholderCanvasBuilder
+  end
   let(:builder) do
     described_class.new(
       record,
@@ -13,7 +16,8 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       content_builder: content_builder,
       choice_builder: IIIFManifest::V3::ManifestBuilder::ChoiceBuilder,
       iiif_annotation_page_factory: IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage,
-      thumbnail_builder_factory: thumbnail_builder_factory
+      thumbnail_builder_factory: thumbnail_builder_factory,
+      placeholder_canvas_builder: placeholder_canvas_builder
     )
   end
 

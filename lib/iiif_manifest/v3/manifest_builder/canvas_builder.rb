@@ -33,6 +33,10 @@ module IIIFManifest
           @canvas ||= iiif_canvas_factory.new
         end
 
+        def placeholder_canvas
+          @placeholder_canvas ||= iiif_canvas_factory.new
+        end
+
         def path
           path = "#{parent.manifest_url}/canvas/#{record.id}"
           path << "##{record.media_fragment}" if record.respond_to?(:media_fragment) && record.media_fragment.present?
@@ -63,6 +67,7 @@ module IIIFManifest
           canvas.items = [annotation_page]
           apply_thumbnail_to(canvas)
           canvas.rendering = populate_rendering if populate_rendering.present?
+          canvas.placeholderCanvas = placeholder_canvas
         end
 
         def apply_thumbnail_to(canvas)
@@ -78,8 +83,14 @@ module IIIFManifest
         end
 
         def attach_image
-          return unless display_image
-          canvas.placeholderCanvas = placeholder_canvas_builder.new(display_image)
+          placeholder_canvas['id'] = "#{path}/placeholder"
+          placeholder_canvas['width'] = display_image.width if display_image.width.present?
+          placeholder_canvas['height'] = display_image.height if display_image.height.present?
+          placeholder_annotation_page ||= iiif_annotation_page_factory.new
+          placeholder_annotation_page['id'] = "#{path}/placeholder/annotation_page/#{placeholder_annotation_page.index}"
+          placeholder_canvas.items = [placeholder_annotation_page]
+          # placeholder_canvas_builder.new(display_image).apply(canvas)
+          # content_builder.new(display_image).apply(canvas)
         end
 
         def attach_content
