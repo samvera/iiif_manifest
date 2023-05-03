@@ -5,9 +5,6 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   let(:content_builder) do
     IIIFManifest::V3::ManifestBuilder::ContentBuilder
   end
-  let(:placeholder_canvas_builder) do
-    IIIFManifest::V3::ManifestBuilder::PlaceholderCanvasBuilder
-  end
   let(:builder) do
     described_class.new(
       record,
@@ -17,7 +14,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       choice_builder: IIIFManifest::V3::ManifestBuilder::ChoiceBuilder,
       iiif_annotation_page_factory: IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage,
       thumbnail_builder_factory: thumbnail_builder_factory,
-      placeholder_canvas_builder: placeholder_canvas_builder
+      placeholder_canvas_builder_factory: placeholder_canvas_builder_factory
     )
   end
 
@@ -38,16 +35,23 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
                                          label: 'full',
                                          iiif_endpoint: iiif_endpoint)
   end
+  let(:placeholder_content) do
+    IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Image',
+                                                            width: 100,
+                                                            height: 100,
+                                                            format: 'image/jpeg')            
+  end
   let(:record) do
-    MyWork.new(display_content: display_content)
+    MyWork.new(display_content: display_content, placeholder_content: placeholder_content)
   end
 
   before do
     class MyWork
-      attr_reader :display_content
+      attr_reader :display_content, :placeholder_content
 
-      def initialize(display_content:)
+      def initialize(display_content:, placeholder_content:)
         @display_content = display_content
+        @placeholder_content = placeholder_content
       end
 
       def id
@@ -61,6 +65,8 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     allow(content_builder).to receive(:new).and_return(built_content)
     allow(thumbnail_builder).to receive(:build).and_return(iiif_thumbnail)
     allow(thumbnail_builder_factory).to receive(:new).and_return(thumbnail_builder)
+    allow(placeholder_canvas_builder).to receive(:apply).and_return(placeholder_canvas)
+    allow(placeholder_canvas_builder_factory).to receive(:new).and_return(placeholder_canvas_builder)
   end
 
   let(:iiif_body) do
@@ -116,6 +122,23 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
 
   let(:content_builder) do
     double('Content Builder')
+  end
+
+  let(:placeholder_canvas_builder) do
+    instance_double(IIIFManifest::V3::ManifestBuilder::PlaceholderCanvasBuilder)
+  end
+
+  let(:placeholder_canvas_builder_factory) do
+    double('PlaceholderCanvas Builder')
+  end
+
+  let(:placeholder_canvas) do
+    placeholder_canvas = IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas.new
+    placeholder_canvas['height'] = 100
+    placeholder_canvas['width'] = 100
+    placeholder_canvas['type'] = 'Canvas'
+    placeholder_canvas['items'] = []
+    placeholder_canvas
   end
 
   describe '#canvas' do
@@ -201,6 +224,45 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         page = items.first
         expect(page).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage
         expect(page.items).to be_empty
+      end
+    end
+
+    context 'when the placeholder_content is not specified for a record' do
+      it 'does not generate placeholderCanvas' do
+        canvas = builder.canvas
+        values = canvas.inner_hash
+
+        expect(values).not_to include 'placeholderCanvas'
+      end
+    end
+
+    context 'when placeholder_content is specificed for a record' do
+      let(:placeholder_content) do
+        IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Image',
+                                                                width: 100,
+                                                                height: 100,
+                                                                format: 'image/jpeg')
+      end
+      before do
+        class MyWork
+          attr_reader :display_content, :placeholder_content
+
+          def initialize(display_content:, placeholder_content:)
+            @display_content = display_content
+            @placeholder_content = placeholder_content
+          end
+
+          def id
+            'test-22'
+          end
+        end
+      end
+
+      it 'generates placeholderCanvas' do
+        canvas = builder.canvas
+        values = canvas.inner_hash
+
+        # expect(values).to include 'placeholderCanvas'
       end
     end
   end

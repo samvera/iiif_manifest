@@ -65,7 +65,7 @@ module IIIFManifest
         def placeholder_canvas_builder
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
             ManifestBuilder::PlaceholderCanvasBuilder,
-            iiif_canvas_factory: iiif_canvas_factory, 
+            placeholder_canvas_builder_factory: placeholder_canvas_builder_factory,
             iiif_annotation_page_factory: iiif_annotation_page_factory,
             content_builder: content_builder
           )
@@ -151,7 +151,7 @@ module IIIFManifest
           IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
         end
 
-        def placeholder_canvas_builder
+        def placeholder_canvas_builder_factory
           IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
         end
 

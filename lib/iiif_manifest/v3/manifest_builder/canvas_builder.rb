@@ -23,18 +23,15 @@ module IIIFManifest
           @thumbnail_builder_factory = thumbnail_builder_factory
           @placeholder_canvas_builder = placeholder_canvas_builder
           apply_record_properties
-          # Presentation 3.0 approach
+          # Presentation 2.x approach
           attach_image if display_image
           # Presentation 3.0 approach
           attach_content if display_content
+          attach_placeholder_canvas if placeholder_content
         end
 
         def canvas
           @canvas ||= iiif_canvas_factory.new
-        end
-
-        def placeholder_canvas
-          @placeholder_canvas ||= iiif_canvas_factory.new
         end
 
         def path
@@ -60,6 +57,10 @@ module IIIFManifest
           Array.wrap(record.display_content) if record.respond_to?(:display_content) && record.display_content.present?
         end
 
+        def placeholder_content
+          record.placeholder_content if record.respond_to?(:placeholder_content)
+        end
+
         def apply_record_properties
           canvas['id'] = path
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
@@ -67,7 +68,6 @@ module IIIFManifest
           canvas.items = [annotation_page]
           apply_thumbnail_to(canvas)
           canvas.rendering = populate_rendering if populate_rendering.present?
-          canvas.placeholderCanvas = placeholder_canvas
         end
 
         def apply_thumbnail_to(canvas)
@@ -83,14 +83,7 @@ module IIIFManifest
         end
 
         def attach_image
-          placeholder_canvas['id'] = "#{path}/placeholder"
-          placeholder_canvas['width'] = display_image.width if display_image.width.present?
-          placeholder_canvas['height'] = display_image.height if display_image.height.present?
-          placeholder_annotation_page ||= iiif_annotation_page_factory.new
-          placeholder_annotation_page['id'] = "#{path}/placeholder/annotation_page/#{placeholder_annotation_page.index}"
-          placeholder_canvas.items = [placeholder_annotation_page]
-          # placeholder_canvas_builder.new(display_image).apply(canvas)
-          # content_builder.new(display_image).apply(canvas)
+          content_builder.new(display_image).apply(canvas)
         end
 
         def attach_content
@@ -99,6 +92,10 @@ module IIIFManifest
           else
             choice_builder.new(display_content).apply(canvas)
           end
+        end
+
+        def attach_placeholder_canvas
+          placeholder_canvas_builder.new(placeholder_content, path).apply(canvas)
         end
 
         def populate_rendering
