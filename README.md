@@ -107,7 +107,9 @@ For example:
 
 The class that represents the leaf nodes, must implement `#id`. It must also implement `#display_image` which returns an instance of `IIIFManifest::DisplayImage`
 
-Additionally it **_may_** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at each leaf node. This follows a similar format as `#sequence_rendering` at sequences level.
+In Presentation 3.0, additionally it **_may_** implement;
+- `#sequence_rendering` to contain an array of hashes for file downloads to be offered at each leaf node. This follows a similar format as `#sequence_rendering` at sequences level
+- `#placeholder_content` to contain an instance of `IIIFManifest::V3::DisplayContent` for [`placeholderCanvas`](https://iiif.io/api/presentation/3.0/#placeholdercanvas) at each leaf node
 
 ```ruby
   class Page
@@ -128,9 +130,19 @@ Additionally it **_may_** implement `#sequence_rendering` to contain an array of
                                      )
     end
 
+    # --------------------------------------- Presentation 3.0 (Alpha) ---------------------------------------
     def sequence_rendering
       [{"@id" => "http://test.host/display_image/id/download", "format" => "application/pdf", "label" => "Download"}]
     end
+
+    def placeholder_content
+      IIIFManifest::V3::DisplayContent.new(id,
+                                           width: 100,
+                                           height: 100,
+                                           type: "Image",
+                                           format: "image/jpeg")
+    end
+    # --------------------------------------- Presentation 3.0 (Alpha) ---------------------------------------
 
     private
 
@@ -166,7 +178,11 @@ The presentation 3.0 support has been contained to the `V3` namespace. Version 2
 - Presenters **_may_** implement `#homepage` to contain a hash for linking back to a repository webpage for this manifest. The hash must contain "id", "format" (mime type), "type", and "label" (eg. `{ "id" => "repository url", "format" => "text/html", "type" => "Text", "label" => { "en": ["View in repository"] }`).
 - File set presenters may target a fragment of its content by providing `#media_fragment` which will be appended to its `id`.
 - Range objects may now implement `#items` instead of `#ranges` and `#file_set_presenters` to allow for interleaving these objects. `#items` is not required and existing range objects should continue to work.
-- File set presenters may provide `#display_content` which should return an instance of `IIIFManifest::V3::DisplayContent` (or an array of instances in the case of a user `Choice`). `#display_image` is no longer required but will still work if provided.
+- File set presenters may provide,
+  - `#display_content` which should return an instance of `IIIFManifest::V3::DisplayContent` (or an array of instances in the case of a user `Choice`)
+  - `#display_image` is no longer required but will still work if provided
+  - `#sequence_rendering` is supported at leaf node level, to present an array of file downloads available at each leaf node
+  - `#placeholder_content` which returns an instance of `IIIFManifest::V3::DisplayContent` presents a [`placeholderCanvas`](https://iiif.io/api/presentation/3.0/#placeholdercanvas) at leaf node level
 - DisplayContent may provide `#auth_service` which should return a hash containing a IIIF Authentication service definition (<https://iiif.io/api/auth/1.0/>) that will be included on the content resource.
 
 ## Configuration

@@ -141,12 +141,13 @@ module IIIFManifest
             inner_hash['rendering'] = rendering
           end
 
-          # def placeholderCanvas
-          #   inner_hash['placeholderCanvas']
-          # end
+          def placeholder_canvas=(placeholder_canvas)
+            return unless placeholder_canvas.present?
+            inner_hash['placeholderCanvas'] = placeholder_canvas
+          end
 
-          def placeholderCanvas=(placeholderCanvas)
-            inner_hash['placeholderCanvas'] = placeholderCanvas
+          def placeholderCanvas
+            inner_hash['placeholderCanvas']
           end
         end
 

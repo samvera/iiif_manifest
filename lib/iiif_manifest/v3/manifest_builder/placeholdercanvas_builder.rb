@@ -2,35 +2,40 @@ module IIIFManifest
   module V3
     class ManifestBuilder
       class PlaceholderCanvasBuilder
-        attr_reader :placeholder_content, :canvas_path, :placeholder_canvas_builder_factory, :iiif_annotation_page_factory,
+        attr_reader :placeholder_content, :canvas_path, :iiif_placeholder_canvas_factory, :iiif_annotation_page_factory,
                     :content_builder
         def initialize(placeholder_content,
                        canvas_path,
-                       placeholder_canvas_builder_factory:,
+                       iiif_placeholder_canvas_factory:,
                        iiif_annotation_page_factory:,
                        content_builder:)
           @placeholder_content = placeholder_content
           @canvas_path = canvas_path
-          @placeholder_canvas_builder_factory = placeholder_canvas_builder_factory
+          @iiif_placeholder_canvas_factory = iiif_placeholder_canvas_factory
           @iiif_annotation_page_factory = iiif_annotation_page_factory
           @content_builder = content_builder
-          apply_record_properties
-          attach_content
         end
+
+        def build
+          return nil if placeholder_content.nil?
+
+          build_placeholder_canvas
+          attach_content
+
+          placeholder_canvas
+        end
+
+        private
 
         def path
           "#{canvas_path}/placeholder"
         end
 
         def placeholder_canvas
-          @placeholder_canvas ||= placeholder_canvas_builder_factory.new
+          @placeholder_canvas ||= iiif_placeholder_canvas_factory.new
         end
 
-        def apply(canvas)
-          canvas.placeholderCanvas = placeholder_canvas
-        end
-
-        def apply_record_properties
+        def build_placeholder_canvas
           placeholder_canvas['id'] = path
           placeholder_canvas['width'] = placeholder_content.width if placeholder_content.width.present?
           placeholder_canvas['height'] = placeholder_content.height if placeholder_content.height.present?

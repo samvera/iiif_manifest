@@ -58,14 +58,14 @@ module IIIFManifest
             choice_builder: choice_builder,
             iiif_annotation_page_factory: iiif_annotation_page_factory,
             thumbnail_builder_factory: thumbnail_builder_factory,
-            placeholder_canvas_builder: placeholder_canvas_builder
+            placeholder_canvas_builder_factory: placeholder_canvas_builder_factory
           )
         end
 
-        def placeholder_canvas_builder
+        def placeholder_canvas_builder_factory
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
             ManifestBuilder::PlaceholderCanvasBuilder,
-            placeholder_canvas_builder_factory: placeholder_canvas_builder_factory,
+            iiif_placeholder_canvas_factory: iiif_placeholder_canvas_factory,
             iiif_annotation_page_factory: iiif_annotation_page_factory,
             content_builder: content_builder
           )
@@ -151,7 +151,7 @@ module IIIFManifest
           IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
         end
 
-        def placeholder_canvas_builder_factory
+        def iiif_placeholder_canvas_factory
           IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
         end
 
