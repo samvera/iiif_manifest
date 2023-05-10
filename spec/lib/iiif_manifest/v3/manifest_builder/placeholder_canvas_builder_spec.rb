@@ -17,6 +17,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::PlaceholderCanvasBuilder do
     IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Image',
                                                             width: 100,
                                                             height: 100,
+                                                            duration: 100,
                                                             format: 'image/jpeg')
   end
   let(:iiif_annotation_page_factory) { IIIFManifest::V3::ManifestServiceLocator.iiif_annotation_page_factory }
@@ -45,10 +46,11 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::PlaceholderCanvasBuilder do
 
   describe "#build_placeholder_canvas" do
     it 'sets properties on the canvas' do
-      expect(placeholder_canvas['id']).to eq 'http://example.com/canvas/placeholder'
+      expect(placeholder_canvas['id']).to eq "http://example.com/canvas/placeholder"
       expect(placeholder_canvas['type']).to eq "Canvas"
       expect(placeholder_canvas['width']).to eq 100
       expect(placeholder_canvas['height']).to eq 100
+      expect(placeholder_canvas['duration']).to eq 100
       expect(placeholder_canvas['items']).to be_an Array
 
       item = placeholder_canvas['items'].first
@@ -60,6 +62,11 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::PlaceholderCanvasBuilder do
       expect(annotation['type']).to eq "Annotation"
       expect(annotation['motivation']).to eq "painting"
       expect(annotation.key?('body')).to eq true
+      expect(annotation['target']).to eq "http://example.com/canvas/placeholder"
+
+      expect(annotation['body']['type']).to eq "Image"
+      expect(annotation['body']['duration']).to eq 100
+      expect(annotation['body']['format']).to eq "image/jpeg"
     end
   end
 end

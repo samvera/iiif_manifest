@@ -39,6 +39,7 @@ module IIIFManifest
           placeholder_canvas['id'] = path
           placeholder_canvas['width'] = placeholder_content.width if placeholder_content.width.present?
           placeholder_canvas['height'] = placeholder_content.height if placeholder_content.height.present?
+          placeholder_canvas['duration'] = placeholder_content.duration if placeholder_content.duration.present?
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           placeholder_canvas.items = [annotation_page]
         end
