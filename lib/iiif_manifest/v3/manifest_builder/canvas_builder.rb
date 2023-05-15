@@ -3,7 +3,8 @@ module IIIFManifest
     class ManifestBuilder
       class CanvasBuilder
         attr_reader :record, :parent, :iiif_canvas_factory, :content_builder,
-                    :choice_builder, :iiif_annotation_page_factory, :thumbnail_builder_factory
+                    :choice_builder, :iiif_annotation_page_factory, :thumbnail_builder_factory,
+                    :placeholder_canvas_builder_factory
 
         def initialize(record,
                        parent,
@@ -11,7 +12,8 @@ module IIIFManifest
                        content_builder:,
                        choice_builder:,
                        iiif_annotation_page_factory:,
-                       thumbnail_builder_factory:)
+                       thumbnail_builder_factory:,
+                       placeholder_canvas_builder_factory:)
           @record = record
           @parent = parent
           @iiif_canvas_factory = iiif_canvas_factory
@@ -19,11 +21,13 @@ module IIIFManifest
           @choice_builder = choice_builder
           @iiif_annotation_page_factory = iiif_annotation_page_factory
           @thumbnail_builder_factory = thumbnail_builder_factory
+          @placeholder_canvas_builder_factory = placeholder_canvas_builder_factory
           apply_record_properties
           # Presentation 2.x approach
           attach_image if display_image
           # Presentation 3.0 approach
           attach_content if display_content
+          attach_placeholder_canvas if placeholder_content
         end
 
         def canvas
@@ -51,6 +55,10 @@ module IIIFManifest
         # @return [NilClass] if there is no display content
         def display_content
           Array.wrap(record.display_content) if record.respond_to?(:display_content) && record.display_content.present?
+        end
+
+        def placeholder_content
+          record.placeholder_content if record.respond_to?(:placeholder_content)
         end
 
         def apply_record_properties
@@ -84,6 +92,10 @@ module IIIFManifest
           else
             choice_builder.new(display_content).apply(canvas)
           end
+        end
+
+        def attach_placeholder_canvas
+          canvas.placeholder_canvas = placeholder_canvas_builder_factory.new(placeholder_content, path).build
         end
 
         def populate_rendering

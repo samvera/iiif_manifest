@@ -140,6 +140,15 @@ module IIIFManifest
           def rendering=(rendering)
             inner_hash['rendering'] = rendering
           end
+
+          def placeholder_canvas=(placeholder_canvas)
+            return unless placeholder_canvas.present?
+            inner_hash['placeholderCanvas'] = placeholder_canvas
+          end
+
+          def placeholderCanvas
+            inner_hash['placeholderCanvas']
+          end
         end
 
         class Range < IIIFService
