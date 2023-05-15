@@ -17,7 +17,6 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::PlaceholderCanvasBuilder do
     IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Image',
                                                             width: 100,
                                                             height: 100,
-                                                            duration: 100,
                                                             format: 'image/jpeg')
   end
   let(:iiif_annotation_page_factory) { IIIFManifest::V3::ManifestServiceLocator.iiif_annotation_page_factory }
@@ -45,28 +44,62 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::PlaceholderCanvasBuilder do
   end
 
   describe "#build_placeholder_canvas" do
-    it 'sets properties on the canvas' do
-      expect(placeholder_canvas['id']).to eq "http://example.com/canvas/placeholder"
-      expect(placeholder_canvas['type']).to eq "Canvas"
-      expect(placeholder_canvas['width']).to eq 100
-      expect(placeholder_canvas['height']).to eq 100
-      expect(placeholder_canvas['duration']).to eq 100
-      expect(placeholder_canvas['items']).to be_an Array
+    context 'with image' do
+      it 'returns an image canvas' do
+        expect(placeholder_canvas['id']).to eq "http://example.com/canvas/placeholder"
+        expect(placeholder_canvas['type']).to eq "Canvas"
+        expect(placeholder_canvas['width']).to eq 100
+        expect(placeholder_canvas['height']).to eq 100
+        expect(placeholder_canvas.key?('duration')).to eq false
+        expect(placeholder_canvas['items']).to be_an Array
 
-      item = placeholder_canvas['items'].first
-      expect(item['type']).to eq "AnnotationPage"
-      expect(item['id']).to include "http://example.com/canvas/placeholder/annotation_page/"
-      expect(item['items']).to be_an Array
+        item = placeholder_canvas['items'].first
+        expect(item['type']).to eq "AnnotationPage"
+        expect(item['id']).to include "http://example.com/canvas/placeholder/annotation_page/"
+        expect(item['items']).to be_an Array
 
-      annotation = item['items'].first
-      expect(annotation['type']).to eq "Annotation"
-      expect(annotation['motivation']).to eq "painting"
-      expect(annotation.key?('body')).to eq true
-      expect(annotation['target']).to eq "http://example.com/canvas/placeholder"
+        annotation = item['items'].first
+        expect(annotation['type']).to eq "Annotation"
+        expect(annotation['motivation']).to eq "painting"
+        expect(annotation.key?('body')).to eq true
+        expect(annotation['target']).to eq "http://example.com/canvas/placeholder"
 
-      expect(annotation['body']['type']).to eq "Image"
-      expect(annotation['body']['duration']).to eq 100
-      expect(annotation['body']['format']).to eq "image/jpeg"
+        expect(annotation['body']['type']).to eq "Image"
+        expect(annotation['body']['format']).to eq "image/jpeg"
+      end
+    end
+
+    context 'with video' do
+      let(:placeholder_content) do
+        IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Video',
+                                                                width: 100,
+                                                                height: 100,
+                                                                duration: 100,
+                                                                format: 'video/mp4')
+      end
+      it 'returns a video canvas' do
+        expect(placeholder_canvas['id']).to eq "http://example.com/canvas/placeholder"
+        expect(placeholder_canvas['type']).to eq "Canvas"
+        expect(placeholder_canvas['width']).to eq 100
+        expect(placeholder_canvas['height']).to eq 100
+        expect(placeholder_canvas['duration']).to eq 100
+        expect(placeholder_canvas['items']).to be_an Array
+
+        item = placeholder_canvas['items'].first
+        expect(item['type']).to eq "AnnotationPage"
+        expect(item['id']).to include "http://example.com/canvas/placeholder/annotation_page/"
+        expect(item['items']).to be_an Array
+
+        annotation = item['items'].first
+        expect(annotation['type']).to eq "Annotation"
+        expect(annotation['motivation']).to eq "painting"
+        expect(annotation.key?('body')).to eq true
+        expect(annotation['target']).to eq "http://example.com/canvas/placeholder"
+
+        expect(annotation['body']['type']).to eq "Video"
+        expect(annotation['body']['duration']).to eq 100
+        expect(annotation['body']['format']).to eq "video/mp4"
+      end
     end
   end
 end
