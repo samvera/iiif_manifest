@@ -2,8 +2,8 @@ module IIIFManifest
   module V3
     class ManifestBuilder
       class CanvasBuilder
-        attr_reader :record, :parent, :iiif_canvas_factory, :content_builder,
-                    :choice_builder, :iiif_annotation_page_factory, :thumbnail_builder_factory,
+        attr_reader :record, :parent, :iiif_canvas_factory, :content_builder, :choice_builder,
+                    :supplementing_content_builder, :iiif_annotation_page_factory, :thumbnail_builder_factory,
                     :placeholder_canvas_builder_factory
 
         def initialize(record,
@@ -11,6 +11,7 @@ module IIIFManifest
                        iiif_canvas_factory:,
                        content_builder:,
                        choice_builder:,
+                       supplementing_content_builder:,
                        iiif_annotation_page_factory:,
                        thumbnail_builder_factory:,
                        placeholder_canvas_builder_factory:)
@@ -19,6 +20,7 @@ module IIIFManifest
           @iiif_canvas_factory = iiif_canvas_factory
           @content_builder = content_builder
           @choice_builder = choice_builder
+          @supplementing_content_builder = supplementing_content_builder
           @iiif_annotation_page_factory = iiif_annotation_page_factory
           @thumbnail_builder_factory = thumbnail_builder_factory
           @placeholder_canvas_builder_factory = placeholder_canvas_builder_factory
@@ -27,6 +29,7 @@ module IIIFManifest
           attach_image if display_image
           # Presentation 3.0 approach
           attach_content if display_content
+          attach_supplementing if supplementing_content
           attach_placeholder_canvas if placeholder_content
         end
 
@@ -57,6 +60,12 @@ module IIIFManifest
           Array.wrap(record.display_content) if record.respond_to?(:display_content) && record.display_content.present?
         end
 
+        # @return [Array<Object>] if the record has supplementing content
+        # @return [NilClass] if there is no display content
+        def supplementing_content
+          Array.wrap(record.supplementing_content) if record.respond_to?(:supplementing_content) && record.supplementing_content.present?
+        end
+
         def placeholder_content
           record.placeholder_content if record.respond_to?(:placeholder_content)
         end
@@ -66,6 +75,8 @@ module IIIFManifest
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
+          supplementing_annotation_page['id'] = "#{path}/supplementing/#{supplementing_annotation_page.index}" if supplementing_content.present?
+          canvas.annotations = [supplementing_annotation_page] if supplementing_content.present?
           apply_thumbnail_to(canvas)
           canvas.rendering = populate_rendering if populate_rendering.present?
         end
@@ -82,6 +93,10 @@ module IIIFManifest
           @annotation_page ||= iiif_annotation_page_factory.new
         end
 
+        def supplementing_annotation_page
+          @supplementing_annotation_page ||= iiif_annotation_page_factory.new
+        end
+
         def attach_image
           content_builder.new(display_image).apply(canvas)
         end
@@ -91,6 +106,13 @@ module IIIFManifest
             content_builder.new(display_content.first).apply(canvas)
           else
             choice_builder.new(display_content).apply(canvas)
+          end
+        end
+
+        def attach_supplementing
+          supplementing_content.each do |sc|
+            supplementing_items = supplementing_content_builder.new(supplementing_content).apply(canvas)
+            supplementing_annotation_page.items += [supplementing_items]
           end
         end
 

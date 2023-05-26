@@ -149,6 +149,14 @@ module IIIFManifest
           def placeholderCanvas
             inner_hash['placeholderCanvas']
           end
+
+          def annotations
+            inner_hash['annotations']
+          end
+
+          def annotations=(annotations)
+            inner_hash['annotations'] = annotations
+          end
         end
 
         class Range < IIIFService

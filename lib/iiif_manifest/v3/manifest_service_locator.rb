@@ -56,6 +56,7 @@ module IIIFManifest
             iiif_canvas_factory: iiif_canvas_factory,
             content_builder: content_builder,
             choice_builder: choice_builder,
+            supplementing_content_builder: supplementing_content_builder,
             iiif_annotation_page_factory: iiif_annotation_page_factory,
             thumbnail_builder_factory: thumbnail_builder_factory,
             placeholder_canvas_builder_factory: placeholder_canvas_builder_factory
@@ -88,11 +89,26 @@ module IIIFManifest
           )
         end
 
+        def supplementing_content_builder
+          IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+            ManifestBuilder::SupplementingContentBuilder,
+            iiif_annotation_factory: iiif_annotation_factory,
+            body_builder_factory: body_builder_factory
+          )
+        end
+
         def body_builder_factory
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
             ManifestBuilder::BodyBuilder,
             iiif_body_factory: iiif_body_factory,
             image_service_builder_factory: image_service_builder_factory
+          )
+        end
+
+        def supplementing_body_builder_factory
+          IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+            ManifestBuilder::BodyBuilder,
+            iiif_supplementing_body_factory: iiif_supplementing_body_factory
           )
         end
 
