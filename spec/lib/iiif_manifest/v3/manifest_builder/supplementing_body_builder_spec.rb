@@ -9,14 +9,20 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::SupplementingBodyBuilder do
     )
   end
   let(:url) { 'http://example.com/caption.vtt' }
-  let(:supplementing_content) { IIIFManifest::V3::SupplementingContent.new(url, label: 'English', type: 'Text', format: 'text/vtt', language: 'eng') }
+  let(:supplementing_content) do
+    IIIFManifest::V3::SupplementingContent.new(url,
+                                               label: 'English',
+                                               type: 'Text',
+                                               format: 'text/vtt',
+                                               language: 'eng')
+  end
   let(:annotation) { IIIFManifest::V3::ManifestBuilder::IIIFManifest::Annotation.new }
 
   describe '#apply' do
-    subject { builder.apply(annotation) }
+    subject(:apply) { builder.apply(annotation) }
 
     it 'sets a body on the annotation' do
-      subject
+      apply
       expect(annotation.body).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body
       expect(annotation.body['id']).to eq url
       expect(annotation.body['type']).to eq 'Text'

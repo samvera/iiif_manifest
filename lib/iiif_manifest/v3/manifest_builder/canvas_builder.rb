@@ -63,7 +63,8 @@ module IIIFManifest
         # @return [Array<Object>] if the record has supplementing content
         # @return [NilClass] if there is no display content
         def supplementing_content
-          Array.wrap(record.supplementing_content) if record.respond_to?(:supplementing_content) && record.supplementing_content.present?
+          return unless record.respond_to?(:supplementing_content) && record.supplementing_content.present?
+          Array.wrap(record.supplementing_content)
         end
 
         def placeholder_content
@@ -75,8 +76,10 @@ module IIIFManifest
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
-          supplementing_annotation_page['id'] = "#{path}/supplementing/#{supplementing_annotation_page.index}" if supplementing_content.present?
-          canvas.annotations = [supplementing_annotation_page] if supplementing_content.present?
+          if supplementing_content.present?
+            supplementing_annotation_page['id'] = "#{path}/supplementing/#{supplementing_annotation_page.index}"
+            canvas.annotations = [supplementing_annotation_page]
+          end
           apply_thumbnail_to(canvas)
           canvas.rendering = populate_rendering if populate_rendering.present?
         end
@@ -111,7 +114,7 @@ module IIIFManifest
 
         def attach_supplementing
           supplementing_content.each do |sc|
-            supplementing_items = supplementing_content_builder.new(supplementing_content).apply(canvas)
+            supplementing_items = supplementing_content_builder.new(sc).apply(canvas)
             supplementing_annotation_page.items += [supplementing_items]
           end
         end

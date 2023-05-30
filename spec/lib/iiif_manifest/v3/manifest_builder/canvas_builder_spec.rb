@@ -29,7 +29,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   end
 
   let(:url) { 'http://example.com/img1.jpg' }
-  let(:caption_url) { 'http://example.com/img1.jpg/caption.vtt'}
+  let(:caption_url) { 'http://example.com/img1.jpg/caption.vtt' }
   let(:iiif_endpoint) { double('endpoint', url: 'http://example.com/img1') }
   let(:display_content) do
     IIIFManifest::V3::DisplayContent.new(url,
@@ -54,7 +54,9 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
                                                language: 'eng')]
   end
   let(:record) do
-    MyWork.new(display_content: display_content, placeholder_content: placeholder_content, supplementing_content: supplementing_content)
+    MyWork.new(display_content: display_content,
+               placeholder_content: placeholder_content,
+               supplementing_content: supplementing_content)
   end
 
   before do
@@ -329,9 +331,9 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(items.length).to eq 1
         page = items.first
         expect(page).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage
-        expect(page.items).to_not be_empty
+        expect(page.items).not_to be_empty
 
-        expect(values).to_not include 'annotations'
+        expect(values).not_to include 'annotations'
       end
     end
 
@@ -362,7 +364,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(items.length).to eq 1
         page = items.first
         expect(page).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage
-        expect(page.items).to_not be_empty
+        expect(page.items).not_to be_empty
 
         expect(values).to include 'annotations'
         supplementing_annotations = values['annotations']

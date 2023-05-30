@@ -12,7 +12,8 @@ module IIIFManifest
 
         def apply(canvas)
           # Assume first item in canvas annotations is an annotation page
-          supplementing_annotation['id'] = "#{canvas.annotations.first['id']}/annotations/#{supplementing_annotation.index}"
+          canvas_id = canvas.annotations.first['id']
+          supplementing_annotation['id'] = "#{canvas_id}/annotations/#{supplementing_annotation.index}"
           supplementing_annotation['target'] = canvas['id']
           supplementing_annotation['motivation'] = 'supplementing'
           supplementing_annotation
