@@ -105,13 +105,6 @@ module IIIFManifest
           )
         end
 
-        def supplementing_body_builder_factory
-          IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
-            ManifestBuilder::BodyBuilder,
-            iiif_supplementing_body_factory: iiif_supplementing_body_factory
-          )
-        end
-
         def thumbnail_builder_factory
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
             ManifestBuilder::ThumbnailBuilder,

@@ -114,8 +114,8 @@ module IIIFManifest
 
         def attach_supplementing
           supplementing_content.each do |sc|
-            supplementing_items = supplementing_content_builder.new(sc).apply(canvas)
-            supplementing_annotation_page.items += [supplementing_items]
+            supplementing_annotations = supplementing_content_builder.new(sc).apply(canvas)
+            supplementing_annotation_page.items += [supplementing_annotations]
           end
         end
 

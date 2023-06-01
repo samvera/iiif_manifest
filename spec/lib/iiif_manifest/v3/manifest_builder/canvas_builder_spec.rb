@@ -169,7 +169,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     IIIFManifest::V3::ManifestBuilder::SupplementingContentBuilder.new(
       record.supplementing_content,
       iiif_annotation_factory: iiif_supplementing_annotation_factory,
-      body_builder_factory: supplementing_body_builder_factory
+      body_builder_factory: body_builder_factory
     )
   end
 
@@ -371,6 +371,8 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(supplementing_annotations.length).to eq 1
         supplementing_page = supplementing_annotations.first
         expect(supplementing_page.items.length).to eq 2
+        expect(supplementing_page.items[0].body.inner_hash['language']).to eq 'eng'
+        expect(supplementing_page.items[1].body.inner_hash['language']).to eq 'eng'
         expect(supplementing_page.items).to all(be_a(IIIFManifest::V3::ManifestBuilder::IIIFManifest::Annotation))
       end
     end
