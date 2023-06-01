@@ -21,16 +21,10 @@ module IIIFManifest
         def build_body
           body['id'] = content.url
           body['type'] = body_type
-          video_info
+          body_display_dimensions
           body['format'] = content.format if content.try(:format).present?
           body['label'] = ManifestBuilder.language_map(content.label) if content.try(:label).present?
-          body['language'] = body_language
-        end
-
-        def video_info
-          body['height'] = content.height if content.try(:height).present?
-          body['width'] = content.width if content.try(:width).present?
-          body['duration'] = content.duration if content.try(:duration).present?
+          body['language'] = content.language if content.try(:language).present?
         end
 
         def body
@@ -41,9 +35,10 @@ module IIIFManifest
           content.try(:type) || 'Image'
         end
 
-        def body_language
-          return if content.try(:language).blank?
-          content.language
+        def body_display_dimensions
+          body['height'] = content.height if content.try(:height).present?
+          body['width'] = content.width if content.try(:width).present?
+          body['duration'] = content.duration if content.try(:duration).present?
         end
 
         def iiif_endpoint
