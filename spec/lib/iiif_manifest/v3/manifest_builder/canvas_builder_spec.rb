@@ -5,6 +5,9 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   let(:content_builder) do
     IIIFManifest::V3::ManifestBuilder::ContentBuilder
   end
+  let(:supplementing_content_builder) do
+    IIIFManifest::V3::ManifestBuilder::SupplementingContentBuilder
+  end
   let(:builder) do
     described_class.new(
       record,
@@ -12,6 +15,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       iiif_canvas_factory: IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas,
       content_builder: content_builder,
       choice_builder: IIIFManifest::V3::ManifestBuilder::ChoiceBuilder,
+      supplementing_content_builder: supplementing_content_builder,
       iiif_annotation_page_factory: IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage,
       thumbnail_builder_factory: thumbnail_builder_factory,
       placeholder_canvas_builder_factory: placeholder_canvas_builder_factory
@@ -25,6 +29,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   end
 
   let(:url) { 'http://example.com/img1.jpg' }
+  let(:caption_url) { 'http://example.com/img1.jpg/caption.vtt' }
   let(:iiif_endpoint) { double('endpoint', url: 'http://example.com/img1') }
   let(:display_content) do
     IIIFManifest::V3::DisplayContent.new(url,
@@ -41,17 +46,27 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
                                                             height: 100,
                                                             format: 'image/jpeg')
   end
+  let(:supplementing_content) do
+    [IIIFManifest::V3::SupplementingContent.new(caption_url,
+                                               type: 'text',
+                                               format: 'text/vtt',
+                                               label: 'English',
+                                               language: 'eng')]
+  end
   let(:record) do
-    MyWork.new(display_content: display_content, placeholder_content: placeholder_content)
+    MyWork.new(display_content: display_content,
+               placeholder_content: placeholder_content,
+               supplementing_content: supplementing_content)
   end
 
   before do
     class MyWork
-      attr_reader :display_content, :placeholder_content
+      attr_reader :display_content, :placeholder_content, :supplementing_content
 
-      def initialize(display_content:, placeholder_content:)
+      def initialize(display_content:, placeholder_content:, supplementing_content:)
         @display_content = display_content
         @placeholder_content = placeholder_content
+        @supplementing_content = supplementing_content
       end
 
       def id
@@ -60,9 +75,13 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     end
 
     allow(body_builder).to receive(:apply).and_return(iiif_body)
+    allow(supplementing_body_builder).to receive(:apply).and_return(iiif_supplementing_body)
     allow(body_builder_factory).to receive(:new).and_return(body_builder)
+    allow(supplementing_body_builder_factory).to receive(:new).and_return(supplementing_body_builder)
     allow(iiif_annotation_factory).to receive(:new).and_return(iiif_annotation)
+    allow(iiif_supplementing_annotation_factory).to receive(:new).and_return(iiif_supplementing_annotation)
     allow(content_builder).to receive(:new).and_return(built_content)
+    allow(supplementing_content_builder).to receive(:new).and_return(built_supplementing_content)
     allow(thumbnail_builder).to receive(:build).and_return(iiif_thumbnail)
     allow(thumbnail_builder_factory).to receive(:new).and_return(thumbnail_builder)
     allow(placeholder_canvas_builder).to receive(:build).and_return(placeholder_canvas)
@@ -74,6 +93,14 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     body['width'] = '100px'
     body['height'] = '100px'
     body['duration'] = nil
+    body
+  end
+
+  let(:iiif_supplementing_body) do
+    body = IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body.new
+    body['label'] = { "none" => ["English"] }
+    body['language'] = 'eng'
+    body['format'] = 'text/vtt'
     body
   end
 
@@ -92,7 +119,17 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     annotation
   end
 
+  let(:iiif_supplementing_annotation) do
+    supplementing_annotation = IIIFManifest::V3::ManifestBuilder::IIIFManifest::Annotation.new
+    supplementing_annotation.body = iiif_supplementing_body
+    supplementing_annotation
+  end
+
   let(:iiif_annotation_factory) do
+    double('IIIF Annotation Factory')
+  end
+
+  let(:iiif_supplementing_annotation_factory) do
     double('IIIF Annotation Factory')
   end
 
@@ -100,7 +137,15 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     instance_double(IIIFManifest::V3::ManifestBuilder::BodyBuilder)
   end
 
+  let(:supplementing_body_builder) do
+    instance_double(IIIFManifest::V3::ManifestBuilder::BodyBuilder)
+  end
+
   let(:body_builder_factory) do
+    double('Body Builder')
+  end
+
+  let(:supplementing_body_builder_factory) do
     double('Body Builder')
   end
 
@@ -120,8 +165,20 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     )
   end
 
+  let(:built_supplementing_content) do
+    IIIFManifest::V3::ManifestBuilder::SupplementingContentBuilder.new(
+      record.supplementing_content,
+      iiif_annotation_factory: iiif_supplementing_annotation_factory,
+      body_builder_factory: body_builder_factory
+    )
+  end
+
   let(:content_builder) do
     double('Content Builder')
+  end
+
+  let(:supplementing_content_builder) do
+    double('Supplementing Content Builder')
   end
 
   let(:placeholder_canvas_builder) do
@@ -146,21 +203,21 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       it 'generates the canvas' do
         canvas = builder.canvas
         expect(canvas).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
-        values = canvas.inner_hash
+        canvas_values = canvas.inner_hash
 
-        expect(values).to include "type" => "Canvas"
-        expect(values).to include "id" => "http://test.host/books/book-77/manifest/canvas/test-22"
-        expect(values).to include "items"
+        expect(canvas_values).to include "type" => "Canvas"
+        expect(canvas_values).to include "id" => "http://test.host/books/book-77/manifest/canvas/test-22"
+        expect(canvas_values).to include "items"
 
-        expect(values).to include "thumbnail"
-        thumbnail = values['thumbnail'].first
+        expect(canvas_values).to include "thumbnail"
+        thumbnail = canvas_values['thumbnail'].first
         expect(thumbnail).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Thumbnail
         thumbnail_values = thumbnail.inner_hash
         expect(thumbnail_values).to include "type" => "Image"
         expect(thumbnail_values).to include "width" => 200
         expect(thumbnail_values).to include "height" => 150
 
-        items = values['items']
+        items = canvas_values['items']
         expect(items.length).to eq 1
         page = items.first
         expect(page).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage
@@ -169,6 +226,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         annotation = items.first
         expect(annotation).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Annotation
         values = annotation.inner_hash
+        expect(values).to include "motivation" => "painting"
         expect(values).to include('body')
         body = values['body']
         expect(body).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body
@@ -176,6 +234,24 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(values).to include "width" => "100px"
         expect(values).to include "height" => "100px"
         expect(values).to include "duration" => nil
+
+        annotations = canvas_values['annotations']
+        expect(annotations.length).to eq 1
+        supplement_page = annotations.first
+        expect(supplement_page).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage
+        supplement_items = supplement_page.items
+        expect(supplement_items.length).to eq 1
+        supplement_annotation = supplement_items.first
+        expect(supplement_annotation).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Annotation
+        supplement_values = supplement_annotation.inner_hash
+        expect(supplement_values).to include "motivation" => "supplementing"
+        expect(supplement_values).to include('body')
+        supplement_body = supplement_values['body']
+        expect(supplement_body).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body
+        values = supplement_body.inner_hash
+        expect(values).to include "label" => { "none" => ["English"] }
+        expect(values).to include "format" => "text/vtt"
+        expect(values).to include "language" => "eng"
       end
     end
 
@@ -224,6 +300,80 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         page = items.first
         expect(page).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage
         expect(page.items).to be_empty
+
+        expect(values).to include 'annotations'
+      end
+    end
+
+    context 'when supplementing content is empty for an item' do
+      before do
+        class MyWork
+          def id
+            'test-22'
+          end
+
+          def supplementing_content
+            []
+          end
+        end
+      end
+
+      it 'generates the canvas' do
+        canvas = builder.canvas
+        expect(canvas).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
+        values = canvas.inner_hash
+
+        expect(values).to include "type" => "Canvas"
+        expect(values).to include "id" => "http://test.host/books/book-77/manifest/canvas/test-22"
+
+        expect(values).to include 'items'
+        items = values['items']
+        expect(items.length).to eq 1
+        page = items.first
+        expect(page).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage
+        expect(page.items).not_to be_empty
+
+        expect(values).not_to include 'annotations'
+      end
+    end
+
+    context 'when supplementing content has more than one item' do
+      let(:supplementing_content) do
+        [IIIFManifest::V3::SupplementingContent.new("http://transcript.vtt",
+                                                    type: 'text',
+                                                    format: 'text/vtt',
+                                                    label: 'English',
+                                                    language: 'eng'),
+         IIIFManifest::V3::SupplementingContent.new("http://caption.vtt",
+                                                    type: 'text',
+                                                    format: 'text/vtt',
+                                                    label: 'English',
+                                                    language: 'eng')]
+      end
+
+      it 'generates the canvas' do
+        canvas = builder.canvas
+        expect(canvas).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
+        values = canvas.inner_hash
+
+        expect(values).to include "type" => "Canvas"
+        expect(values).to include "id" => "http://test.host/books/book-77/manifest/canvas/test-22"
+
+        expect(values).to include 'items'
+        items = values['items']
+        expect(items.length).to eq 1
+        page = items.first
+        expect(page).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage
+        expect(page.items).not_to be_empty
+
+        expect(values).to include 'annotations'
+        supplementing_annotations = values['annotations']
+        expect(supplementing_annotations.length).to eq 1
+        supplementing_page = supplementing_annotations.first
+        expect(supplementing_page.items.length).to eq 2
+        expect(supplementing_page.items[0].body.inner_hash['language']).to eq 'eng'
+        expect(supplementing_page.items[1].body.inner_hash['language']).to eq 'eng'
+        expect(supplementing_page.items).to all(be_a(IIIFManifest::V3::ManifestBuilder::IIIFManifest::Annotation))
       end
     end
 

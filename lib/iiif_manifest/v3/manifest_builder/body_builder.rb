@@ -2,9 +2,9 @@ module IIIFManifest
   module V3
     class ManifestBuilder
       class BodyBuilder
-        attr_reader :display_content, :iiif_body_factory, :image_service_builder_factory
-        def initialize(display_content, iiif_body_factory:, image_service_builder_factory:)
-          @display_content = display_content
+        attr_reader :content, :iiif_body_factory, :image_service_builder_factory
+        def initialize(content, iiif_body_factory:, image_service_builder_factory:)
+          @content = content
           @iiif_body_factory = iiif_body_factory
           @image_service_builder_factory = image_service_builder_factory
         end
@@ -19,13 +19,12 @@ module IIIFManifest
         private
 
         def build_body
-          body['id'] = display_content.url
+          body['id'] = content.url
           body['type'] = body_type
-          body['height'] = display_content.height if display_content.try(:height).present?
-          body['width'] = display_content.width if display_content.try(:width).present?
-          body['duration'] = display_content.duration if display_content.try(:duration).present?
-          body['format'] = display_content.format if display_content.try(:format).present?
-          body['label'] = ManifestBuilder.language_map(display_content.label) if display_content.try(:label).present?
+          body_display_dimensions
+          body['format'] = content.format if content.try(:format).present?
+          body['label'] = ManifestBuilder.language_map(content.label) if content.try(:label).present?
+          body['language'] = content.language if content.try(:language).present?
         end
 
         def body
@@ -33,11 +32,17 @@ module IIIFManifest
         end
 
         def body_type
-          display_content.try(:type) || 'Image'
+          content.try(:type) || 'Image'
+        end
+
+        def body_display_dimensions
+          body['height'] = content.height if content.try(:height).present?
+          body['width'] = content.width if content.try(:width).present?
+          body['duration'] = content.duration if content.try(:duration).present?
         end
 
         def iiif_endpoint
-          display_content.try(:iiif_endpoint)
+          content.try(:iiif_endpoint)
         end
 
         def image_service_builder
@@ -45,7 +50,7 @@ module IIIFManifest
         end
 
         def auth_service
-          display_content.try(:auth_service)
+          content.try(:auth_service)
         end
 
         def apply_auth_service
