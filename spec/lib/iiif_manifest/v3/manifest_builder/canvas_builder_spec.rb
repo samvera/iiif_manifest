@@ -273,6 +273,24 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       end
     end
 
+    context 'when display content has no see_also' do
+      let(:display_content) do
+        IIIFManifest::V3::DisplayContent.new(url,
+                                             width: 640,
+                                             height: 480,
+                                             type: 'Image',
+                                             format: 'image/jpeg',
+                                             label: 'full',
+                                             iiif_endpoint: iiif_endpoint)
+      end
+      it 'generates canvas without seeAlso property' do
+        canvas = builder.canvas
+        expect(canvas).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
+        values = canvas.inner_hash
+        expect(values.key?('seeAlso')).to be false
+      end
+    end
+
     context 'when the display content is empty for an item' do
       before do
         class MyWork
