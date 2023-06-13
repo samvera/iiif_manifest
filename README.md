@@ -109,6 +109,7 @@ The class that represents the leaf nodes, must implement `#id`. It must also imp
 
 In Presentation 3.0, additionally it **_may_** implement;
 - `#sequence_rendering` to contain an array of hashes for file downloads to be offered at each leaf node. This follows a similar format as `#sequence_rendering` at sequences level
+- `#see_also` to contain an array of hashes for related resources to be offered at each leaf node. Items must contain "@id" and "type" properties. Items should contain "label", "format", and "profile" properties.
 - `#placeholder_content` to contain an instance of `IIIFManifest::V3::DisplayContent` for [`placeholderCanvas`](https://iiif.io/api/presentation/3.0/#placeholdercanvas) at each leaf node
 
 ```ruby
@@ -133,6 +134,10 @@ In Presentation 3.0, additionally it **_may_** implement;
     # --------------------------------------- Presentation 3.0 (Alpha) ---------------------------------------
     def sequence_rendering
       [{"@id" => "http://test.host/display_image/id/download", "format" => "application/pdf", "label" => "Download"}]
+    end
+
+    def see_also
+      [{"@id" => "http://test.host/display_image/id/image.json", "type" => "dataset", "format" => "application/json", "label" => "Related Resource"}]
     end
 
     def placeholder_content

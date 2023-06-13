@@ -8,6 +8,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
   let(:supplementing_content_builder) do
     IIIFManifest::V3::ManifestBuilder::SupplementingContentBuilder
   end
+  let(:see_also) { { id: '1234.json', label: 'seeAlso' } }
   let(:builder) do
     described_class.new(
       record,
@@ -208,6 +209,8 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(canvas_values).to include "type" => "Canvas"
         expect(canvas_values).to include "id" => "http://test.host/books/book-77/manifest/canvas/test-22"
         expect(canvas_values).to include "items"
+        expect(canvas_values).to include "annotations"
+        expect(canvas_values).not_to include "seeAlso"
 
         expect(canvas_values).to include "thumbnail"
         thumbnail = canvas_values['thumbnail'].first
@@ -273,21 +276,26 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       end
     end
 
-    context 'when display content has no see_also' do
-      let(:display_content) do
-        IIIFManifest::V3::DisplayContent.new(url,
-                                             width: 640,
-                                             height: 480,
-                                             type: 'Image',
-                                             format: 'image/jpeg',
-                                             label: 'full',
-                                             iiif_endpoint: iiif_endpoint)
+    context 'when record has see_also' do
+      before do
+        class MyWork
+          def id
+            'test-22'
+          end
+
+          def see_also
+            [{
+              id: 'test-22.json',
+              label: 'test-22 see also'
+            }]
+          end
+        end
       end
       it 'generates canvas without seeAlso property' do
         canvas = builder.canvas
         expect(canvas).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
         values = canvas.inner_hash
-        expect(values.key?('seeAlso')).to be false
+        expect(values.key?('seeAlso')).to be true
       end
     end
 
