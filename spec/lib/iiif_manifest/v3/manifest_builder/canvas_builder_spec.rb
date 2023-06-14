@@ -291,7 +291,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
           end
         end
       end
-      it 'generates canvas without seeAlso property' do
+      it 'generates canvas with seeAlso property' do
         canvas = builder.canvas
         expect(canvas).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
         values = canvas.inner_hash
