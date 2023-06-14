@@ -286,6 +286,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
           def see_also
             [{
               id: 'test-22.json',
+              type: 'Dataset',
               label: 'test-22 see also'
             }]
           end
