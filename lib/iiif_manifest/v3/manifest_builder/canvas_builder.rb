@@ -82,6 +82,7 @@ module IIIFManifest
           end
           apply_thumbnail_to(canvas)
           canvas.rendering = populate_rendering if populate_rendering.present?
+          canvas.see_also = populate_see_also if populate_see_also.present?
         end
 
         def apply_thumbnail_to(canvas)
@@ -132,6 +133,16 @@ module IIIFManifest
               sequence_rendering['label'] = ManifestBuilder.language_map(rendering['label'])
             end
             sequence_rendering
+          end
+        end
+
+        def populate_see_also
+          return unless record.respond_to?(:see_also)
+          record.see_also.collect do |sa|
+            see_also = sa.to_h.except('@id', 'label')
+            see_also['id'] = sa['@id']
+            see_also['label'] = ManifestBuilder.language_map(sa['label']) if sa['label'].present?
+            see_also
           end
         end
       end

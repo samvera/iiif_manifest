@@ -157,6 +157,10 @@ module IIIFManifest
           def annotations=(annotations)
             inner_hash['annotations'] = annotations
           end
+
+          def see_also=(see_also)
+            inner_hash['seeAlso'] = see_also
+          end
         end
 
         class Range < IIIFService
