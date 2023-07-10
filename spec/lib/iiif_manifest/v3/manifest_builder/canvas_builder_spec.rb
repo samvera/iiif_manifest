@@ -300,6 +300,29 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       end
     end
 
+    context 'when record has part_of' do
+      before do
+        class MyWork
+          def id
+            'test-22'
+          end
+
+          def part_of
+            [{
+              id: 'http://test.host/books/book-77/manifest',
+              type: 'manifest'
+            }]
+          end
+        end
+      end
+      it 'generates canvas with partOf property' do
+        canvas = builder.canvas
+        expect(canvas).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
+        values = canvas.inner_hash
+        expect(values.key?('partOf')).to be true
+      end
+    end
+
     context 'when the display content is empty for an item' do
       before do
         class MyWork

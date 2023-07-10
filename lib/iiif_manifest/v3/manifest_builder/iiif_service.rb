@@ -161,6 +161,10 @@ module IIIFManifest
           def see_also=(see_also)
             inner_hash['seeAlso'] = see_also
           end
+
+          def part_of=(part_of)
+            inner_hash['partOf'] = part_of
+          end
         end
 
         class Range < IIIFService

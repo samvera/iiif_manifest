@@ -76,13 +76,18 @@ module IIIFManifest
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
-          if supplementing_content.present?
-            supplementing_annotation_page['id'] = "#{path}/supplementing/#{supplementing_annotation_page.index}"
-            canvas.annotations = [supplementing_annotation_page]
-          end
+          apply_supplementing_content_to(canvas)
           apply_thumbnail_to(canvas)
-          canvas.rendering = populate_rendering if populate_rendering.present?
-          canvas.see_also = populate_see_also if populate_see_also.present?
+          canvas.rendering = populate(:rendering) if populate(:rendering).present?
+          canvas.see_also = populate(:see_also) if populate(:see_also).present?
+          canvas.part_of = populate(:part_of) if populate(:part_of).present?
+        end
+
+        def apply_supplementing_content_to(canvas)
+          return if supplementing_content.blank?
+
+          supplementing_annotation_page['id'] = "#{path}/supplementing/#{supplementing_annotation_page.index}"
+          canvas.annotations = [supplementing_annotation_page]
         end
 
         def apply_thumbnail_to(canvas)
@@ -124,25 +129,15 @@ module IIIFManifest
           canvas.placeholder_canvas = placeholder_canvas_builder_factory.new(placeholder_content, path).build
         end
 
-        def populate_rendering
-          return unless record.respond_to?(:sequence_rendering)
-          record.sequence_rendering.collect do |rendering|
-            sequence_rendering = rendering.to_h.except('@id', 'label')
-            sequence_rendering['id'] = rendering['@id']
-            if rendering['label'].present?
-              sequence_rendering['label'] = ManifestBuilder.language_map(rendering['label'])
-            end
-            sequence_rendering
-          end
-        end
+        def populate(property)
+          property = :sequence_rendering if property == :rendering
 
-        def populate_see_also
-          return unless record.respond_to?(:see_also)
-          record.see_also.collect do |sa|
-            see_also = sa.to_h.except('@id', 'label')
-            see_also['id'] = sa['@id']
-            see_also['label'] = ManifestBuilder.language_map(sa['label']) if sa['label'].present?
-            see_also
+          return unless record.respond_to?(property)
+          record.send(property).collect do |prop|
+            output = prop.to_h.except('@id', 'label')
+            output['id'] = prop['@id']
+            output['label'] = ManifestBuilder.language_map(prop['label']) if prop['label'].present?
+            output
           end
         end
       end
