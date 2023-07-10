@@ -141,6 +141,10 @@ In Presentation 3.0, additionally it **_may_** implement;
       [{"@id" => "http://test.host/display_image/id/image.json", "type" => "dataset", "format" => "application/json", "label" => "Related Resource"}]
     end
 
+    def part_of
+      [{"@id" => "http://test.host/display_image/id/parent.json", "type" => "manifest"}]
+    end
+
     def placeholder_content
       IIIFManifest::V3::DisplayContent.new(id,
                                            width: 100,
