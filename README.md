@@ -109,8 +109,8 @@ The class that represents the leaf nodes, must implement `#id`. It must also imp
 
 In Presentation 3.0, additionally it **_may_** implement;
 - `#sequence_rendering` to contain an array of hashes for file downloads to be offered at each leaf node. This follows a similar format as `#sequence_rendering` at sequences level
-- `#see_also` to contain an array of hashes for related resources to be offered at each leaf node. Items must contain "@id" and "type" properties. Items should contain "label", "format", and "profile" properties.
-- `#part_of` to contain an array of hashes for parent resources to be offered at each leaf node. Items must contain "@id" and "type" properties. Items should contain "label".
+- `#see_also` to contain an array of hashes for related resources to be offered at each leaf node. Items must contain "id" and "type" properties. Items should contain "label", "format", and "profile" properties.
+- `#part_of` to contain an array of hashes for parent resources to be offered at each leaf node. Items must contain "id" and "type" properties. Items should contain "label".
 - `#placeholder_content` to contain an instance of `IIIFManifest::V3::DisplayContent` for [`placeholderCanvas`](https://iiif.io/api/presentation/3.0/#placeholdercanvas) at each leaf node
 
 ```ruby
@@ -138,11 +138,11 @@ In Presentation 3.0, additionally it **_may_** implement;
     end
 
     def see_also
-      [{"@id" => "http://test.host/display_image/id/image.json", "type" => "dataset", "format" => "application/json", "label" => "Related Resource"}]
+      [{"id" => "http://test.host/display_image/id/image.json", "type" => "dataset", "format" => "application/json", "label" => "Related Resource"}]
     end
 
     def part_of
-      [{"@id" => "http://test.host/display_image/id/parent.json", "type" => "manifest"}]
+      [{"id" => "http://test.host/display_image/id/parent.json", "type" => "manifest"}]
     end
 
     def placeholder_content
