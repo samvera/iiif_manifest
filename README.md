@@ -109,7 +109,8 @@ The class that represents the leaf nodes, must implement `#id`. It must also imp
 
 In Presentation 3.0, additionally it **_may_** implement;
 - `#sequence_rendering` to contain an array of hashes for file downloads to be offered at each leaf node. This follows a similar format as `#sequence_rendering` at sequences level
-- `#see_also` to contain an array of hashes for related resources to be offered at each leaf node. Items must contain "@id" and "type" properties. Items should contain "label", "format", and "profile" properties.
+- `#see_also` to contain an array of hashes for related resources to be offered at each leaf node. Items must contain "id" and "type" properties. Items should contain "label", "format", and "profile" properties.
+- `#part_of` to contain an array of hashes for parent resources to be offered at each leaf node. Items must contain "id" and "type" properties. Items should contain "label".
 - `#placeholder_content` to contain an instance of `IIIFManifest::V3::DisplayContent` for [`placeholderCanvas`](https://iiif.io/api/presentation/3.0/#placeholdercanvas) at each leaf node
 
 ```ruby
@@ -137,7 +138,11 @@ In Presentation 3.0, additionally it **_may_** implement;
     end
 
     def see_also
-      [{"@id" => "http://test.host/display_image/id/image.json", "type" => "dataset", "format" => "application/json", "label" => "Related Resource"}]
+      [{"id" => "http://test.host/display_image/id/image.json", "type" => "dataset", "format" => "application/json", "label" => "Related Resource"}]
+    end
+
+    def part_of
+      [{"id" => "http://test.host/display_image/id/parent.json", "type" => "manifest"}]
     end
 
     def placeholder_content
@@ -187,6 +192,7 @@ The presentation 3.0 support has been contained to the `V3` namespace. Version 2
   - `#display_content` which should return an instance of `IIIFManifest::V3::DisplayContent` (or an array of instances in the case of a user `Choice`)
   - `#display_image` is no longer required but will still work if provided
   - `#sequence_rendering` is supported at leaf node level, to present an array of file downloads available at each leaf node
+  - `#part_of` is supported at leaf node level, to present an array of parent resources available at each leaf node.
   - `#placeholder_content` which returns an instance of `IIIFManifest::V3::DisplayContent` presents a [`placeholderCanvas`](https://iiif.io/api/presentation/3.0/#placeholdercanvas) at leaf node level
 - DisplayContent may provide `#auth_service` which should return a hash containing a IIIF Authentication service definition (<https://iiif.io/api/auth/1.0/>) that will be included on the content resource.
 
