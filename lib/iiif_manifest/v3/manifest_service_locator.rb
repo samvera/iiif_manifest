@@ -89,6 +89,14 @@ module IIIFManifest
           )
         end
 
+        def annotation_content_builder
+          IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+            ManifestBuilder::AnnotationContentBuilder,
+            iiif_annotation_factory: iiif_annotation_factory,
+            body_builder_factory: body_builder_factory
+          )
+        end
+
         def supplementing_content_builder
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
             ManifestBuilder::SupplementingContentBuilder,
