@@ -56,7 +56,7 @@ module IIIFManifest
             iiif_canvas_factory: iiif_canvas_factory,
             content_builder: content_builder,
             choice_builder: choice_builder,
-            supplementing_content_builder: supplementing_content_builder,
+            annotation_content_builder: annotation_content_builder,
             iiif_annotation_page_factory: iiif_annotation_page_factory,
             thumbnail_builder_factory: thumbnail_builder_factory,
             placeholder_canvas_builder_factory: placeholder_canvas_builder_factory
@@ -92,14 +92,6 @@ module IIIFManifest
         def annotation_content_builder
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
             ManifestBuilder::AnnotationContentBuilder,
-            iiif_annotation_factory: iiif_annotation_factory,
-            body_builder_factory: body_builder_factory
-          )
-        end
-
-        def supplementing_content_builder
-          IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
-            ManifestBuilder::SupplementingContentBuilder,
             iiif_annotation_factory: iiif_annotation_factory,
             body_builder_factory: body_builder_factory
           )

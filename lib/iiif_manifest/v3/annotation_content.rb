@@ -1,9 +1,9 @@
 module IIIFManifest
   module V3
-    class SupplementingContent
+    class AnnotationContent
       attr_reader :url, :type, :motivation, :format, :language, :label, :value, :media_fragment
 
-      def initialize(url, type:, motivation: 'supplementing', **kwargs)
+      def initialize(url, type:, motivation:, **kwargs)
         @url = url
         @type = type
         @motivation = motivation

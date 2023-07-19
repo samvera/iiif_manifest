@@ -9,6 +9,6 @@ module IIIFManifest
     autoload :ManifestFactory
     autoload :ManifestServiceLocator
     autoload :DisplayContent
-    autoload :SupplementingContent
+    autoload :AnnotationContent
   end
 end

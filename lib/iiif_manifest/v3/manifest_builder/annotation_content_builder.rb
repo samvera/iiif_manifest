@@ -25,7 +25,7 @@ module IIIFManifest
           annotation_body_builder.apply(annotation)
         end
 
-        def body_builder
+        def annotation_body_builder
           body_builder_factory.new(annotation_content)
         end
 

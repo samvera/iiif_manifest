@@ -3,15 +3,14 @@ module IIIFManifest
     class ManifestBuilder
       class CanvasBuilder
         attr_reader :record, :parent, :iiif_canvas_factory, :content_builder, :choice_builder,
-                    :supplementing_content_builder, :annotation_content_builder, :iiif_annotation_page_factory, :thumbnail_builder_factory,
-                    :placeholder_canvas_builder_factory
+                    :annotation_content_builder, :iiif_annotation_page_factory,
+                    :thumbnail_builder_factory, :placeholder_canvas_builder_factory
 
         def initialize(record,
                        parent,
                        iiif_canvas_factory:,
                        content_builder:,
                        choice_builder:,
-                       supplementing_content_builder:,
                        annotation_content_builder:,
                        iiif_annotation_page_factory:,
                        thumbnail_builder_factory:,
@@ -21,7 +20,6 @@ module IIIFManifest
           @iiif_canvas_factory = iiif_canvas_factory
           @content_builder = content_builder
           @choice_builder = choice_builder
-          @supplementing_content_builder = supplementing_content_builder
           @annotation_content_builder = annotation_content_builder
           @iiif_annotation_page_factory = iiif_annotation_page_factory
           @thumbnail_builder_factory = thumbnail_builder_factory
@@ -32,7 +30,6 @@ module IIIFManifest
           # Presentation 3.0 approach
           attach_content if display_content
           attach_annotation if annotation_content
-          attach_supplementing if supplementing_content
           attach_placeholder_canvas if placeholder_content
         end
 
@@ -63,11 +60,11 @@ module IIIFManifest
           Array.wrap(record.display_content) if record.respond_to?(:display_content) && record.display_content.present?
         end
 
-        # @return [Array<Object>] if the record has supplementing content
-        # @return [NilClass] if there is no display content
-        def supplementing_content
-          return unless record.respond_to?(:supplementing_content) && record.supplementing_content.present?
-          Array.wrap(record.supplementing_content)
+        # @return [Array<Object>] if the record has generic annotation content
+        # @return [NilClass] if there is no annotation content
+        def annotation_content
+          return unless record.respond_to?(:annotation_content) && record.annotation_content.present?
+          Array.wrap(record.annotation_content)
         end
 
         def placeholder_content
@@ -80,7 +77,6 @@ module IIIFManifest
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
           apply_annotation_content_to(canvas)
-          apply_supplementing_content_to(canvas)
           apply_thumbnail_to(canvas)
           canvas.rendering = populate(:rendering) if populate(:rendering).present?
           canvas.see_also = populate(:see_also) if populate(:see_also).present?
@@ -92,13 +88,6 @@ module IIIFManifest
 
           generic_annotation_page['id'] = "#{path}/#{annotation_content.motivation}/#{generic_annotation_page.index}"
           canvas.annotations = [generic_annotation_page]
-        end
-
-        def apply_supplementing_content_to(canvas)
-          return if supplementing_content.blank?
-
-          supplementing_annotation_page['id'] = "#{path}/supplementing/#{supplementing_annotation_page.index}"
-          canvas.annotations = [supplementing_annotation_page]
         end
 
         def apply_thumbnail_to(canvas)
@@ -117,10 +106,6 @@ module IIIFManifest
           @generic_annotation_page ||= iiif_annotation_page_factory.new
         end
 
-        def supplementing_annotation_page
-          @supplementing_annotation_page ||= iiif_annotation_page_factory.new
-        end
-
         def attach_image
           content_builder.new(display_image).apply(canvas)
         end
@@ -136,14 +121,7 @@ module IIIFManifest
         def attach_annotation
           annotation_content.each do |an|
             annotation = annotation_content_builder.new(an).apply(canvas)
-            generic_annotation_page.items += [annotations]
-          end
-        end
-
-        def attach_supplementing
-          supplementing_content.each do |sc|
-            supplementing_annotations = supplementing_content_builder.new(sc).apply(canvas)
-            supplementing_annotation_page.items += [supplementing_annotations]
+            generic_annotation_page.items += [annotation]
           end
         end
 
