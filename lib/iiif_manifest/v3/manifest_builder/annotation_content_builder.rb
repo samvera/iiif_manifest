@@ -14,8 +14,8 @@ module IIIFManifest
           # Assume first item in canvas annotations is an annotation page
           canvas_id = canvas.annotations.first['id']
           annotation['id'] = "#{canvas_id}/annotations/#{annotation.index}"
-          annotation['target'] = target
-          annotation['motivation'] = annotation_content.motivation
+          annotation['target'] = target(canvas)
+          annotation['motivation'] = annotation_content.motivation if annotation_content.try(:motivation).present?
           annotation
         end
 
@@ -33,8 +33,8 @@ module IIIFManifest
           @annotation ||= iiif_annotation_factory.new
         end
 
-        def target
-          if annotation_content.media_fragment
+        def target(canvas)
+          if annotation_content.try(:media_fragment).present?
             canvas['id'] + annotation_content.media_fragment
           else
             canvas['id']

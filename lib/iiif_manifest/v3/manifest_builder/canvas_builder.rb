@@ -64,6 +64,7 @@ module IIIFManifest
         # @return [NilClass] if there is no annotation content
         def annotation_content
           return unless record.respond_to?(:annotation_content) && record.annotation_content.present?
+
           Array.wrap(record.annotation_content)
         end
 
@@ -86,7 +87,7 @@ module IIIFManifest
         def apply_annotation_content_to(canvas)
           return if annotation_content.blank?
 
-          generic_annotation_page['id'] = "#{path}/#{annotation_content.motivation}/#{generic_annotation_page.index}"
+          generic_annotation_page['id'] = "#{path}/annotation/#{generic_annotation_page.index}"
           canvas.annotations = [generic_annotation_page]
         end
 
