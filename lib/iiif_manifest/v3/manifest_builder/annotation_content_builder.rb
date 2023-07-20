@@ -13,9 +13,10 @@ module IIIFManifest
         def apply(canvas)
           # Assume first item in canvas annotations is an annotation page
           canvas_id = canvas.annotations.first['id']
-          annotation['id'] = "#{canvas_id}/annotations/#{annotation.index}"
+          motivation = annotation_content.motivation if annotation_content.try(:motivation).present?
+          annotation['id'] = "#{canvas_id}/#{motivation}/#{annotation.index}"
           annotation['target'] = target(canvas)
-          annotation['motivation'] = annotation_content.motivation if annotation_content.try(:motivation).present?
+          annotation['motivation'] = motivation
           annotation
         end
 

@@ -87,7 +87,7 @@ module IIIFManifest
         def apply_annotation_content_to(canvas)
           return if annotation_content.blank?
 
-          generic_annotation_page['id'] = "#{path}/annotation/#{generic_annotation_page.index}"
+          generic_annotation_page['id'] = "#{path}/annotation_page/#{generic_annotation_page.index}"
           canvas.annotations = [generic_annotation_page]
         end
 
