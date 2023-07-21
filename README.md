@@ -190,6 +190,7 @@ The presentation 3.0 support has been contained to the `V3` namespace. Version 2
 - Range objects may now implement `#items` instead of `#ranges` and `#file_set_presenters` to allow for interleaving these objects. `#items` is not required and existing range objects should continue to work.
 - File set presenters may provide,
   - `#display_content` which should return an instance of `IIIFManifest::V3::DisplayContent` (or an array of instances in the case of a user `Choice`)
+  - `#annotation_content` which should return an instance of `IIIFManifest::V3::AnnotationContent` (or an array of instances in the case of a canvas having multiple annotations)
   - `#display_image` is no longer required but will still work if provided
   - `#sequence_rendering` is supported at leaf node level, to present an array of file downloads available at each leaf node
   - `#part_of` is supported at leaf node level, to present an array of parent resources available at each leaf node.
