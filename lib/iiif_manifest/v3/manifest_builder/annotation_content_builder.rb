@@ -14,24 +14,24 @@ module IIIFManifest
           # Assume first item in canvas annotations is an annotation page
           canvas_id = canvas.annotations.first['id']
           motivation = annotation_content.motivation if annotation_content.try(:motivation).present?
-          annotation['id'] = "#{canvas_id}/#{motivation}/#{annotation.index}"
-          annotation['target'] = target(canvas)
-          annotation['motivation'] = motivation
-          annotation
+          generic_annotation['id'] = "#{canvas_id}/#{motivation}/#{generic_annotation.index}"
+          generic_annotation['target'] = target(canvas)
+          generic_annotation['motivation'] = motivation
+          generic_annotation
         end
 
         private
 
         def build_annotation_resource
-          annotation_body_builder.apply(annotation)
+          annotation_body_builder.apply(generic_annotation)
         end
 
         def annotation_body_builder
           body_builder_factory.new(annotation_content)
         end
 
-        def annotation
-          @annotation ||= iiif_annotation_factory.new
+        def generic_annotation
+          @generic_annotation ||= iiif_annotation_factory.new
         end
 
         def target(canvas)

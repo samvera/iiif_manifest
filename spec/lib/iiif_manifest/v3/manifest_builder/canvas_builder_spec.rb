@@ -48,12 +48,12 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
                                                             format: 'image/jpeg')
   end
   let(:annotation_content) do
-    [IIIFManifest::V3::AnnotationContent.new(caption_url,
-                                             type: 'text',
-                                             motivation: 'supplementing',
-                                             format: 'text/vtt',
-                                             label: 'English',
-                                             language: 'eng')]
+    IIIFManifest::V3::AnnotationContent.new(caption_url,
+                                            type: 'text',
+                                            motivation: 'supplementing',
+                                            format: 'text/vtt',
+                                            label: 'English',
+                                            language: 'eng')
   end
   let(:record) do
     MyWork.new(display_content: display_content,
@@ -172,7 +172,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     IIIFManifest::V3::ManifestBuilder::AnnotationContentBuilder.new(
       record.annotation_content,
       iiif_annotation_factory: iiif_caption_annotation_factory,
-      body_builder_factory: body_builder_factory
+      body_builder_factory: caption_body_builder_factory
     )
   end
 
@@ -390,19 +390,32 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
     end
 
     context 'when annotation content has more than one item' do
+      let(:built_annotation_content) do
+        IIIFManifest::V3::ManifestBuilder::AnnotationContentBuilder.new(
+          record.annotation_content[0],
+          iiif_annotation_factory: iiif_caption_annotation_factory,
+          body_builder_factory: caption_body_builder_factory
+        )
+      end
       let(:annotation_content) do
-        [IIIFManifest::V3::AnnotationContent.new("http://transcript.vtt",
-                                                  type: 'text',
-                                                  motivation: 'supplementing',
-                                                  format: 'text/vtt',
-                                                  label: 'English',
-                                                  language: 'eng'),
+        [IIIFManifest::V3::AnnotationContent.new("http://highlight.mark",
+                                                 type: 'TextualBody',
+                                                 motivation: 'highlighting',
+                                                 format: 'text/html',
+                                                 value: 'marker',
+                                                 media_fragment: 't=15'),
+         IIIFManifest::V3::AnnotationContent.new("http://transcript.vtt",
+                                                 type: 'text',
+                                                 motivation: 'supplementing',
+                                                 format: 'text/vtt',
+                                                 label: 'English',
+                                                 language: 'eng'),
          IIIFManifest::V3::AnnotationContent.new("http://caption.vtt",
-                                                  type: 'text',
-                                                  motivation: 'supplementing',
-                                                  format: 'text/vtt',
-                                                  label: 'English',
-                                                  language: 'eng')]
+                                                 type: 'text',
+                                                 motivation: 'supplementing',
+                                                 format: 'text/vtt',
+                                                 label: 'English',
+                                                 language: 'eng')]
       end
 
       it 'generates the canvas' do
@@ -421,13 +434,14 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(page.items).not_to be_empty
 
         expect(values).to include 'annotations'
-        caption_annotations = values['annotations']
-        expect(caption_annotations.length).to eq 1
-        captions_page = caption_annotations.first
-        expect(captions_page.items.length).to eq 2
-        expect(captions_page.items[0].body.inner_hash['language']).to eq 'eng'
-        expect(captions_page.items[1].body.inner_hash['language']).to eq 'eng'
-        expect(captions_page.items).to all(be_a(IIIFManifest::V3::ManifestBuilder::IIIFManifest::Annotation))
+        annotations = values['annotations']
+        expect(annotations.length).to eq 1
+        annotation_page = annotations.first
+        expect(annotation_page.items.length).to eq 3
+        expect(annotation_page.items[0].inner_hash['target']).to include 't=15'
+        expect(annotation_page.items[1].body.inner_hash['language']).to eq 'eng'
+        expect(annotation_page.items[2].body.inner_hash['language']).to eq 'eng'
+        expect(annotation_page.items).to all(be_a(IIIFManifest::V3::ManifestBuilder::IIIFManifest::Annotation))
       end
     end
 
