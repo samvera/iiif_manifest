@@ -25,6 +25,7 @@ module IIIFManifest
           body['format'] = content.format if content.try(:format).present?
           body['label'] = ManifestBuilder.language_map(content.label) if content.try(:label).present?
           body['language'] = content.language if content.try(:language).present?
+          body['value'] = content.value if content.try(:value).present?
         end
 
         def body
