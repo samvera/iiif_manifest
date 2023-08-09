@@ -36,7 +36,7 @@ module IIIFManifest
 
         def target(canvas)
           if annotation_content.try(:media_fragment).present?
-            canvas['id'] + annotation_content.media_fragment
+            canvas['id'] + "##{annotation_content.media_fragment}"
           else
             canvas['id']
           end

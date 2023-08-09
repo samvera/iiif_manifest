@@ -438,7 +438,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(annotations.length).to eq 1
         annotation_page = annotations.first
         expect(annotation_page.items.length).to eq 3
-        expect(annotation_page.items[0].inner_hash['target']).to include 't=15'
+        expect(annotation_page.items[0].inner_hash['target']).to include '#t=15'
         expect(annotation_page.items[1].body.inner_hash['language']).to eq 'eng'
         expect(annotation_page.items[2].body.inner_hash['language']).to eq 'eng'
         expect(annotation_page.items).to all(be_a(IIIFManifest::V3::ManifestBuilder::IIIFManifest::Annotation))
