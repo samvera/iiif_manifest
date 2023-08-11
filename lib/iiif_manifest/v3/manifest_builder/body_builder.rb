@@ -19,7 +19,7 @@ module IIIFManifest
         private
 
         def build_body
-          body['id'] = content.url
+          body['id'] = body_id
           body['type'] = body_type
           body_display_dimensions
           body['format'] = content.format if content.try(:format).present?
@@ -30,6 +30,15 @@ module IIIFManifest
 
         def body
           @body ||= iiif_body_factory.new
+        end
+
+        def body_id
+          return if content.try(:body_id).blank? && content.try(:url).blank?
+          if content.try(:body_id).present?
+            content.body_id
+          else
+            content.url
+          end
         end
 
         def body_type

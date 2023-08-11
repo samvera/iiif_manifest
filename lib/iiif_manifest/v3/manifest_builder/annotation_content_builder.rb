@@ -13,8 +13,7 @@ module IIIFManifest
         def apply(canvas)
           # Assume first item in canvas annotations is an annotation page
           canvas_id = canvas.annotations.first['id']
-          motivation = annotation_content.motivation if annotation_content.try(:motivation).present?
-          generic_annotation['id'] = "#{canvas_id}/#{motivation}/#{generic_annotation.index}"
+          generic_annotation['id'] = annotation_id(canvas_id)
           generic_annotation['target'] = target(canvas)
           generic_annotation['motivation'] = motivation
           generic_annotation
@@ -32,6 +31,18 @@ module IIIFManifest
 
         def generic_annotation
           @generic_annotation ||= iiif_annotation_factory.new
+        end
+
+        def annotation_id(canvas_id)
+          if annotation_content.try(:annotation_id).blank?
+            "#{canvas_id}/#{motivation}/#{generic_annotation.index}"
+          else
+            annotation_content.annotation_id
+          end
+        end
+
+        def motivation
+          annotation_content.motivation if annotation_content.try(:motivation).present?
         end
 
         def target(canvas)

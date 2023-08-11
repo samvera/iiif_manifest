@@ -178,6 +178,58 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
           expect(annotation.body['service']).to include auth_service
         end
       end
+
+      describe 'annotation_content' do
+        let(:builder) do
+          described_class.new(
+            annotation_content,
+            iiif_body_factory: IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body,
+            image_service_builder_factory: image_service_builder_factory
+          )
+        end
+
+        context 'with body_id' do
+          let(:url) { "http://transcript.vtt" }
+          let(:annotation_content) do
+            IIIFManifest::V3::AnnotationContent.new(body_id: url,
+                                                    type: 'text',
+                                                    motivation: 'supplementing',
+                                                    format: 'text/vtt',
+                                                    label: 'English',
+                                                    language: 'eng')
+          end
+
+          it 'sets a body on the annotation' do
+            subject
+            expect(annotation.body).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body
+            expect(annotation.body['id']).to eq url
+            expect(annotation.body['type']).to eq 'text'
+            expect(annotation.body['label']).to eq('none' => ['English'])
+            expect(annotation.body['format']).to eq 'text/vtt'
+            expect(annotation.body['language']).to eq 'eng'
+          end
+        end
+        context 'with annotation_id' do
+          let(:url) { "http://highlight.mark" }
+          let(:annotation_content) do
+            IIIFManifest::V3::AnnotationContent.new(annotation_id: url,
+                                                    type: 'TextualBody',
+                                                    motivation: 'highlighting',
+                                                    format: 'text/html',
+                                                    value: 'marker',
+                                                    media_fragment: 't=15')
+          end
+
+          it 'sets a body on the annotation' do
+            subject
+            expect(annotation.body).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body
+            expect(annotation.body['id']).to be_nil
+            expect(annotation.body['type']).to eq 'TextualBody'
+            expect(annotation.body['value']).to eq 'marker'
+            expect(annotation.body['format']).to eq 'text/html'
+          end
+        end
+      end
     end
   end
 end

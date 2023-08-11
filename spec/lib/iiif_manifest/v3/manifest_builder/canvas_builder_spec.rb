@@ -48,7 +48,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
                                                             format: 'image/jpeg')
   end
   let(:annotation_content) do
-    IIIFManifest::V3::AnnotationContent.new(caption_url,
+    IIIFManifest::V3::AnnotationContent.new(body_id: caption_url,
                                             type: 'text',
                                             motivation: 'supplementing',
                                             format: 'text/vtt',
@@ -398,19 +398,19 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         )
       end
       let(:annotation_content) do
-        [IIIFManifest::V3::AnnotationContent.new("http://highlight.mark",
+        [IIIFManifest::V3::AnnotationContent.new(annotation_id: "http://highlight.mark",
                                                  type: 'TextualBody',
                                                  motivation: 'highlighting',
                                                  format: 'text/html',
                                                  value: 'marker',
                                                  media_fragment: 't=15'),
-         IIIFManifest::V3::AnnotationContent.new("http://transcript.vtt",
+         IIIFManifest::V3::AnnotationContent.new(body_id: "http://transcript.vtt",
                                                  type: 'text',
                                                  motivation: 'supplementing',
                                                  format: 'text/vtt',
                                                  label: 'English',
                                                  language: 'eng'),
-         IIIFManifest::V3::AnnotationContent.new("http://caption.vtt",
+         IIIFManifest::V3::AnnotationContent.new(body_id: "http://caption.vtt",
                                                  type: 'text',
                                                  motivation: 'supplementing',
                                                  format: 'text/vtt',
@@ -438,6 +438,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(annotations.length).to eq 1
         annotation_page = annotations.first
         expect(annotation_page.items.length).to eq 3
+        expect(annotation_page.items[0].inner_hash['id']).to eq "http://highlight.mark"
         expect(annotation_page.items[0].inner_hash['target']).to include '#t=15'
         expect(annotation_page.items[1].body.inner_hash['language']).to eq 'eng'
         expect(annotation_page.items[2].body.inner_hash['language']).to eq 'eng'
