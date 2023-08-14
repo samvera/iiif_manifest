@@ -35,7 +35,7 @@ module IIIFManifest
 
         def annotation_id(canvas_id)
           if annotation_content.try(:annotation_id).blank?
-            "#{canvas_id}/#{motivation}/#{generic_annotation.index}"
+            "#{canvas_id}/#{motivation.presence || 'annotation'}/#{generic_annotation.index}"
           else
             annotation_content.annotation_id
           end

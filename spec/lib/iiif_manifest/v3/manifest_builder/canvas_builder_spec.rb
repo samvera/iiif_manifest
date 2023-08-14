@@ -446,6 +446,40 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       end
     end
 
+    context "when annotation_content has no annotation_id and no motivation" do
+      let(:annotation_content) do
+        IIIFManifest::V3::AnnotationContent.new(motivation: nil,
+                                                type: 'TextualBody',
+                                                format: 'text/html',
+                                                value: 'marker',
+                                                media_fragment: 't=15')
+      end
+
+      it 'generates the canvas' do
+        canvas = builder.canvas
+        expect(canvas).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
+        values = canvas.inner_hash
+
+        expect(values).to include "type" => "Canvas"
+        expect(values).to include "id" => "http://test.host/books/book-77/manifest/canvas/test-22"
+
+        expect(values).to include 'items'
+        items = values['items']
+        expect(items.length).to eq 1
+        page = items.first
+        expect(page).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage
+        expect(page.items).not_to be_empty
+
+        expect(values).to include 'annotations'
+        annotations = values['annotations']
+        expect(annotations.length).to eq 1
+        annotation_page = annotations.first
+        expect(annotation_page.items[0].inner_hash['id']).to match(/.+\/annotation\/.+/)
+        expect(annotation_page.items[0].inner_hash['target']).to include '#t=15'
+        expect(annotation_page.items).to all(be_a(IIIFManifest::V3::ManifestBuilder::IIIFManifest::Annotation))
+      end
+    end
+
     context 'when placeholder_content is specificed for a record' do
       it 'generates placeholderCanvas' do
         canvas = builder.canvas
