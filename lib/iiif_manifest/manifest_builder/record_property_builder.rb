@@ -48,15 +48,24 @@ module IIIFManifest
         @iiif_autocomplete_service ||= iiif_autocomplete_service_factory.new
       end
 
+      def custom_services
+        record.respond_to?(:service) ? record.send(:service) : []
+      end
+
         # Build services. Currently supported:
         #   search_service, with (optional) embedded autocomplete service
         #
         # @return [Array] array of services
       def services
-        iiif_search_service.search_service = search_service
-        iiif_autocomplete_service.autocomplete_service = autocomplete_service
-        iiif_search_service.service = iiif_autocomplete_service if autocomplete_service.present?
-        [iiif_search_service]
+        services = []
+        if search_service.present?
+          iiif_search_service.search_service = search_service
+          iiif_autocomplete_service.autocomplete_service = autocomplete_service
+          iiif_search_service.service = iiif_autocomplete_service if autocomplete_service.present?
+          services << iiif_search_service
+        end
+        services += Array(custom_services)
+        services
       end
 
         # Validate manifest_metadata against the IIIF spec format for metadata

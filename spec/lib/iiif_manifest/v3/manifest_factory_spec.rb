@@ -392,6 +392,34 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
     end
 
+    context 'with custom services' do
+      let(:services) { [service] }
+      let(:service) do
+        {
+          id: "https://example.org/service",
+          type: "ExampleExtensionService",
+          profile: "https://example.org/docs/service",
+          customProperty: "Custom Configuration"
+        }
+      end
+
+      it 'has a service element' do
+        allow(book_presenter).to receive(:service).and_return(services)
+        expect(result['service']).to include service
+      end
+
+      context 'when search service is also present' do
+        let(:search_service) { 'http://test.host/books/book-77/search' }
+
+        it 'has both services' do
+          allow(book_presenter).to receive(:search_service).and_return(search_service)
+          allow(book_presenter).to receive(:service).and_return(services)
+          expect(result['service']).to include service
+          expect(result['service']).to include IIIFManifest::V3::ManifestBuilder::IIIFManifest::SearchService
+        end
+      end
+    end
+
     context 'when there are child works' do
       let(:child_work_presenter) { presenter_class.new('test2', label: 'Inner book') }
 

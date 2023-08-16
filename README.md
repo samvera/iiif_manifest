@@ -32,6 +32,8 @@ Additionally it **_should_** implement `#manifest_metadata` to provide an array 
 
 Additionally it **_may_** implement `#search_service` to contain the url for a IIIF search api compliant search endpoint and `#autocomplete_service` to contain the url for a IIIF search api compliant autocomplete endpoint. Please note, the autocomplete service is embedded within the search service description so if an autocomplete_service is supplied without a search_service it will be ignored. The IIIF `profile` added to the service descriptions is version 0 as this is the version supported by the current version of Universal Viewer. Only include a search_service within the manifest if your application has implemented a IIIF search service at the endpoint specified in the manifest.
 
+Additionally it **_may_** implement `#service` to contain an array of hashes for services other than `search_service` or `autocomplete_service`.  Each must contain "@id" (V2) or "id" (V3) and "@context" (V2) or "type" (V3) and may contain any other arbitrary properties.
+
 Additionally it **_may_** implement `#sequence_rendering` to contain an array of hashes for file downloads to be offered at sequences level. Each hash must contain "@id", "format" (mime type) and "label" (eg. `{ "@id" => "download url", "format" => "application/pdf", "label" => "user friendly label" }`).
 
 Finally, it **_may_** implement `ranges`, which returns an array of objects which represent a table of contents or similar structure, each of which responds to `label`, `ranges`, and `file_set_presenters`.
@@ -74,6 +76,16 @@ For example:
 
     def autocomplete_service
       "http://test.host/books/#{@id}/autocomplete"
+    end
+
+    def service
+      [
+        {
+          "@context" => "http://iiif.io/api/annext/services/example/context.json",
+          "@id" => "https://example.org/service",
+          "profile" => "https://example.org/docs/service"
+        }
+      ]
     end
 
     def sequence_rendering
