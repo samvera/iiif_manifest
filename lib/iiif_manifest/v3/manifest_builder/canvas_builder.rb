@@ -72,6 +72,7 @@ module IIIFManifest
           record.placeholder_content if record.respond_to?(:placeholder_content)
         end
 
+        # rubocop:disable Metrics/AbcSize
         def apply_record_properties
           canvas['id'] = path
           canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
@@ -82,7 +83,9 @@ module IIIFManifest
           canvas.rendering = populate(:rendering) if populate(:rendering).present?
           canvas.see_also = populate(:see_also) if populate(:see_also).present?
           canvas.part_of = populate(:part_of) if populate(:part_of).present?
+          canvas.metadata = metadata_from_record(record) if metadata_from_record(record).present?
         end
+        # rubocop:enable Metrics/AbcSize
 
         def apply_annotation_content_to(canvas)
           return if annotation_content.blank?
@@ -139,6 +142,32 @@ module IIIFManifest
             output['id'] = prop['@id']
             output['label'] = ManifestBuilder.language_map(prop['label']) if prop['label'].present?
             output
+          end
+        end
+
+        def metadata_from_record(record)
+          return unless valid_v3_metadata?
+          record.item_metadata
+        end
+
+        # Validate item_metadata against the IIIF spec format for metadata
+        #
+        # @return [Boolean]
+        def valid_v3_metadata?
+          return false unless record.respond_to?(:item_metadata)
+          metadata = record.item_metadata
+          valid_v3_metadata_fields?(metadata)
+        end
+
+        # Item metadata must be an array containing hashes
+        #
+        # @param metadata [Array<Hash>] a list of metadata with label and value as required keys for each entry
+        # @return [Boolean]
+        def valid_v3_metadata_fields?(metadata)
+          metadata.is_a?(Array) && metadata.all? do |metadata_field|
+            metadata_field.is_a?(Hash) &&
+              ManifestBuilder.valid_language_map?(metadata_field['label']) &&
+              ManifestBuilder.valid_language_map?(metadata_field['value'])
           end
         end
       end
