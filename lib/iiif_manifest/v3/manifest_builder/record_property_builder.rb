@@ -53,7 +53,7 @@ module IIIFManifest
           manifest.behavior = viewing_hint if viewing_hint.present?
           manifest.metadata = metadata_from_record(record) if metadata_from_record(record).present?
           manifest.viewing_direction = viewing_direction if viewing_direction.present?
-          manifest.service = services if search_service.present?
+          manifest.service = services if services.present?
           manifest.rendering = populate_rendering if populate_rendering.present?
           homepage = ::IIIFManifest.config.manifest_value_for(record, property: :homepage)
           manifest.homepage = homepage if homepage.present?
