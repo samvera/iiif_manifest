@@ -165,6 +165,10 @@ module IIIFManifest
           def part_of=(part_of)
             inner_hash['partOf'] = part_of
           end
+
+          def metadata=(metadata)
+            inner_hash['metadata'] = metadata
+          end
         end
 
         class Range < IIIFService

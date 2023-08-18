@@ -509,6 +509,81 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(values).not_to include 'placeholderCanvas'
       end
     end
+
+    context 'when there is no manifest_metadata method' do
+      it 'does not have a metadata element' do
+        canvas = builder.canvas
+        values = canvas.inner_hash
+
+        expect(values).not_to include 'metadata'
+      end
+    end
+
+    context 'when there is an item_metadata method' do
+      context 'with invalid data' do
+        before do
+          class MyWork
+            def id
+              'test-22'
+            end
+
+            def item_metdata
+              nil
+            end
+          end
+        end
+
+        it 'does not have a metadata element' do
+          canvas = builder.canvas
+          values = canvas.inner_hash
+
+          expect(values).not_to include 'metadata'
+        end
+      end
+
+      context 'with presentation 2 style metadata' do
+        before do
+          class MyWork
+            def id
+              'test-22'
+            end
+
+            def item_metdata
+              [{ 'label' => 'Title', 'value' => 'Title of the Item' }]
+            end
+          end
+        end
+
+        it 'does not have a metadata element' do
+          canvas = builder.canvas
+          values = canvas.inner_hash
+
+          expect(values).not_to include 'metadata'
+        end
+      end
+
+      context 'with presentation 3 style metadata' do
+        before do
+          class MyWork
+            def id
+              'test-22'
+            end
+
+            def item_metadata
+              [{ 'label' => { 'en' => ['Title'] }, 'value' => { 'en' => ['Title of the Item'] } }]
+            end
+          end
+        end
+
+        it 'has metadata' do
+          canvas = builder.canvas
+          values = canvas.inner_hash
+
+          expect(values['metadata'][0]['label']).to eq('en' => ['Title'])
+          expect(values['metadata'][0]['value']).to eq('en' => ['Title of the Item'])
+        end
+      end
+    end
   end
 
   describe '#new' do

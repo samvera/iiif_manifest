@@ -120,6 +120,7 @@ For example:
 The class that represents the leaf nodes, must implement `#id`. It must also implement `#display_image` which returns an instance of `IIIFManifest::DisplayImage`
 
 In Presentation 3.0, additionally it **_may_** implement;
+- `#item_metadata` to contain an array of hashes for metadata to be displayed at each leaf node. Items must contain "label" and "value" properties.
 - `#sequence_rendering` to contain an array of hashes for file downloads to be offered at each leaf node. This follows a similar format as `#sequence_rendering` at sequences level
 - `#see_also` to contain an array of hashes for related resources to be offered at each leaf node. Items must contain "id" and "type" properties. Items should contain "label", "format", and "profile" properties.
 - `#part_of` to contain an array of hashes for parent resources to be offered at each leaf node. Items must contain "id" and "type" properties. Items should contain "label".
@@ -182,9 +183,9 @@ Then you can produce the manifest on the book object like this:
   IIIFManifest::ManifestFactory.new(book).to_h.to_json
 ```
 
-## Presentation 3.0 (Alpha)
+## Presentation 3.0
 
-Provisional support for the [3.0 alpha version of the IIIF presentation api spec](https://iiif.io/api/presentation/3.0/) has been added with a focus on audiovisual content. The [change log](https://iiif.io/api/presentation/3.0/change-log/) lists the changes to the specification.
+Provisional support for the [3.0 version of the IIIF presentation api spec](https://iiif.io/api/presentation/3.0/) has been added with a focus on audiovisual content. The [change log](https://iiif.io/api/presentation/3.0/change-log/) lists the changes to the specification.
 
 The presentation 3.0 support has been contained to the `V3` namespace. Version 2.0 manifests are still being built using `IIIFManifest::ManifestFactory` while version 3.0 manifests can now be built using `IIIFManifest::V3::ManifestFactory`.
 
