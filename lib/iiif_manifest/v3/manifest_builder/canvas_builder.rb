@@ -57,7 +57,9 @@ module IIIFManifest
         # @return [Array<Object>] if the record has a display content
         # @return [NilClass] if there is no display content
         def display_content
-          Array.wrap(record.display_content) if record.respond_to?(:display_content) && record.display_content.present?
+          return unless record.respond_to?(:display_content) && record.display_content.present?
+
+          Array.wrap(record.display_content)
         end
 
         # @return [Array<Object>] if the record has generic annotation content
@@ -136,7 +138,7 @@ module IIIFManifest
         def populate(property)
           property = :sequence_rendering if property == :rendering
 
-          return unless record.respond_to?(property)
+          return unless record.respond_to?(property) && record.send(property).present?
           record.send(property).collect do |prop|
             output = prop.to_h.except('@id', 'label')
             output['id'] = prop['@id']
