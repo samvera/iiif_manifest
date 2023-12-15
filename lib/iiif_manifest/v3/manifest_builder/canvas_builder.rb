@@ -51,27 +51,29 @@ module IIIFManifest
         private
 
         def display_image
-          record.display_image if record.respond_to?(:display_image)
+          @display_image ||= record.display_image if record.respond_to?(:display_image)
         end
 
         # @return [Array<Object>] if the record has a display content
         # @return [NilClass] if there is no display content
         def display_content
+          return @display_content if @display_content.present?
           return unless record.respond_to?(:display_content) && record.display_content.present?
 
-          Array.wrap(record.display_content)
+          @display_content ||= Array.wrap(record.display_content)
         end
 
         # @return [Array<Object>] if the record has generic annotation content
         # @return [NilClass] if there is no annotation content
         def annotation_content
+          return @annotation_content if @annotation_content.present?
           return unless record.respond_to?(:annotation_content) && record.annotation_content.present?
 
-          Array.wrap(record.annotation_content)
+          @annotation_content ||= Array.wrap(record.annotation_content)
         end
 
         def placeholder_content
-          record.placeholder_content if record.respond_to?(:placeholder_content)
+          @placeholder_content ||= record.placeholder_content if record.respond_to?(:placeholder_content)
         end
 
         # rubocop:disable Metrics/AbcSize
