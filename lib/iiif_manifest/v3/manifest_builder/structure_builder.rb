@@ -82,7 +82,7 @@ module IIIFManifest
         end
 
         private
-        
+
         def build_canvas_id(canvas_item)
           path = "#{parent.manifest_url}/canvas/#{canvas_item.id}"
           if canvas_item.respond_to?(:media_fragment) && canvas_item.media_fragment.present?
