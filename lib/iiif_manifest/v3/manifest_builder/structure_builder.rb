@@ -32,7 +32,7 @@ module IIIFManifest
           range['id'] = path
           range['label'] = ManifestBuilder.language_map(record.label) if record.try(:label).present?
           range['behavior'] = 'top' if top?
-          range['items'] = file_set_presenters.collect { |presenter| { 'type' => 'Canvas', 'id' => build_canvas_id(presenter) } }
+          range['items'] = file_set_presenters.collect { |fs| { 'type' => 'Canvas', 'id' => build_canvas_id(fs) } }
         end
 
         def canvas_builders
@@ -85,7 +85,9 @@ module IIIFManifest
         
         def build_canvas_id(canvas_item)
           path = "#{parent.manifest_url}/canvas/#{canvas_item.id}"
-          path << "##{canvas_item.media_fragment}" if canvas_item.respond_to?(:media_fragment) && canvas_item.media_fragment.present?
+          if canvas_item.respond_to?(:media_fragment) && canvas_item.media_fragment.present?
+            path << "##{canvas_item.media_fragment}"
+          end
           path
         end
       end
