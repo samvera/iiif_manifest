@@ -57,19 +57,15 @@ module IIIFManifest
         # @return [Array<Object>] if the record has a display content
         # @return [NilClass] if there is no display content
         def display_content
-          return @display_content unless @display_content.nil?
-          return unless record.respond_to?(:display_content) && !record.display_content.nil?
-
-          @display_content ||= Array.wrap(record.display_content)
+          @display_content ||= Array.wrap(record.display_content) if record.respond_to?(:display_content)
+          @display_content.presence
         end
 
         # @return [Array<Object>] if the record has generic annotation content
         # @return [NilClass] if there is no annotation content
         def annotation_content
-          return @annotation_content unless @annotation_content.nil?
-          return unless record.respond_to?(:annotation_content) && !record.annotation_content.nil?
-
-          @annotation_content ||= Array.wrap(record.annotation_content)
+          @annotation_content ||= Array.wrap(record.annotation_content) if record.respond_to?(:annotation_content)
+          @annotation_content.presence
         end
 
         def placeholder_content
