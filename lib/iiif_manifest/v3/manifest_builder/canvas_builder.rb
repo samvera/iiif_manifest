@@ -75,15 +75,11 @@ module IIIFManifest
         # rubocop:disable Metrics/AbcSize
         def apply_record_properties
           canvas['id'] = path
-          canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
           annotation_page['id'] = "#{path}/annotation_page/#{annotation_page.index}"
           canvas.items = [annotation_page]
+          apply_canvas_attributes(canvas)
           apply_annotation_content_to(canvas)
           apply_thumbnail_to(canvas)
-          canvas.rendering = populate(:rendering) if populate(:rendering).present?
-          canvas.see_also = populate(:see_also) if populate(:see_also).present?
-          canvas.part_of = populate(:part_of) if populate(:part_of).present?
-          canvas.metadata = metadata_from_record(record) if metadata_from_record(record).present?
         end
         # rubocop:enable Metrics/AbcSize
 
@@ -101,6 +97,18 @@ module IIIFManifest
             canvas.thumbnail = Array(thumbnail_builder_factory.new(display_content.first).build)
           end
         end
+
+        # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        def apply_canvas_attributes(canvas)
+          canvas.label = ManifestBuilder.language_map(record.to_s) if record.to_s.present?
+          canvas.rendering = populate(:rendering) if populate(:rendering).present?
+          canvas.see_also = populate(:see_also) if populate(:see_also).present?
+          canvas.part_of = populate(:part_of) if populate(:part_of).present?
+          canvas.metadata = metadata_from_record(record) if metadata_from_record(record).present?
+          canvas.summary = ManifestBuilder.language_map(record.description) if record.respond_to?(:description) &&
+                                                                               record.description.present?
+        end
+        # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
         def annotation_page
           @annotation_page ||= iiif_annotation_page_factory.new
