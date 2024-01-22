@@ -169,6 +169,15 @@ module IIIFManifest
           def metadata=(metadata)
             inner_hash['metadata'] = metadata
           end
+
+          def summary
+            inner_hash['summary']
+          end
+
+          def summary=(summary)
+            return unless summary.present?
+            inner_hash['summary'] = summary
+          end
         end
 
         class Range < IIIFService

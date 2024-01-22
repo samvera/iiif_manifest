@@ -584,6 +584,27 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         end
       end
     end
+
+    context 'when the description is specified for a record' do
+      before do
+        class MyWork
+          def id
+            'test-22'
+          end
+
+          def description
+            'Ipsum Lorem'
+          end
+        end
+      end
+
+      it 'sets summary for a canvas' do
+        canvas = builder.canvas
+        values = canvas.inner_hash
+
+        expect(values['summary']).to eq('none' => ['Ipsum Lorem'])
+      end
+    end
   end
 
   describe '#new' do
