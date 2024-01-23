@@ -35,6 +35,9 @@ workflows:
   ci:
     jobs:
       - test:
+          name: "ruby3-3"
+          ruby_version: "3.3.0"
+      - test:
           name: "ruby3-2"
           ruby_version: "3.2.0"
       - test:
@@ -62,6 +65,9 @@ workflows:
               only:
                 - main
     jobs:
+      - test:
+          name: "ruby3-3"
+          ruby_version: "3.3.0"
       - test:
           name: "ruby3-2"
           ruby_version: "3.2.0"
