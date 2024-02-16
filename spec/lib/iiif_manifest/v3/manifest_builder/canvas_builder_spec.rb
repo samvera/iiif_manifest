@@ -605,6 +605,31 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(values['summary']).to eq('none' => ['Ipsum Lorem'])
       end
     end
+
+    context 'when the homepage is specified for a record' do
+      before do
+        class MyWork
+          def id
+            'test-22'
+          end
+
+          def homepage
+            [{
+              id: 'http://example.com/test-22',
+              type: 'Text',
+              label: 'test-22 homepage'
+            }]
+          end
+        end
+      end
+
+      it 'sets homepage for a canvas' do
+        canvas = builder.canvas
+        values = canvas.inner_hash
+
+        expect(values.key?('homepage')).to be true
+      end
+    end
   end
 
   describe '#new' do

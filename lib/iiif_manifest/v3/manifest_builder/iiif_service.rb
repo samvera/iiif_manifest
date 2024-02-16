@@ -178,6 +178,10 @@ module IIIFManifest
             return unless summary.present?
             inner_hash['summary'] = summary
           end
+
+          def homepage=(homepage)
+            inner_hash['homepage'] = homepage
+          end
         end
 
         class Range < IIIFService
