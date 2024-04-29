@@ -357,6 +357,48 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
       end
     end
 
+    context 'when the display_content is not specified for a record with placeholder content' do
+      before do
+        class MyWork
+          def id
+            'test-22'
+          end
+
+          def display_content
+            nil
+          end
+
+          def placeholder_content
+            IIIFManifest::V3::DisplayContent.new(nil,
+                                           width: 100,
+                                           height: 100,
+                                           type: "Text",
+                                           format: "text/plain",
+                                           label: "Restricted item")
+          end
+        end
+      end
+
+      it 'generates the canvas' do
+        canvas = builder.canvas
+        expect(canvas).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::Canvas
+        values = canvas.inner_hash
+
+        expect(values).to include "type" => "Canvas"
+        expect(values).to include "id" => "http://test.host/books/book-77/manifest/canvas/test-22"
+
+        expect(values).to include 'items'
+        expect(values).to include 'width' => 100
+        expect(values).to include 'height' => 100
+
+        items = values['items']
+        expect(items.length).to eq 1
+        page = items.first
+        expect(page).to be_a IIIFManifest::V3::ManifestBuilder::IIIFManifest::AnnotationPage
+        expect(page.items).to be_empty
+      end
+    end
+
     context 'when annotation content is empty for an item' do
       before do
         class MyWork

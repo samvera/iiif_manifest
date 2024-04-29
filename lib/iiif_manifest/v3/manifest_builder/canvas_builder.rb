@@ -80,6 +80,11 @@ module IIIFManifest
           apply_canvas_attributes(canvas)
           apply_annotation_content_to(canvas)
           apply_thumbnail_to(canvas)
+
+          if !display_content && placeholder_content
+            canvas['width'] = placeholder_content.width if placeholder_content.width.present?
+            canvas['height'] = placeholder_content.height if placeholder_content.height.present?
+          end
         end
         # rubocop:enable Metrics/AbcSize
 
