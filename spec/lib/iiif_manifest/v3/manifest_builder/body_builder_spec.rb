@@ -223,7 +223,7 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
           it 'sets a body on the annotation' do
             subject
             expect(annotation.body).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body
-            expect(annotation.body['id']).to be_nil
+            expect(annotation.body['id']).to eq ''
             expect(annotation.body['type']).to eq 'TextualBody'
             expect(annotation.body['value']).to eq 'marker'
             expect(annotation.body['format']).to eq 'text/html'
