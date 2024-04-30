@@ -115,6 +115,7 @@ module IIIFManifest
           canvas.summary = ManifestBuilder.language_map(record.description) if record.respond_to?(:description) &&
                                                                                record.description.present?
           canvas.homepage = populate(:homepage) if populate(:homepage).present?
+          canvas.service = populate(:service) if populate(:service).present?
         end
         # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 

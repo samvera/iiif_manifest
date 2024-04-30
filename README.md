@@ -126,6 +126,7 @@ In Presentation 3.0, additionally it **_may_** implement;
 - `#part_of` to contain an array of hashes for parent resources to be offered at each leaf node. Items must contain "id" and "type" properties. Items should contain "label".
 - `#homepage` to contain an array of hashes for homepage resources to be offered at each leaf node. Items must contain "id", "type", and "label" properties. Items should contain a "format" property and may contain a "language" property.
 - `#placeholder_content` to contain an instance of `IIIFManifest::V3::DisplayContent` for [`placeholderCanvas`](https://iiif.io/api/presentation/3.0/#placeholdercanvas) at each leaf node
+- `#service` to contain an array of hashes for services. Each must contain "id" and "type" and may contain any other arbitrary properties.
 
 ```ruby
   class Page
@@ -146,7 +147,7 @@ In Presentation 3.0, additionally it **_may_** implement;
                                      )
     end
 
-    # --------------------------------------- Presentation 3.0 (Alpha) ---------------------------------------
+    # --------------------------------------- Presentation 3.0 ---------------------------------------
     def sequence_rendering
       [{"@id" => "http://test.host/display_image/id/download", "format" => "application/pdf", "label" => "Download"}]
     end
@@ -170,7 +171,17 @@ In Presentation 3.0, additionally it **_may_** implement;
                                            type: "Image",
                                            format: "image/jpeg")
     end
-    # --------------------------------------- Presentation 3.0 (Alpha) ---------------------------------------
+
+    def service
+      [
+        {
+          "@context" => "http://iiif.io/api/annext/services/example/context.json",
+          "@id" => "https://example.org/service",
+          "profile" => "https://example.org/docs/service"
+        }
+      ]
+    end
+    # --------------------------------------- Presentation 3.0 ---------------------------------------
 
     private
 
