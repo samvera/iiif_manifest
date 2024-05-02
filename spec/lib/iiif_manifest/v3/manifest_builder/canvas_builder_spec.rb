@@ -672,6 +672,30 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         expect(values.key?('homepage')).to be true
       end
     end
+
+    context 'when a service is specified for a record' do
+      before do
+        class MyWork
+          def id
+            'test-22'
+          end
+
+          def service
+            [{
+              id: 'http://example.com/test-22/service',
+              type: 'service1'
+            }]
+          end
+        end
+      end
+
+      it 'sets service for a canvas' do
+        canvas = builder.canvas
+        values = canvas.inner_hash
+
+        expect(values.key?('service')).to be true
+      end
+    end
   end
 
   describe '#new' do

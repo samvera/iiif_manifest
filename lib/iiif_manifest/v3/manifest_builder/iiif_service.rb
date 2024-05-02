@@ -182,6 +182,14 @@ module IIIFManifest
           def homepage=(homepage)
             inner_hash['homepage'] = homepage
           end
+
+          def service
+            inner_hash['service'] || []
+          end
+
+          def service=(service)
+            inner_hash['service'] = service
+          end
         end
 
         class Range < IIIFService
