@@ -226,6 +226,7 @@ The presentation 3.0 support has been contained to the `V3` namespace. Version 2
   - `#homepage` is supported at leaf node level, to present an array of homepage resources available at each leaf node.
   - `#placeholder_content` which returns an instance of `IIIFManifest::V3::DisplayContent` presents a [`placeholderCanvas`](https://iiif.io/api/presentation/3.0/#placeholdercanvas) at leaf node level
 - DisplayContent may provide `#auth_service` which should return a hash containing a IIIF Authentication service definition (<https://iiif.io/api/auth/1.0/>) that will be included on the content resource.
+- Presenters **_may_** implement `#collection?` to indicate that the presenter is a collection with `work_presenters` and no `file_set_presenters`.  This will generate a manifest of type `Collection` with items of type `Manifest`.
 
 ## Configuration
 
