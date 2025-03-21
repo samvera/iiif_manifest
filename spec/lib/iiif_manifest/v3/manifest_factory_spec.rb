@@ -536,7 +536,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       end
       it 'returns a IIIF Collection' do
         expect(result['type']).to eq 'Collection'
-        expect(result['label']).to eq({"none"=>["Collection 1"]})
+        expect(result['label']).to eq({ "none" => ["Collection 1"] })
       end
       it "doesn't build sequences" do
         expect(result['sequences']).to eq nil

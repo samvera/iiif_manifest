@@ -10,7 +10,7 @@ module IIIFManifest
           )
         end
 
-       def child_manifest_builder
+        def child_manifest_builder
           IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
             ManifestBuilder,
             builders: record_property_builder,
