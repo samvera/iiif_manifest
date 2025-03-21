@@ -45,8 +45,8 @@ module IIIFManifest
       end
 
       def apply(collection)
-        collection['manifests'] ||= []
-        collection['manifests'] << to_h
+        collection['items'] ||= []
+        collection['items'] << to_h
         collection
       end
 

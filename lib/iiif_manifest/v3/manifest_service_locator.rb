@@ -2,6 +2,38 @@ module IIIFManifest
   module V3
     class ManifestServiceLocator < IIIFManifest::ManifestServiceLocator
       class << self
+        def collection_manifest_builder
+          IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+            ManifestBuilder,
+            builders: collection_manifest_builders,
+            top_record_factory: iiif_collection_factory
+          )
+        end
+
+       def child_manifest_builder
+          IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+            ManifestBuilder,
+            builders: record_property_builder,
+            top_record_factory: iiif_manifest_factory
+          )
+        end
+
+        def manifest_builder
+          IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+            ManifestBuilder,
+            builders: manifest_builders,
+            top_record_factory: iiif_manifest_factory
+          )
+        end
+
+        def sammelband_manifest_builder
+          IIIFManifest::ManifestServiceLocator::InjectedFactory.new(
+            ManifestBuilder,
+            builders: sammelband_manifest_builders,
+            top_record_factory: iiif_manifest_factory
+          )
+        end
+
         # Builders which receive a work as an argument to .new and return objects
         #   that respond to #apply.
         def manifest_builders
