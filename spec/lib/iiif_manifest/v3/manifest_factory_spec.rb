@@ -682,7 +682,6 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         it 'returns items' do
           expect(content_annotation_id).not_to be_empty
           expect(content_annotation_body['type']).to eq 'Choice'
-          expect(content_annotation_body['choiceHint']).to eq 'user'
           expect(content_annotation_body.items.size).to eq 3
           content_annotation_body.items.each do |choice|
             expect(choice['type']).to eq 'Video'

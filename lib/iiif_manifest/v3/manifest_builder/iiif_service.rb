@@ -222,8 +222,7 @@ module IIIFManifest
 
           def initial_attributes
             {
-              'type' => 'Choice',
-              'choiceHint' => 'user'
+              'type' => 'Choice'
             }
           end
         end
