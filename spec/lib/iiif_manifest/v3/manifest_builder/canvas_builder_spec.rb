@@ -39,7 +39,8 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
                                          type: 'Image',
                                          format: 'image/jpeg',
                                          label: 'full',
-                                         iiif_endpoint: iiif_endpoint)
+                                         iiif_endpoint: iiif_endpoint,
+                                         thumbnail: iiif_thumbnail)
   end
   let(:placeholder_content) do
     IIIFManifest::V3::DisplayContent.new(SecureRandom.uuid, type: 'Image',
@@ -694,6 +695,25 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::CanvasBuilder do
         values = canvas.inner_hash
 
         expect(values.key?('service')).to be true
+      end
+    end
+
+    context 'when a thumbnail is not specified for a record' do
+      let(:display_content) do
+        IIIFManifest::V3::DisplayContent.new(url,
+                                         width: 640,
+                                         height: 480,
+                                         type: 'Image',
+                                         format: 'image/jpeg',
+                                         label: 'full',
+                                         iiif_endpoint: iiif_endpoint)
+      end
+
+      it 'thumbnail field is not present on the canvas' do
+        canvas = builder.canvas
+        values = canvas.inner_hash
+
+        expect(values.key?('thumbnail')).to be false
       end
     end
   end
