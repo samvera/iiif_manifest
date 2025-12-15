@@ -100,7 +100,7 @@ module IIIFManifest
         def apply_thumbnail_to(canvas)
           if display_image
             canvas.thumbnail = Array(thumbnail_builder_factory.new(display_image).build)
-          elsif display_content.try(:first)
+          elsif display_content.try(:first) && display_content.first.try(:thumbnail)
             canvas.thumbnail = Array(thumbnail_builder_factory.new(display_content.first).build)
           end
         end
