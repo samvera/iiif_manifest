@@ -92,6 +92,35 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         IIIFManifest::V3::DisplayContent.new(id, type: 'Sound', duration: 360_000, format: 'audio/mp4')
       end
     end
+
+    class Collection
+      attr_reader :id, :label
+
+      def initialize(id, label: 'Collection 1')
+        @id = id
+        @label = label
+      end
+
+      def to_s
+        label
+      end
+
+      def file_set_presenters
+        []
+      end
+
+      def work_presenters
+        []
+      end
+
+      def manifest_url
+        "http://test.host/collection/#{id}/manifest"
+      end
+
+      def collection?
+        true
+      end
+    end
   end
 
   after do
@@ -437,8 +466,8 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(json_result['behavior']).to eq 'multi-part'
       end
       it 'builds child manifests' do
-        expect(result['manifests'].length).to eq 1
-        first_child = result['manifests'].first
+        expect(result['items'].length).to eq 1
+        first_child = result['items'].first
         expect(first_child['id']).to eq 'http://test.host/books/test2/manifest'
         expect(first_child['type']).to eq 'Manifest'
         expect(first_child['label']).to eq('none' => ['Inner book'])
@@ -463,7 +492,7 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(result['type']).to eq 'Manifest'
       end
       it "doesn't build manifests" do
-        expect(result.key?('manifest')).to be false
+        expect(result.key?('manifests')).to be false
       end
       it 'builds items array from all the child file sets' do
         expect(result['items'].length).to eq 2
@@ -490,10 +519,37 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
         expect(result['type']).to eq 'Manifest'
       end
       it "doesn't build manifests" do
-        expect(result.key?('manifest')).to be false
+        expect(result.key?('manifests')).to be false
       end
       it 'builds items array from all the child file sets' do
         expect(result['items'].length).to eq 1
+      end
+    end
+
+    context 'when it is a collection' do
+      subject { described_class.new(collection_presenter) }
+      let(:collection_presenter) { Collection.new('collection-1', label: 'Collection 1') }
+      let(:work_presenter) { Book.new('test2', label: 'Book') }
+
+      before do
+        allow(collection_presenter).to receive(:work_presenters).and_return([work_presenter])
+      end
+      it 'returns a IIIF Collection' do
+        expect(result['type']).to eq 'Collection'
+        expect(result['label']).to eq({ "none" => ["Collection 1"] })
+      end
+      it "doesn't build sequences" do
+        expect(result['sequences']).to eq nil
+      end
+      it "doesn't have a multi-part viewing hint" do
+        expect(json_result['behavior']).not_to eq 'multi-part'
+      end
+      it 'builds manifests' do
+        expect(result['items'].length).to eq 1
+        first_child = result['items'].first
+        expect(first_child['id']).to eq 'http://test.host/books/test2/manifest'
+        expect(first_child['type']).to eq 'Manifest'
+        expect(first_child['label']).to eq('none' => ['Book'])
       end
     end
 
