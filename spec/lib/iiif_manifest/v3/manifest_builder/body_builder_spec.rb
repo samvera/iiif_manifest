@@ -180,52 +180,54 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
 
         context 'multiple auth services' do
           let(:auth_service) do
-            [{
-              context: "http://iiif.io/api/auth/1/context.json",
-              id: "http://example.org/iiif/loginservice",
-              confirmLabel: "Login",
-              description: "...",
-              failureDescription: "<a href=\"http://example.org/policy\">Access Policy</a>",
-              failureHeader: "Authentication Failed",
-              header: "This material requires authorization",
-              label: "This material requires authorization",
-              profile: "http://iiif.io/api/auth/1/login",
-              service: [
-                {
-                  context: "http://iiif.io/api/auth/1/context.json",
-                  id: "http://example.org/iiif/token",
-                  profile: "http://iiif.io/api/auth/1/token"
-                },
-                {
-                  context: "http://iiif.io/api/auth/1/context.json",
-                  id: "http://example.org/iiif/logout",
-                  label: "Log out",
-                  profile: "http://iiif.io/api/auth/1/logout"
-                }
-              ]
-            },
-            {
-              id: "http://example.org/iiif/probe",
-              type: "AuthProbeService2",
-              service: [
-                {
-                  id: "http://example.org/auth",
-                  type: "AuthAccessService2",
-                  profile: "active",
-                  service: [
-                    {
-                      id: "http://example.org/auth_token",
-                      type: "AuthAccessTokenService2",
-                    },
-                    {
-                      id: "http://example.org/logout",
-                      type: "AuthLogoutService2",
-                      label: { "en": [I18n.t('iiif.auth.logoutLabel')] }
-                    }
-                  ]
-                }
-              ]
-            }]
+            [
+              {
+                context: "http://iiif.io/api/auth/1/context.json",
+                id: "http://example.org/iiif/loginservice",
+                confirmLabel: "Login",
+                description: "...",
+                failureDescription: "<a href=\"http://example.org/policy\">Access Policy</a>",
+                failureHeader: "Authentication Failed",
+                header: "This material requires authorization",
+                label: "This material requires authorization",
+                profile: "http://iiif.io/api/auth/1/login",
+                service: [
+                  {
+                    context: "http://iiif.io/api/auth/1/context.json",
+                    id: "http://example.org/iiif/token",
+                    profile: "http://iiif.io/api/auth/1/token"
+                  },
+                  {
+                    context: "http://iiif.io/api/auth/1/context.json",
+                    id: "http://example.org/iiif/logout",
+                    label: "Log out",
+                    profile: "http://iiif.io/api/auth/1/logout"
+                  }
+                ]
+              },
+              {
+                id: "http://example.org/iiif/probe",
+                type: "AuthProbeService2",
+                service: [
+                  {
+                    id: "http://example.org/auth",
+                    type: "AuthAccessService2",
+                    profile: "active",
+                    service: [
+                      {
+                        id: "http://example.org/auth_token",
+                        type: "AuthAccessTokenService2"
+                      },
+                      {
+                        id: "http://example.org/logout",
+                        type: "AuthLogoutService2",
+                        label: { "en": [I18n.t('iiif.auth.logoutLabel')] }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           end
 
           it '' do
