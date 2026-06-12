@@ -65,9 +65,9 @@ module IIIFManifest
 
         def apply_auth_service
           body.service = if body['service'].blank?
-                           [auth_service]
+                           [auth_service].flatten
                          else
-                           body['service'] + [auth_service]
+                           body['service'] + [auth_service].flatten
                          end
         end
       end

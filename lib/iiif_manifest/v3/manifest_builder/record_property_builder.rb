@@ -44,6 +44,7 @@ module IIIFManifest
         # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize, Metrics/MethodLength
         def setup_manifest_from_record(manifest, record)
           manifest['id'] = record.manifest_url.to_s
+          manifest['@context'] = record.context if record.try(:context).present?
           label = ::IIIFManifest.config.manifest_value_for(record, property: :label)
           manifest.label = ManifestBuilder.language_map(label) if label.present?
           summary = ::IIIFManifest.config.manifest_value_for(record, property: :summary)
