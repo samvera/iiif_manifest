@@ -225,7 +225,8 @@ The presentation 3.0 support has been contained to the `V3` namespace. Version 2
   - `#part_of` is supported at leaf node level, to present an array of parent resources available at each leaf node.
   - `#homepage` is supported at leaf node level, to present an array of homepage resources available at each leaf node.
   - `#placeholder_content` which returns an instance of `IIIFManifest::V3::DisplayContent` presents a [`placeholderCanvas`](https://iiif.io/api/presentation/3.0/#placeholdercanvas) at leaf node level
-- DisplayContent may provide `#auth_service` which should return an array containing one or more hashes defining IIIF Authentication services (<https://iiif.io/api/auth/1.0/> or <https://iiif.io/api/auth/2.0/>) that will be included on the content resource.
+  - DisplayContent may provide `#auth_service` which should return a hash containing a IIIF Authentication 1.0 service definition (<https://iiif.io/api/auth/1.0/>) that will be included on the content resource.
+  - DisplayContent may provide `#auth2_service` which should return a hash containing a IIIF Authentication 2.0 service definition (<https://iiif.io/api/auth/2.0/>) that will be included on the content resource.
 
 ## Configuration
 

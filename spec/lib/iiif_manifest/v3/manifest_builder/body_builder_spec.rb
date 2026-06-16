@@ -128,113 +128,176 @@ RSpec.describe IIIFManifest::V3::ManifestBuilder::BodyBuilder do
         end
       end
 
-      context 'with auth service' do
-        let(:auth_service) do
-          {
-            context: "http://iiif.io/api/auth/1/context.json",
-            id: "http://example.org/iiif/loginservice",
-            confirmLabel: "Login",
-            description: "...",
-            failureDescription: "<a href=\"http://example.org/policy\">Access Policy</a>",
-            failureHeader: "Authentication Failed",
-            header: "This material requires authorization",
-            label: "This material requires authorization",
-            profile: "http://iiif.io/api/auth/1/login",
-            service: [
-              {
-                context: "http://iiif.io/api/auth/1/context.json",
-                id: "http://example.org/iiif/token",
-                profile: "http://iiif.io/api/auth/1/token"
-              },
-              {
-                context: "http://iiif.io/api/auth/1/context.json",
-                id: "http://example.org/iiif/logout",
-                label: "Log out",
-                profile: "http://iiif.io/api/auth/1/logout"
-              }
-            ]
-          }
-        end
-        let(:display_content) do
-          IIIFManifest::V3::DisplayContent.new(url, width: 640,
-                                                    height: 480,
-                                                    duration: 1000,
-                                                    type: 'Video',
-                                                    format: 'video/mp4',
-                                                    label: 'Reel 1',
-                                                    auth_service: auth_service)
-        end
-
-        it 'sets a body on the annotation' do
-          subject
-          expect(annotation.body).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body
-          expect(annotation.body['id']).to eq url
-          expect(annotation.body['type']).to eq 'Video'
-          expect(annotation.body['width']).to eq 640
-          expect(annotation.body['height']).to eq 480
-          expect(annotation.body['duration']).to eq 1000
-          expect(annotation.body['label']).to eq('none' => ['Reel 1'])
-          expect(annotation.body['format']).to eq 'video/mp4'
-          expect(annotation.body['service']).to include auth_service
-        end
-
-        context 'multiple auth services' do
+      describe 'authorization services' do
+        context 'with auth service' do
           let(:auth_service) do
-            [
-              {
-                context: "http://iiif.io/api/auth/1/context.json",
-                id: "http://example.org/iiif/loginservice",
-                confirmLabel: "Login",
-                description: "...",
-                failureDescription: "<a href=\"http://example.org/policy\">Access Policy</a>",
-                failureHeader: "Authentication Failed",
-                header: "This material requires authorization",
-                label: "This material requires authorization",
-                profile: "http://iiif.io/api/auth/1/login",
-                service: [
-                  {
-                    context: "http://iiif.io/api/auth/1/context.json",
-                    id: "http://example.org/iiif/token",
-                    profile: "http://iiif.io/api/auth/1/token"
-                  },
-                  {
-                    context: "http://iiif.io/api/auth/1/context.json",
-                    id: "http://example.org/iiif/logout",
-                    label: "Log out",
-                    profile: "http://iiif.io/api/auth/1/logout"
-                  }
-                ]
-              },
-              {
-                id: "http://example.org/iiif/probe",
-                type: "AuthProbeService2",
-                service: [
-                  {
-                    id: "http://example.org/auth",
-                    type: "AuthAccessService2",
-                    profile: "active",
-                    service: [
-                      {
-                        id: "http://example.org/auth_token",
-                        type: "AuthAccessTokenService2"
-                      },
-                      {
-                        id: "http://example.org/logout",
-                        type: "AuthLogoutService2",
-                        label: { "en": [I18n.t('iiif.auth.logoutLabel')] }
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
+            {
+              context: "http://iiif.io/api/auth/1/context.json",
+              id: "http://example.org/iiif/loginservice",
+              confirmLabel: "Login",
+              description: "...",
+              failureDescription: "<a href=\"http://example.org/policy\">Access Policy</a>",
+              failureHeader: "Authentication Failed",
+              header: "This material requires authorization",
+              label: "This material requires authorization",
+              profile: "http://iiif.io/api/auth/1/login",
+              service: [
+                {
+                  context: "http://iiif.io/api/auth/1/context.json",
+                  id: "http://example.org/iiif/token",
+                  profile: "http://iiif.io/api/auth/1/token"
+                },
+                {
+                  context: "http://iiif.io/api/auth/1/context.json",
+                  id: "http://example.org/iiif/logout",
+                  label: "Log out",
+                  profile: "http://iiif.io/api/auth/1/logout"
+                }
+              ]
+            }
+          end
+          let(:display_content) do
+            IIIFManifest::V3::DisplayContent.new(url, width: 640,
+                                                      height: 480,
+                                                      duration: 1000,
+                                                      type: 'Video',
+                                                      format: 'video/mp4',
+                                                      label: 'Reel 1',
+                                                      auth_service: auth_service)
           end
 
-          it '' do
+          it 'sets a body on the annotation' do
             subject
-            expect(annotation.body['service']).to eq auth_service
+            expect(annotation.body).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body
+            expect(annotation.body['id']).to eq url
+            expect(annotation.body['type']).to eq 'Video'
+            expect(annotation.body['width']).to eq 640
+            expect(annotation.body['height']).to eq 480
+            expect(annotation.body['duration']).to eq 1000
+            expect(annotation.body['label']).to eq('none' => ['Reel 1'])
+            expect(annotation.body['format']).to eq 'video/mp4'
+            expect(annotation.body['service']).to include auth_service
+          end
+        end
+
+        context 'with auth2 service' do
+          let(:auth2_service) do
+            {
+              id: "http://example.org/iiif/probe",
+              type: "AuthProbeService2",
+              service: [
+                {
+                  id: "http://example.org/auth",
+                  type: "AuthAccessService2",
+                  profile: "active",
+                  service: [
+                    {
+                      id: "http://example.org/auth_token",
+                      type: "AuthAccessTokenService2"
+                    },
+                    {
+                      id: "http://example.org/logout",
+                      type: "AuthLogoutService2",
+                      label: { "en": [I18n.t('iiif.auth.logoutLabel')] }
+                    }
+                  ]
+                }
+              ]
+            }
+          end
+          let(:display_content) do
+            IIIFManifest::V3::DisplayContent.new(url, width: 640,
+                                                      height: 480,
+                                                      duration: 1000,
+                                                      type: 'Video',
+                                                      format: 'video/mp4',
+                                                      label: 'Reel 1',
+                                                      auth2_service: auth2_service)
+          end
+
+          it 'sets a body on the annotation' do
+            subject
+            expect(annotation.body).to be_kind_of IIIFManifest::V3::ManifestBuilder::IIIFManifest::Body
+            expect(annotation.body['id']).to eq url
+            expect(annotation.body['type']).to eq 'Video'
+            expect(annotation.body['width']).to eq 640
+            expect(annotation.body['height']).to eq 480
+            expect(annotation.body['duration']).to eq 1000
+            expect(annotation.body['label']).to eq('none' => ['Reel 1'])
+            expect(annotation.body['format']).to eq 'video/mp4'
+            expect(annotation.body['service']).to include auth2_service
+          end
+        end
+
+        context 'with auth service and auth 2 service' do
+          let(:auth_service) do
+            {
+              context: "http://iiif.io/api/auth/1/context.json",
+              id: "http://example.org/iiif/loginservice",
+              confirmLabel: "Login",
+              description: "...",
+              failureDescription: "<a href=\"http://example.org/policy\">Access Policy</a>",
+              failureHeader: "Authentication Failed",
+              header: "This material requires authorization",
+              label: "This material requires authorization",
+              profile: "http://iiif.io/api/auth/1/login",
+              service: [
+                {
+                  context: "http://iiif.io/api/auth/1/context.json",
+                  id: "http://example.org/iiif/token",
+                  profile: "http://iiif.io/api/auth/1/token"
+                },
+                {
+                  context: "http://iiif.io/api/auth/1/context.json",
+                  id: "http://example.org/iiif/logout",
+                  label: "Log out",
+                  profile: "http://iiif.io/api/auth/1/logout"
+                }
+              ]
+            }
+          end
+          let(:auth2_service) do
+            {
+              id: "http://example.org/iiif/probe",
+              type: "AuthProbeService2",
+              service: [
+                {
+                  id: "http://example.org/auth",
+                  type: "AuthAccessService2",
+                  profile: "active",
+                  service: [
+                    {
+                      id: "http://example.org/auth_token",
+                      type: "AuthAccessTokenService2"
+                    },
+                    {
+                      id: "http://example.org/logout",
+                      type: "AuthLogoutService2",
+                      label: { "en": [I18n.t('iiif.auth.logoutLabel')] }
+                    }
+                  ]
+                }
+              ]
+            }
+          end
+          let(:display_content) do
+            IIIFManifest::V3::DisplayContent.new(url, width: 640,
+                                                      height: 480,
+                                                      duration: 1000,
+                                                      type: 'Video',
+                                                      format: 'video/mp4',
+                                                      label: 'Reel 1',
+                                                      auth_service: auth_service,
+                                                      auth2_service: auth2_service)
+          end
+
+          it 'creates an array of auth services' do
+            subject
+            expect(annotation.body['service']).to be_an(Array)
             expect(annotation.body['service'].all?(Hash)).to be_truthy
             expect(annotation.body['service'].count).to eq 2
+            expect(annotation.body['service']).to include auth_service
+            expect(annotation.body['service']).to include auth2_service
           end
         end
       end

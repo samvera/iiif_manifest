@@ -12,7 +12,7 @@ module IIIFManifest
         def apply(annotation)
           build_body
           image_service_builder.apply(body) if iiif_endpoint
-          apply_auth_service if auth_service
+          apply_auth_service if auth_service || auth2_service
           annotation.body = body
         end
 
@@ -63,11 +63,15 @@ module IIIFManifest
           content.try(:auth_service)
         end
 
+        def auth2_service
+          content.try(:auth2_service)
+        end
+
         def apply_auth_service
           body.service = if body['service'].blank?
-                           [auth_service].flatten
+                           [auth_service, auth2_service].compact
                          else
-                           body['service'] + [auth_service].flatten
+                           body['service'] + [auth_service, auth2_service].compact
                          end
         end
       end
