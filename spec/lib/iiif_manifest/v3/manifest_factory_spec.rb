@@ -209,6 +209,40 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
           expect(result['items'].first['items'].first['items'].first['body']['duration']).to eq 360_000
           expect(result['items'].first['items'].first['items'].first['body']['format']).to eq 'audio/mp4'
         end
+
+        it 'returns default @context' do
+          expect(result['@context']).to eq ['http://www.w3.org/ns/anno.jsonld', 'http://iiif.io/api/presentation/3/context.json']
+        end
+
+        context 'auth2_service present' do
+          class AudioFileAuthPresenter
+            attr_reader :id, :label
+            def initialize(id: 'test-22', label: 'Disc 1')
+              @id = id
+              @label = label
+            end
+
+            def to_s
+              label
+            end
+
+            def display_content
+              IIIFManifest::V3::DisplayContent.new(id,
+                                                   type: 'Sound',
+                                                   duration: 360_000,
+                                                   format: 'audio/mp4',
+                                                   auth2_service: { id: 'test' })
+            end
+          end
+
+          let(:file_presenter) { AudioFileAuthPresenter.new }
+
+          it 'sets the manifest context' do
+            allow(book_presenter).to receive(:file_set_presenters).and_return([file_presenter])
+
+            expect(result['@context'][1]).to eq 'http://iiif.io/api/auth/2/context.json'
+          end
+        end
       end
     end
 

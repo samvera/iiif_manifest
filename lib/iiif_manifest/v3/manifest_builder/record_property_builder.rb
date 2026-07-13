@@ -19,6 +19,7 @@ module IIIFManifest
           setup_manifest_from_record(manifest, record)
           # Build the items array
           canvas_builder.apply(manifest.items)
+          apply_auth2_context(manifest) if auth2?(record)
           apply_thumbnail_to(manifest) unless manifest_thumbnail?
           manifest
         end
@@ -100,6 +101,14 @@ module IIIFManifest
           metadata_field
         end
 
+        def apply_auth2_context(manifest)
+          manifest["@context"] = [
+            'http://www.w3.org/ns/anno.jsonld',
+            'http://iiif.io/api/auth/2/context.json',
+            'http://iiif.io/api/presentation/3/context.json'
+          ]
+        end
+
         def apply_thumbnail_to(manifest)
           if manifest.is_a? IIIFManifest::Collection
             manifest.thumbnail = manifest.items.collect(&:thumbnail).compact
@@ -110,6 +119,12 @@ module IIIFManifest
 
         def manifest_thumbnail?
           ::IIIFManifest.config.manifest_thumbnail == false
+        end
+
+        def auth2?(record)
+          # DisplayContent can be an array, so need to massage things to iterate over everything in all cases
+          content = record.file_set_presenters.map { |pres| Array(pres.try(:display_content)).compact }.flatten
+          content.any? { |item| item.try(:auth2_service).present? }
         end
       end
     end
