@@ -35,6 +35,21 @@ module IIIFManifest
       def apply_record_properties
         canvas['@id'] = path
         canvas.label = record.to_s
+        canvas['metadata'] = record.item_metadata if valid_item_metadata?
+      end
+
+      # Validate item_metadata is an array of hashes with label and value
+      # as required keys for each entry
+      #
+      # @return [Boolean]
+      def valid_item_metadata?
+        return false unless record.respond_to?(:item_metadata)
+        metadata = record.item_metadata
+        metadata.is_a?(Array) && metadata.all? do |metadata_field|
+          metadata_field.is_a?(Hash) &&
+            metadata_field['label'].present? &&
+            metadata_field['value'].present?
+        end
       end
 
       def attach_image
