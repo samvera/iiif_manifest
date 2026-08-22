@@ -32,19 +32,13 @@ RSpec.describe IIIFManifest::ManifestFactory do
       def ranges
         @ranges ||=
           [
-            ManifestRange.new(label: 'Table of Contents', ranges: [
-                                ManifestRange.new(label: 'Chapter 1', file_set_presenters: [])
-                              ])
+            IIIFManifest::ManifestRange.new(
+              label: 'Table of Contents',
+              ranges: [
+                IIIFManifest::ManifestRange.new(label: 'Chapter 1', file_set_presenters: [])
+              ]
+            )
           ]
-      end
-    end
-
-    class ManifestRange
-      attr_reader :label, :ranges, :file_set_presenters
-      def initialize(label:, ranges: [], file_set_presenters: [])
-        @label = label
-        @ranges = ranges
-        @file_set_presenters = file_set_presenters
       end
     end
 

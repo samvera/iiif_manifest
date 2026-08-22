@@ -8,6 +8,7 @@ module IIIFManifest
   autoload :Configuration
   autoload :ManifestBuilder
   autoload :ManifestFactory
+  autoload :ManifestRange
   autoload :ManifestServiceLocator
   autoload :DisplayImage
   autoload :IIIFCollection
