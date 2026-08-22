@@ -36,23 +36,17 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       def ranges
         @ranges ||=
           [
-            ManifestRange.new(label: 'Table of Contents', ranges: [
-                                ManifestRange.new(label: 'Chapter 1', file_set_presenters: [])
-                              ])
+            IIIFManifest::ManifestRange.new(
+              label: 'Table of Contents',
+              ranges: [
+                IIIFManifest::ManifestRange.new(label: 'Chapter 1', file_set_presenters: [])
+              ]
+            )
           ]
       end
     end
 
     class AudioBook < Book
-    end
-
-    class ManifestRange
-      attr_reader :label, :ranges, :file_set_presenters
-      def initialize(label:, ranges: [], file_set_presenters: [])
-        @label = label
-        @ranges = ranges
-        @file_set_presenters = file_set_presenters
-      end
     end
 
     class DisplayImagePresenter
@@ -483,8 +477,12 @@ RSpec.describe IIIFManifest::V3::ManifestFactory do
       let(:child_work_presenter) { presenter_class.new('test-99') }
       let(:file_presenter) { DisplayImagePresenter.new(id: 'test-22') }
       let(:file_presenter2) { DisplayImagePresenter.new(id: 'test-33', label: 'Page 2') }
-      let(:chapter_1_range) { ManifestRange.new(label: 'Chapter 1', file_set_presenters: [file_presenter]) }
-      let(:child_work_range) { ManifestRange.new(label: 'Child Work', file_set_presenters: [file_presenter2]) }
+      let(:chapter_1_range) do
+        IIIFManifest::ManifestRange.new(label: 'Chapter 1', file_set_presenters: [file_presenter])
+      end
+      let(:child_work_range) do
+        IIIFManifest::ManifestRange.new(label: 'Child Work', file_set_presenters: [file_presenter2])
+      end
 
       before do
         allow(book_presenter).to receive(:work_presenters).and_return([child_work_presenter])
